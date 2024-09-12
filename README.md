@@ -20,4 +20,4 @@ git clone git@github.com:noksys/genoc.git
 
 Follow the on-screen instructions.
 
-You can safely run this on an existing NixOS installation. All files inside `/etc/nixos` will be backed up to `/etc/nixos/backup/<timestamp>_nixconf_backup.zip`.
+You can safely run this on an existing NixOS installation. All files inside `/etc/nixos` will be backed up to `/etc/nixos/backup/${timestamp}`.

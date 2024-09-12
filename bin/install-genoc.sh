@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#!nix-shell -p zip git -i bash
+#!nix-shell -p rsync git -i bash
 
 if [[ "$EUID" -ne 0 ]]; then
   echo "This script must be run as root."
@@ -7,12 +7,10 @@ if [[ "$EUID" -ne 0 ]]; then
 fi
 
 timestamp=$(date +%Y%m%d_%H%M%S)
-
-backup_dir="/etc/nixos/backup"
-backup_file="${backup_dir}/${timestamp}_nixconf_backup.zip"
+backup_dir="/etc/nixos/backup/${timestamp}"
 
 mkdir -p "$backup_dir"
-zip -r --symlinks "$backup_file" /etc/nixos/*
+rsync -aP /etc/nixos/ $backup_dir
 
 echo "Backup created at: $backup_file"
 
