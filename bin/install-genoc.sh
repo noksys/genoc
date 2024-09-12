@@ -12,7 +12,7 @@ backup_dir="/etc/nixos/backup"
 backup_file="${backup_dir}/${timestamp}_nixconf_backup.zip"
 
 mkdir -p "$backup_dir"
-zip -r "$backup_file" /etc/nixos/*
+zip -r --symlinks "$backup_file" /etc/nixos/*
 
 echo "Backup created at: $backup_file"
 
