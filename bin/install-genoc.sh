@@ -35,7 +35,11 @@ echo
 echo "*** ATTENTION! ***"
 echo
 echo "Now, edit the files:"
-echo "'/etc/nixos/custom_machine.nix'"
-echo "'/etc/nixos/custom_vars.nix'"
+echo
+echo "/etc/nixos/custom_machine.nix"
+echo "/etc/nixos/custom_vars.nix"
+echo
 echo "to make your custom adjustments, and then run:"
+echo
 echo "nixos-rebuild switch"
+echo
