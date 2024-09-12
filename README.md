@@ -9,13 +9,20 @@ If you have any improvement suggestions, don't hesitate: fork the repository and
 ## Installation
 First, perform a fresh installation of NixOS.
 
-Then, run the following commands:
+Then, run:
 
 ```bash
+curl -s https://raw.githubusercontent.com/noksys/genoc/main/bin/install-genoc.sh | sudo bash
+```
+
+Or:
+
+```bash
+nix-shell -p git
 sudo su
 cd /etc/nixos
 git clone git@github.com:noksys/genoc.git
-./bin/install-genoc.sh
+./genoc/bin/install-genoc.sh
 ```
 
 Follow the on-screen instructions.

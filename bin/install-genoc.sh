@@ -14,8 +14,6 @@ rsync -aP /etc/nixos/ $backup_dir
 
 echo "Backup created at: $backup_file"
 
-"${BASH_SOURCE%/*}/setup-unstable-channel.sh"
-
 cd /etc/nixos
 
 if [[ ! -d "./genoc" ]]; then
@@ -25,6 +23,7 @@ if [[ ! -d "./genoc" ]]; then
   cd -
 fi
 
+./genoc/bin/setup-unstable-channel.sh
 ln -s ./genoc/configuration.nix
 
 cp ./genoc/custom_machine.example.nix ./custom_machine.nix
@@ -32,4 +31,11 @@ cp ./genoc/custom_vars.example.nix ./custom_vars.nix
 
 cd -
 
-echo "Now, edit the files '/etc/nixos/custom_machine.nix' and '/etc/nixos/custom_vars.nix' to make your custom adjustments, and then run: nixos-rebuild switch"
+echo
+echo "*** ATTENTION! ***"
+echo
+echo "Now, edit the files:"
+echo "'/etc/nixos/custom_machine.nix'"
+echo "'/etc/nixos/custom_vars.nix'"
+echo "to make your custom adjustments, and then run:"
+echo "nixos-rebuild switch"
