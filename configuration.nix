@@ -1,7 +1,7 @@
 { config, lib, pkgs, modulesPath, ... }:
 
 let
-  vars = import ./custom_vars.nix;
+  vars = import ../custom_vars.nix;
 in
 {
   imports =
@@ -91,7 +91,7 @@ in
     description = vars.userFullName;
     extraGroups = [ "networkmanager" "wheel" "audio" "tarsnap" ];
     packages = lib.mkMerge [
-      (import ./pkg_default_user.nix { pkgs = pkgs; })
+      (import ./pkg/default_user.nix { pkgs = pkgs; })
     ];
   };
 

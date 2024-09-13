@@ -2,7 +2,7 @@
 
 let
   fenix = import (fetchTarball "https://github.com/nix-community/fenix/archive/monthly.tar.gz") { }; # Rust
-  gitsh = import ./gitsh.nix { inherit pkgs; };
+  gitsh = import ../dev/gitsh.nix { inherit pkgs; };
 in
 with pkgs; [
   awscli2
