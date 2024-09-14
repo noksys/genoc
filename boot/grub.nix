@@ -8,6 +8,8 @@ in
     enable = true;
     device = "${vars.bootDevice}";
     useOSProber = true;
+    splashImage = ./bg.png;
   };
-}
 
+  boot.loader.timeout = 5;
+}
