@@ -18,9 +18,9 @@
   ];
 
   fileSystems."/mnt/hgfs" = {
-    device = ".host:/";
-    fsType = "fuse./run/current-system/sw/bin/vmhgfs-fuse";
-    options = ["umask=22" "uid=1000" "gid=1000" "allow_other" "defaults" "auto_unmount"];
+    device = lib.mkForce ".host:/";
+    fsType = lib.mkForce "fuse./run/current-system/sw/bin/vmhgfs-fuse";
+    options = lib.mkForce ["umask=22" "uid=1000" "gid=1000" "allow_other" "defaults" "auto_unmount"];
   };
 
   systemd.services.vmtoolsd = {
