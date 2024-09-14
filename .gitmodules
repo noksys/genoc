@@ -1,3 +1,0 @@
-[submodule "hardware/nixos-hardware"]
-	path = hardware/nixos-hardware
-	url = git@github.com:noksys/nixos-hardware.git
