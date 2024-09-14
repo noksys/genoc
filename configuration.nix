@@ -26,6 +26,7 @@ in
   fileSystems."/".options = lib.mkDefault [ "noatime" ];
 
   boot.loader.grub.configurationLimit = 5;
+  boot.initrd.availableKernelModules = lib.mkMerge [ [ "dm_crypt" ] ];
 
   system = {
     copySystemConfiguration = true;
