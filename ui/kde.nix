@@ -47,6 +47,7 @@ in
       kdePackages.kate
       libsForQt5.kde-cli-tools
       libsForQt5.kservice
+      libsForQt5.kdbusaddons
     ];
   }];
 }
