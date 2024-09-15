@@ -90,7 +90,7 @@ in
     description = vars.userFullName;
     extraGroups = [ "networkmanager" "wheel" "audio" "tarsnap" ];
     packages = lib.mkMerge [
-      (import ./pkg/default_user.nix { pkgs = pkgs; })
+      (import ./pkgs/default_user.nix { pkgs = pkgs; })
     ];
   };
 

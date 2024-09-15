@@ -10,6 +10,7 @@ with pkgs; [
   gzip
   lsof
   lzip
+  ntfs3g
   pkg-config
   psmisc
   rzip
