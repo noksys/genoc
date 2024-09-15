@@ -50,4 +50,13 @@ in
       libsForQt5.kdbusaddons
     ];
   }];
+
+  # Fix WiFi
+  networking = {
+    networkmanager = {
+      enable = lib.mkDefault true;
+      wifi.backend = lib.mkForce "iwd";
+    };
+    wireless.iwd.enable = lib.mkForce true;
+  };
 }
