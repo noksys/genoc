@@ -3,7 +3,7 @@
 {
   imports = [
     ../../hardware-configuration.nix
-    ../sound/pipewire.nix
+    ../sound/pulseaudio.nix
   ];
 
   # Virtualization
