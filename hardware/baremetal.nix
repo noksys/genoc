@@ -4,6 +4,7 @@
   imports = [
     ../../hardware-configuration.nix
     ../sound/pulseaudio.nix
+    ./bluetooth.nix
   ];
 
   # Virtualization
