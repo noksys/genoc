@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ../../hardware-configuration.nix
     ../sound/pulseaudio.nix
   ];
 

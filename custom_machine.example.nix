@@ -5,10 +5,11 @@ let
 in
 {
   imports = [
+    ./genoc/hardware/vmware.nix # choose between vmware.nix or baremetal.nix
+
     ./genoc/locale/ptbr.nix     # define locale
     ./genoc/ui/kde.nix          # can be KDE, Gnome, LXQt etc.
     ./genoc/boot/grub.nix       # can be systemd-boot
-    ./genoc/hardware/vmware.nix # choose between vmware.nix or baremetal.nix
 
     # optional:
     ./genoc/backup/tarsnap.nix
