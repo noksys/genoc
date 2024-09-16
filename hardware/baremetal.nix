@@ -9,4 +9,11 @@
 
   # Virtualization
   virtualisation.vmware.guest.enable = false;
+
+
+  environment.systemPackages = lib.mkMerge [
+    (with pkgs; [
+      lm_sensors
+    ])
+  ];
 }
