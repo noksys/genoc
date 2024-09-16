@@ -22,4 +22,5 @@ with pkgs; [
   yubikey-agent
   yubikey-manager-qt
   yubikey-personalization
+  wireguard-tools
 ]
