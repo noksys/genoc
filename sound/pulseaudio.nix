@@ -22,7 +22,10 @@
     enable = true;
     support32Bit = true;
     package = pkgs.pulseaudioFull;
-    extraConfig = "load-module module-combine-sink";
+    extraConfig = "
+      load-module module-combine-sink
+      load-module module-switch-on-connect
+    ";
   };
 
   # Disable real-time scheduling daemon (RTKit)
