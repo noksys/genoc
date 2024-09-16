@@ -1,0 +1,3 @@
+[submodule "third-party/Shawn8901"]
+	path = third-party/Shawn8901
+	url = git@github.com:Shawn8901/nix-configuration.git
