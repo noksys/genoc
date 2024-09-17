@@ -11,6 +11,7 @@ with pkgs; [
   gawk
   ghostscript
   htop
+  jq
   keepassxc
   ledger
   parted
