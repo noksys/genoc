@@ -4,19 +4,6 @@
   # Sound configuration
   sound.enable = true;
 
-  # PipeWire configuration
-  services.pipewire = {
-    enable = false;
-    alsa.enable = false;
-    alsa.support32Bit = false;
-    pulse.enable = false;
-    # Uncomment to enable JACK for JACK applications
-    # jack.enable = true;
-
-    # Example session manager (default enabled, no need to redefine)
-    # media-session.enable = true;
-  };
-
   # PulseAudio configuration
   hardware.pulseaudio = {
     enable = true;
@@ -25,6 +12,8 @@
     extraConfig = "
       load-module module-combine-sink
       load-module module-switch-on-connect
+      load-module module-equalizer-sink
+      load-mudule module-dbus-protocol
     ";
   };
 

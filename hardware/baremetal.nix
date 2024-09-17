@@ -3,7 +3,8 @@
 {
   imports = [
     ../../hardware-configuration.nix
-    ../sound/pulseaudio.nix
+    #../sound/pulseaudio.nix
+    ../sound/pipewire.nix
     ./bluetooth.nix
   ];
 
