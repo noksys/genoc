@@ -19,4 +19,5 @@ with pkgs; [
   unzip
   util-linux
   zip
+  zsh
 ]
