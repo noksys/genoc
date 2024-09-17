@@ -18,4 +18,11 @@ in
       vscode = unstable.vscode;
     };
   };
+
+  environment.systemPackages = lib.mkMerge [
+    (with pkgs; [
+      wmctrl
+      xorg.xprop
+      ])
+  ];
 }
