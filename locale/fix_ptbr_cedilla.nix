@@ -12,6 +12,9 @@
     <dead_acute> <c> : "ç"
     <dead_acute> <C> : "Ç"
 
+    # Grave accent
+    <dead_grave> <a> : "à"
+
     # Acute accent for vowels
     <dead_acute> <a> : "á"
     <dead_acute> <A> : "Á"
