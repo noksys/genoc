@@ -6,6 +6,7 @@ with pkgs; [
   emacsPackages.emacs
   featherpad
   gnome.gnome-tweaks
+  ispell
   neovim
   vim
   vscode
