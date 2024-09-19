@@ -9,4 +9,10 @@
     <nixos-hardware/lenovo/legion/16irx8h>
     ./baremetal.nix
   ];
+
+  environment.systemPackages = lib.mkMerge [
+    (with pkgs; [
+      nvtopPackages.intel
+    ])
+  ];
 }
