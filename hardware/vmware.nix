@@ -8,7 +8,7 @@
 
   # Virtualization
   virtualisation.vmware.guest.enable = true;
-  #virtualisation.docker.storageDriver = "btrfs;"
+  #virtualisation.docker.storageDriver = "btrfs";
   virtualisation.docker.enable = true;
   virtualisation.waydroid.enable = true;
 
