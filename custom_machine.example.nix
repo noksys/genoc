@@ -76,6 +76,7 @@ in
     (import ./genoc/pkgs/network_tools.nix { pkgs = pkgs; })
     (import ./genoc/pkgs/nix.nix { pkgs = pkgs; })
     (import ./genoc/pkgs/tools.nix { pkgs = pkgs; })
+    #(import ./genoc/pkgs/security.nix { pkgs = pkgs; })
     (import ./genoc/pkgs/sys_tools.nix { pkgs = pkgs; })
   ];
 }
