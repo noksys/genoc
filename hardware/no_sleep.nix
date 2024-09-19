@@ -3,11 +3,11 @@
 {
   systemd = {
     targets = {
-      hibernate = {
+      sleep = {
         enable = false;
         unitConfig.DefaultDependencies = "no";
       };
-      "hybrid-sleep" = {
+      suspend = {
         enable = false;
         unitConfig.DefaultDependencies = "no";
       };
