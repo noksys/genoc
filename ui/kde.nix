@@ -48,6 +48,8 @@ in
       libsForQt5.kde-cli-tools
       libsForQt5.kservice
       libsForQt5.kdbusaddons
+      xdg-desktop-portal-wlr
+      xdg-desktop-portal-kde
     ];
   }];
 
