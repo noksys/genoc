@@ -12,6 +12,7 @@ with pkgs; [
   megasync
   ncdu
   openssl
+  opera
   palemoon-bin
   signal-desktop
   telegram-desktop
