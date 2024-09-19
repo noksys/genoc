@@ -5,6 +5,7 @@ with pkgs; [
   btrfs-progs
   bzip2
   coreutils-full
+  efibootmgr
   encfs
   gparted
   gzip
