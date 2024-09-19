@@ -15,8 +15,9 @@ in
     ./genoc/backup/tarsnap.nix
     ./genoc/dev/vscode.nix
     ./genoc/ui/fonts.nix
-    ./genoc/crypto/bitcoin.nix
-    ./genoc/crypto/liquid.nix
+    ./genoc/cryptocurrency/bitcoin.nix
+    ./genoc/cryptocurrency/liquid.nix
+    #./genoc/security/tpm2.nix
   ];
 
   # File Systems
@@ -66,7 +67,7 @@ in
 #         })
     ])
     (import ./genoc/pkgs/comm.nix { pkgs = pkgs; })
-    (import ./genoc/pkgs/crypto.nix { pkgs = pkgs; })
+    (import ./genoc/pkgs/cryptocurrency.nix { pkgs = pkgs; })
     (import ./genoc/pkgs/dev.nix { pkgs = pkgs; })
     (import ./genoc/pkgs/editors.nix { pkgs = pkgs; })
     (import ./genoc/pkgs/latex.nix { pkgs = pkgs; })
