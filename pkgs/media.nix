@@ -10,6 +10,7 @@ with pkgs; [
   optipng
   pick-colour-picker
   pngquant
+  projectm
   sox
   vlc
 ]
