@@ -71,6 +71,7 @@ in
     (import ./genoc/pkgs/cryptocurrency.nix { pkgs = pkgs; })
     (import ./genoc/pkgs/dev.nix { pkgs = pkgs; })
     (import ./genoc/pkgs/editors.nix { pkgs = pkgs; })
+    #(import ./genoc/pkgs/fun.nix { pkgs = pkgs; })
     (import ./genoc/pkgs/latex.nix { pkgs = pkgs; })
     (import ./genoc/pkgs/media.nix { pkgs = pkgs; })
     (import ./genoc/pkgs/network_tools.nix { pkgs = pkgs; })
