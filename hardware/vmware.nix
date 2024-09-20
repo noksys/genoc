@@ -4,6 +4,8 @@
   imports = [
     ../../hardware-configuration.nix
     ../sound/pulseaudio.nix
+    ./no_hibernation.nix
+    ./no_sleep.nix
   ];
 
   # Virtualization
