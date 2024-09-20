@@ -34,6 +34,8 @@ cd -
 echo
 echo "*** ATTENTION! ***"
 echo
+echo "Please, read README to know how to use my personal public binary cache."
+echo
 echo "Now, edit the files:"
 echo
 echo "/etc/nixos/custom_machine.nix"

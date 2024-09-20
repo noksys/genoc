@@ -28,3 +28,8 @@ git clone git@github.com:noksys/genoc.git
 Follow the on-screen instructions.
 
 You can safely run this on an existing NixOS installation. All files inside `/etc/nixos` will be backed up to `/etc/nixos/backup/${timestamp}`.
+
+## Using Binary Cache (Cachix)
+
+- Install the package `cachix`
+- Run: `cachix use noksys`
