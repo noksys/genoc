@@ -22,4 +22,11 @@
 
   # Configure Pulseaudio globally in nixpkgs
   nixpkgs.config.pulseaudio = true;
+
+    environment.systemPackages = lib.mkMerge [
+    (with pkgs; [
+        pavucontrol
+        pulseaudio
+    ])
+  ];
 }

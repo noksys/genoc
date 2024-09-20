@@ -17,11 +17,14 @@
     wireplumber.enable = true;
   };
 
+  nixpkgs.config.pulseaudio = true;
+
   environment.systemPackages = lib.mkMerge [
     (with pkgs; [
         pipewire
         wireplumber
         pavucontrol
+        pulseaudio
     ])
   ];
 }

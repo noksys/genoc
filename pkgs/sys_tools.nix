@@ -19,6 +19,7 @@ with pkgs; [
   tarsnap
   unzip
   util-linux
+  yad
   zip
   zsh
 ]

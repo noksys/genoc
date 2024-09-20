@@ -14,6 +14,7 @@ with pkgs; [
   jq
   keepassxc
   ledger
+  p7zip
   parted
   patch
   screen
