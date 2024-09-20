@@ -11,10 +11,19 @@
   # Virtualization
   virtualisation.vmware.guest.enable = false;
 
-
   environment.systemPackages = lib.mkMerge [
     (with pkgs; [
+      acpid
+      aha
+      brightnessctl
+      clinfo
+      evtest
+      fwupd
+      glxinfo
       lm_sensors
+      pciutils
+      vulkan-tools
+      wayland-utils
     ])
   ];
 }
