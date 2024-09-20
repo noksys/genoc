@@ -6,7 +6,7 @@ in
 {
   nixpkgs.config = {
     allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-      "vscode-1.86.2"
+      "vscode-1.93.0"
     ];
 
     permittedInsecurePackages = [
