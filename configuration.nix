@@ -18,7 +18,12 @@ in
   #
 
   # Network
-  networking.hostName = vars.hostName;
+  networking = {
+    hostName = vars.hostName;
+    enableIPv6 = true;
+  };
+
+  boot.kernel.sysctl."net.ipv6.conf.all.disable_ipv6" = false;
 
   # System optimization & hacks
   fileSystems."/".options = lib.mkDefault [ "noatime" ];
