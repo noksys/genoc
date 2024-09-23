@@ -19,6 +19,8 @@ in
     ./genoc/cryptocurrency/bitcoin.nix
     ./genoc/cryptocurrency/liquid.nix
     #./genoc/security/tpm2.nix
+    #./genoc/cryptocurrency/electrum.nix
+    #./genoc/hardware/coldcard.nix
   ];
 
   # File Systems
