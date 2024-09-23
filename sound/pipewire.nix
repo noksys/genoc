@@ -21,10 +21,16 @@
 
   environment.systemPackages = lib.mkMerge [
     (with pkgs; [
-        pipewire
-        wireplumber
+        calf
+        easyeffects
+        lsp-plugins
+        mda_lv2
         pavucontrol
+        pipewire
         pulseaudio
+        wireplumber
+        yelp
+        zam-plugins
     ])
   ];
 }
