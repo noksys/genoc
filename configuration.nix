@@ -29,6 +29,7 @@ in
   fileSystems."/".options = lib.mkDefault [ "noatime" ];
 
   boot.loader.grub.configurationLimit = 5;
+  #boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.initrd.availableKernelModules = lib.mkMerge [ [ "dm_crypt" ] ];
 
   system = {
