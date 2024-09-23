@@ -20,8 +20,10 @@
       evtest
       fwupd
       glxinfo
+      libusb
       lm_sensors
       pciutils
+      udev
       vulkan-tools
       wayland-utils
     ])

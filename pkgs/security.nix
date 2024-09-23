@@ -1,8 +1,9 @@
 { pkgs }:
 
 with pkgs; [
-  tpm2-tools
   clevis
   cryptsetup
+  rng-tools
   tpm2-abrmd
+  tpm2-tools
 ]

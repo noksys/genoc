@@ -2,8 +2,7 @@
 
 with pkgs; [
   bitcoin
-  electrum
-  electron-cash
+  #electrum
+  #electron-cash
   elements
-  ledger
 ]

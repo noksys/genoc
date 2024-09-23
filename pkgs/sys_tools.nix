@@ -3,7 +3,9 @@
 with pkgs; [
   binutils
   btrfs-progs
+  busybox
   bzip2
+  compsize
   coreutils-full
   efibootmgr
   encfs
@@ -11,12 +13,14 @@ with pkgs; [
   gzip
   lsof
   lzip
+  nmap
   ntfs3g
   pkg-config
   psmisc
   rzip
   szip
   tarsnap
+  tcpdump
   unzip
   util-linux
   yad

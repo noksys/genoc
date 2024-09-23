@@ -28,12 +28,14 @@ with pkgs; [
   nodejs_20
   perl
   protobuf
-  python3
-  python310Packages.pip
-  python310Packages.pip-tools
-  python311Packages.bitbox02
-  python311Packages.cbor
-  python311Packages.certbot-dns-route53
+  python3Full
+  python312Packages.bitbox02
+  python312Packages.cbor
+  python312Packages.certbot-dns-route53
+  python312Packages.ckcc-protocol
+  python312Packages.gpgme
+  python312Packages.pip
+  python312Packages.pip-tools
   racket
   ruby
   rubyPackages.jekyll-theme-midnight

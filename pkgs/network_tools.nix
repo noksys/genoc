@@ -6,10 +6,12 @@ with pkgs; [
   curl
   dbus
   docker
+  falkon
   firefox
   google-chrome
   gpgme
   megasync
+  mosh
   ncdu
   openssl
   opera

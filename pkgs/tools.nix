@@ -1,6 +1,7 @@
 { pkgs }:
 
 with pkgs; [
+  #terminator don't work well with KDE+Wayland
   appimage-run
   appimagekit
   bash
@@ -13,6 +14,8 @@ with pkgs; [
   htop
   jq
   keepassxc
+  kuro
+  ledger
   ledger
   p7zip
   parted
@@ -20,7 +23,6 @@ with pkgs; [
   screen
   sqlite
   sqlitebrowser
-  #terminator don't work well with KDE+Wayland
   veracrypt
   virt-manager
   waydroid
