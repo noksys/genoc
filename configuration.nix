@@ -94,7 +94,7 @@ in
   users.users.${vars.mainUser} = {
     isNormalUser = true;
     description = vars.userFullName;
-    extraGroups = [ "networkmanager" "wheel" "audio" "tarsnap" "lp" ];
+    extraGroups = [ "networkmanager" "wheel" "audio" "tarsnap" "lp" "tor" "debian-tor" "plugdev" ];
     packages = lib.mkMerge [
       (import ./pkgs/default_user.nix { pkgs = pkgs; })
     ];
