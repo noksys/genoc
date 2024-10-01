@@ -16,7 +16,7 @@ with pkgs; [
   keepassxc
   kuro
   ledger
-  ledger
+  libreoffice
   p7zip
   parted
   patch
