@@ -71,7 +71,8 @@ in
   services.avahi = {
     enable = true;
     nssmdns4 = true;
-    openFirewall = true;  # For WiFi printers
+    openFirewall = false;
+    #openFirewall = true;  # For WiFi printers
   };
 
   # Sudo Configuration
