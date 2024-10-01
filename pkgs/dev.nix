@@ -5,6 +5,7 @@ let
   gitsh = import ../dev/gitsh.nix { inherit pkgs; };
 in
 with pkgs; [
+  asdf-vm
   awscli2
   azure-cli
   azure-functions-core-tools
