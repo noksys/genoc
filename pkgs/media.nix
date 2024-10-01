@@ -7,6 +7,7 @@ with pkgs; [
   gimp-with-plugins
   imagemagick
   inkscape-with-extensions
+  kolourpaint
   optipng
   pick-colour-picker
   pngquant
