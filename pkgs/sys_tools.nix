@@ -8,6 +8,7 @@ with pkgs; [
   compsize
   coreutils-full
   efibootmgr
+  electron
   encfs
   gparted
   gzip
