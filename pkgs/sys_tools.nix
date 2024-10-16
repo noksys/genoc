@@ -12,6 +12,7 @@ with pkgs; [
   encfs
   gparted
   gzip
+  inxi
   lsof
   lzip
   nmap
@@ -22,6 +23,8 @@ with pkgs; [
   szip
   tarsnap
   tcpdump
+  testdisk
+  testdisk-qt
   unzip
   util-linux
   yad
