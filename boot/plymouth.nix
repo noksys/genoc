@@ -29,25 +29,6 @@ in
     ]);
   };
 
-  system.activationScripts.copyPlymouthAssets = ''
-    themeDir="/etc/plymouth/themes/${vars.plymouthTheme}"
-    mkdir -p "$themeDir"
-    cp ${./nixos.png} "$themeDir/"
-    scriptFile="$themeDir/${vars.plymouthTheme}.script"
-    if [ -f "$scriptFile" ]; then
-      echo '
-      # display nixos logo
-      nixos_image = Image("nixos.png");
-      nixos_sprite = Sprite();
-      nixos_sprite.SetImage(nixos_image);
-      nixos_sprite.SetX(Window.GetX() + (Window.GetWidth() / 2 - nixos_image.GetWidth() / 2));
-      nixos_sprite.SetY(Window.GetHeight() - nixos_image.GetHeight() - 50);
-      ' >> "$scriptFile"
-    fi
-
-    plymouth-set-default-theme --reset --rebuild-initrd "${vars.plymouthTheme}" --theme-dir="/etc/plymouth/themes"
-  '';
-
   environment.systemPackages = lib.mkMerge [
     (with pkgs; [
        adi1090x-plymouth-themes
