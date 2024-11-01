@@ -2,6 +2,7 @@
 
 with pkgs; [
   binutils
+  boost
   btrfs-progs
   busybox
   bzip2
@@ -17,6 +18,7 @@ with pkgs; [
   lzip
   nmap
   ntfs3g
+  openssl
   pkg-config
   psmisc
   rzip
@@ -29,5 +31,6 @@ with pkgs; [
   util-linux
   yad
   zip
+  zlib
   zsh
 ]

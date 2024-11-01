@@ -5,6 +5,8 @@ let
 in
 {
   boot = {
+    initrd.systemd.enable = true;
+
     plymouth = {
       enable = true;
       theme = "${vars.plymouthTheme}";
