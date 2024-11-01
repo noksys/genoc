@@ -17,8 +17,8 @@ with pkgs; [
   git
   git-annex
   git-crypt
-  gitsh.git-sh
   gitAndTools.gitFull
+  gitsh.git-sh
   gnum4
   gnumake
   go
@@ -29,7 +29,6 @@ with pkgs; [
   nodejs_20
   perl
   protobuf
-  python3Full
   python312Packages.bitbox02
   python312Packages.cbor
   python312Packages.certbot-dns-route53
@@ -37,7 +36,9 @@ with pkgs; [
   python312Packages.gpgme
   python312Packages.pip
   python312Packages.pip-tools
+  python3Full
   racket
   ruby
   rubyPackages.jekyll-theme-midnight
+  scrcpy
 ]

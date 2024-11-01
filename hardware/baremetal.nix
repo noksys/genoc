@@ -23,6 +23,7 @@
       libusb
       lm_sensors
       pciutils
+      tlp
       udev
       vulkan-tools
       wayland-utils

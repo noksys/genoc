@@ -2,6 +2,8 @@
 
 with pkgs; [
   aspell
+  aspellDicts.pt_BR
+  aspellDicts.en
   emacs
   emacs-gtk
   emacsPackages.emacs

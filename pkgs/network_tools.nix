@@ -12,6 +12,7 @@ with pkgs; [
   gpgme
   megasync
   mosh
+  mullvad-browser
   ncdu
   openssl
   opera
