@@ -27,6 +27,7 @@
       udev
       vulkan-tools
       wayland-utils
+      xorg.xrandr
     ])
   ];
 }

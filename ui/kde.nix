@@ -50,6 +50,7 @@ in
       libsForQt5.kde-cli-tools
       libsForQt5.kdialog
       libsForQt5.kservice
+      #libsForQt5.systemsettings
       xdg-desktop-portal-kde
       xdg-desktop-portal-wlr
     ];

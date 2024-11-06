@@ -12,6 +12,7 @@ with pkgs; [
   bundix
   bundler
   cargo
+  deno
   fenix.complete.toolchain
   gcc
   git
@@ -41,4 +42,5 @@ with pkgs; [
   ruby
   rubyPackages.jekyll-theme-midnight
   scrcpy
+  typescript
 ]
