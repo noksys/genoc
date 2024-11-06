@@ -10,6 +10,12 @@
     ./baremetal.nix
   ];
 
+  boot.extraModprobeConfig = ''
+    options snd-hda-intel model=auto
+  '';
+
+  boot.blacklistedKernelModules = [ "snd_soc_avs" ];
+
   environment.systemPackages = lib.mkMerge [
     (with pkgs; [
       nvtopPackages.intel
