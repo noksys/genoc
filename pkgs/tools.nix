@@ -1,7 +1,6 @@
 { pkgs }:
 
 with pkgs; [
-  #terminator don't work well with KDE+Wayland
   appimage-run
   appimagekit
   bash
@@ -11,6 +10,7 @@ with pkgs; [
   certbot
   gawk
   ghostscript
+  gnucash
   htop
   jq
   keepassxc
@@ -23,6 +23,7 @@ with pkgs; [
   screen
   sqlite
   sqlitebrowser
+  #terminator don't work well with KDE+Wayland
   veracrypt
   virt-manager
   waydroid

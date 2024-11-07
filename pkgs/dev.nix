@@ -27,6 +27,7 @@ with pkgs; [
   golangci-lint
   jekyll
   libsForQt5.qgpgme
+  #nodejs_22
   nodejs_20
   perl
   protobuf
