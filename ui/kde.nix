@@ -44,13 +44,14 @@ in
 
   users.users.${vars.mainUser} = lib.mkMerge [{
     packages = with pkgs; [
+      #libsForQt5.systemsettings
       kdePackages.kate
       kdePackages.kdialog
+      kio-admin
       libsForQt5.kdbusaddons
       libsForQt5.kde-cli-tools
       libsForQt5.kdialog
       libsForQt5.kservice
-      #libsForQt5.systemsettings
       xdg-desktop-portal-kde
       xdg-desktop-portal-wlr
     ];
