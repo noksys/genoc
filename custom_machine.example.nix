@@ -16,6 +16,7 @@ in
     ./genoc/backup/tarsnap.nix
     ./genoc/dev/vscode.nix
     ./genoc/dev/docker.nix
+    ./genoc/dev/git.nix
     ./genoc/ui/fonts.nix
     ./genoc/cryptocurrency/bitcoin.nix
     ./genoc/cryptocurrency/liquid.nix
