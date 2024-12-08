@@ -16,12 +16,12 @@
       displayManager = {
         lightdm.enable = lib.mkForce true;  # LightDM enabled
         gdm.enable = lib.mkForce false;     # GDM disabled
+      };
 
-        # Desktop Manager configuration
-        desktopManager = {
-          gnome.enable = lib.mkForce false; # GNOME disabled
-          lxqt.enable = lib.mkForce true;   # LXQt enabled
-        };
+      # Desktop Manager configuration
+      desktopManager = {
+        gnome.enable = lib.mkForce false; # GNOME disabled
+        lxqt.enable = lib.mkForce true;   # LXQt enabled
       };
 
       # X11 Screen Lock
@@ -37,4 +37,11 @@
     # GNOME Keyring
     gnome.gnome-keyring.enable = true; # GNOME keyring enabled
   };
+
+  environment.etc."pam.d/xscreensaver".text = lib.mkForce ''
+    auth    include        system-auth
+    account include        system-auth
+    password include       system-auth
+    session include        system-auth
+  '';
 }
