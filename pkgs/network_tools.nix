@@ -1,7 +1,7 @@
 { pkgs }:
 
 with pkgs; [
-  anydesk
+  #anydesk
   cjdns
   curl
   dbus
