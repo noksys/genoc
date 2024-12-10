@@ -1,5 +1,8 @@
 { config, lib, pkgs, modulesPath, ... }:
 
+let
+  vars = import ../../custom_vars.nix;
+in
 {
   # Enable nm-applet
   programs.nm-applet.enable = true;
@@ -44,4 +47,29 @@
     password include       system-auth
     session include        system-auth
   '';
+  
+  users.users.${vars.mainUser} = lib.mkMerge [{
+    packages = with pkgs; [
+		gtk3
+		lxqt.lxqt-config
+		lxqt.lxqt-session
+		lxqt.lxqt-panel
+		lxqt.pcmanfm-qt
+		lxqt.lxqt-powermanagement
+		lxqt.lxqt-notificationd
+		lxqt.qterminal
+		lxqt.lxqt-policykit
+		lxqt.pavucontrol-qt
+		lxqt.lximage-qt
+		lxqt.obconf-qt
+		lxqt.qps
+		lxqt.screengrab
+		gtk2
+		noto-fonts
+		fontconfig
+		openbox
+		xscreensaver
+		xautolock
+    ];
+  }];
 }
