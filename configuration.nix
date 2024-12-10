@@ -30,7 +30,7 @@ in
 
   boot.loader.grub.configurationLimit = 5;
   #boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.initrd.availableKernelModules = lib.mkMerge [ [ "dm_crypt" ] ];
+  boot.initrd.availableKernelModules = lib.mkMerge [ [ "dm_crypt" "zfs" ] ];
 
   system = {
     copySystemConfiguration = true;
