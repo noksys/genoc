@@ -15,20 +15,30 @@ in
           selected_themes = [ "${vars.plymouthTheme}" ];
         })
       ];
+
+      extraConfig = ''
+        InputTimeout=0
+      '';
     };
 
     consoleLogLevel = 0;
     initrd.verbose = false;
 
-    kernelParams = lib.mkDefault (config.boot.kernelParams ++ [
+    kernelParams = lib.mkBefore [
       "quiet"
       "splash"
       "boot.shell_on_fail"
-      "loglevel=3"
+      "loglevel=4"
       "rd.systemd.show_status=false"
       "rd.udev.log_level=3"
       "udev.log_priority=3"
-    ]);
+      "plymouth.enable-logo=false"
+      "plymouth.debug=true"
+      "plymouth.ignore-serial-consoles"
+      "rd.luks.options=timeout=0"
+      "rd.timeout=0"
+      "rootflags=x-systemd.device-timeout=0"
+    ];
   };
 
   environment.systemPackages = lib.mkMerge [

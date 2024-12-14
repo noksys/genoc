@@ -5,6 +5,7 @@ let
   gitsh = import ../dev/gitsh.nix { inherit pkgs; };
 in
 with pkgs; [
+  angle-grinder
   asdf-vm
   awscli2
   azure-cli
@@ -20,6 +21,7 @@ with pkgs; [
   git-crypt
   gitAndTools.gitFull
   gitsh.git-sh
+  git-filter-repo
   gnum4
   gnumake
   go
@@ -27,6 +29,7 @@ with pkgs; [
   golangci-lint
   jekyll
   libsForQt5.qgpgme
+  lnav
   #nodejs_22
   nodejs_20
   perl

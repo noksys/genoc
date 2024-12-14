@@ -21,7 +21,10 @@ with pkgs; [
   openssl
   pkg-config
   psmisc
+  pv
+  recoll
   rzip
+  service-wrapper
   szip
   tarsnap
   tcpdump
@@ -29,7 +32,9 @@ with pkgs; [
   testdisk-qt
   unzip
   util-linux
+  xorg.xrdb
   yad
+  zfs
   zip
   zlib
   zsh
