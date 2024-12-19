@@ -25,6 +25,7 @@ with pkgs; [
   recoll
   rzip
   service-wrapper
+  rclone
   szip
   tarsnap
   tcpdump
