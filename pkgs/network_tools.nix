@@ -19,7 +19,9 @@ with pkgs; [
   opera
   palemoon-bin
   postman
+  rclone
   signal-desktop
+  speedtest-cli
   syncthing
   telegram-desktop
   tor
