@@ -161,12 +161,15 @@ in
       DataDirectoryGroupReadable = true;
       AvoidDiskWrites = 1;
       HardwareAccel = 1;
-      SafeLogging = 1;
+
       ControlPort = 9051;
       HashedControlPassword = "${vars.torControlPasswordHash}";
 
       # Network settings
       #ORPort = [443];
+
+      #Log = "debug stderr";
+      SafeLogging = 1;
     };
   };
 
