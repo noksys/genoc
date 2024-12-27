@@ -27,6 +27,7 @@ with pkgs; [
   go
   go-tools
   golangci-lint
+  jdk22
   jekyll
   libsForQt5.qgpgme
   lnav
