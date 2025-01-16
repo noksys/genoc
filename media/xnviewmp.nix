@@ -7,7 +7,7 @@ let
 
   # Set Version and SHA
   xnviewVersion = "1.7.2";
-  xnviewSHA = "1xzmsv4sj6i08l1bz9f6gj64nbsymxapbp3wxndc012cjb355k8r";
+  xnviewSHA = "0qixjajawm6gi1l0011k1sskw4z63kiysdqyyx7lr0pf9hz9ns3l";
 
   # Build XnViewMP from AppImage
   xnviewmp = pkgs.appimageTools.wrapType2 {
