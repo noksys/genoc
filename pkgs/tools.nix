@@ -1,6 +1,7 @@
 { pkgs }:
 
 with pkgs; [
+  #terminator don't work well with KDE+Wayland
   appimage-run
   appimagekit
   bash
@@ -14,6 +15,7 @@ with pkgs; [
   htop
   jq
   keepassxc
+  kitty
   kuro
   ledger
   libreoffice
@@ -23,11 +25,12 @@ with pkgs; [
   screen
   sqlite
   sqlitebrowser
-  #terminator don't work well with KDE+Wayland
+  tmux
   veracrypt
   virt-manager
   waydroid
   wl-clipboard
+  wxmaxima
   xlockmore
   xorg.xmessage
 ]
