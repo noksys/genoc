@@ -42,21 +42,6 @@ in
     # services.xserver.xautolock.enable = true;
   };
 
-  users.users.${vars.mainUser} = lib.mkMerge [{
-    packages = with pkgs; [
-      #libsForQt5.systemsettings
-      kdePackages.kate
-      kdePackages.kdialog
-      kio-admin
-      libsForQt5.kdbusaddons
-      libsForQt5.kde-cli-tools
-      libsForQt5.kdialog
-      libsForQt5.kservice
-      xdg-desktop-portal-kde
-      xdg-desktop-portal-wlr
-    ];
-  }];
-
   # Fix WiFi
   networking = {
     networkmanager = {
@@ -65,4 +50,26 @@ in
     };
     wireless.iwd.enable = lib.mkForce true;
   };
+
+  # Disable file index
+  systemd.user.services.baloo_file = {
+    wantedBy = [ ];
+    enable = false;
+  };
+
+  users.users.${vars.mainUser} = lib.mkMerge [{
+    packages = with pkgs; [
+      #libsForQt5.systemsettings
+      kdePackages.kate
+      kdePackages.kdialog
+      kio-admin
+      libsForQt5.baloo
+      libsForQt5.kdbusaddons
+      libsForQt5.kde-cli-tools
+      libsForQt5.kdialog
+      libsForQt5.kservice
+      xdg-desktop-portal-kde
+      xdg-desktop-portal-wlr
+    ];
+  }];
 }
