@@ -2,7 +2,7 @@
 
 {
   # Sound configuration
-  sound.enable = true;
+  # sound.enable = true; // Deprecated?
   hardware.pulseaudio.enable = false;
 
   # Enable sound with pipewire.

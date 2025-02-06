@@ -2,8 +2,8 @@
 
 with pkgs; [
   #electron-cash
-  #electrum
-  bisq-desktop
+  electrum
+  #bisq-desktop
   bitcoin
   elements
   namecoind

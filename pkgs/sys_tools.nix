@@ -22,16 +22,18 @@ with pkgs; [
   pkg-config
   psmisc
   pv
+  rclone
   recoll
   rzip
   service-wrapper
-  rclone
+  sysfsutils
   szip
   tarsnap
   tcpdump
   testdisk
   testdisk-qt
   unzip
+  usbutils
   util-linux
   xorg.xrdb
   yad

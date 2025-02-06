@@ -20,7 +20,7 @@
       evtest
       fwupd
       glxinfo
-      libusb
+      libusb1
       lm_sensors
       pciutils
       tlp

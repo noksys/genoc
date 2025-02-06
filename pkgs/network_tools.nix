@@ -1,6 +1,7 @@
 { pkgs }:
 
 with pkgs; [
+  chromium
   cjdns
   curl
   dbus
@@ -10,11 +11,13 @@ with pkgs; [
   google-chrome
   gpgme
   input-leap
+  iw
   krdc
   megasync
   mosh
   mullvad-browser
   ncdu
+  nftables
   openssl
   opera
   palemoon-bin

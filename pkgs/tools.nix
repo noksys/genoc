@@ -9,26 +9,31 @@ with pkgs; [
   beep
   calibre
   certbot
+  clickup
   gawk
   ghostscript
   gnucash
   htop
   jq
+  kcalc
   keepassxc
   kitty
   kuro
   ledger
   libreoffice
+  mermaid-cli
   p7zip
   parted
   patch
   screen
+  speedcrunch
   sqlite
   sqlitebrowser
   tmux
   veracrypt
   virt-manager
   waydroid
+  wkhtmltopdf
   wl-clipboard
   wxmaxima
   xlockmore

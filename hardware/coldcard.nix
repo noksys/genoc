@@ -14,7 +14,7 @@
 
   environment.systemPackages = lib.mkMerge [
     (with pkgs; [
-      libusb
+      libusb1
       python311Packages.ckcc-protocol
       python3Full
       udev

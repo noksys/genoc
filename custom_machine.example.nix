@@ -21,7 +21,6 @@ in
     ./genoc/cryptocurrency/bitcoin.nix
     ./genoc/cryptocurrency/liquid.nix
     #./genoc/security/tpm2.nix
-    #./genoc/cryptocurrency/electrum.nix
     #./genoc/hardware/coldcard.nix
   ];
 
@@ -83,5 +82,6 @@ in
     (import ./genoc/pkgs/tools.nix { pkgs = pkgs; })
     #(import ./genoc/pkgs/security.nix { pkgs = pkgs; })
     (import ./genoc/pkgs/sys_tools.nix { pkgs = pkgs; })
+    #(import ./genoc/pkgs/ai.nix { pkgs = pkgs; })
   ];
 }

@@ -2,16 +2,17 @@
 
 with pkgs; [
   aspell
-  aspellDicts.pt_BR
   aspellDicts.en
+  aspellDicts.pt_BR
   emacs
   emacs-gtk
   emacsPackages.emacs
   featherpad
-  gnome.gnome-tweaks
+  gnome-tweaks
   hunspell
   ispell
   neovim
+  sublime
   vim
   vscode
 ]

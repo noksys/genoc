@@ -21,7 +21,18 @@ in
   networking = {
     hostName = vars.hostName;
     enableIPv6 = true;
+
+    networkmanager = {
+      enable = true;
+      wifi.powersave = false;
+    };
   };
+
+  hardware.wirelessRegulatoryDatabase = true;
+
+  boot.extraModprobeConfig = ''
+    options cfg80211 ieee80211_regdom="UY"
+  '';
 
   boot.kernel.sysctl."net.ipv6.conf.all.disable_ipv6" = false;
 
@@ -110,7 +121,7 @@ in
 
   # Nix settings for flakes
   nix = {
-    package = pkgs.nixFlakes;
+    package = pkgs.nixVersions.stable;
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
