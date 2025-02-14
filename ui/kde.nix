@@ -59,15 +59,19 @@ in
 
   users.users.${vars.mainUser} = lib.mkMerge [{
     packages = with pkgs; [
-      #libsForQt5.systemsettings
+      dolphin
+      gwenview
+      kdePackages.baloo          # antes: libsForQt5.baloo
       kdePackages.kate
+      kdePackages.kdbusaddons     # antes: libsForQt5.kdbusaddons
+      kdePackages.kde-cli-tools   # antes: libsForQt5.kde-cli-tools
+      kdePackages.kdegraphics-thumbnailers
       kdePackages.kdialog
+      kdePackages.kimageformats   # antes: libsForQt5.kimageformats
+      kdePackages.kservice        # antes: libsForQt5.kservice
+      kdePackages.systemsettings  # antes: libsForQt5.systemsettings
       kio-admin
-      libsForQt5.baloo
-      libsForQt5.kdbusaddons
-      libsForQt5.kde-cli-tools
-      libsForQt5.kdialog
-      libsForQt5.kservice
+      qt6.qtimageformats          # antes: qt5.qtimageformats
       xdg-desktop-portal-kde
       xdg-desktop-portal-wlr
     ];
