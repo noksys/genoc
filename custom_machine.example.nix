@@ -9,6 +9,7 @@ in
 
     ./genoc/locale/ptbr.nix     # define locale
     ./genoc/ui/kde.nix          # can be KDE, Gnome, LXQt etc.
+    ./genoc/ui/terminal.nix     # useful tools for pure text
     ./genoc/boot/grub.nix       # can be systemd-boot
     ./genoc/boot/plymouth.nix   # splash screen during log
 
