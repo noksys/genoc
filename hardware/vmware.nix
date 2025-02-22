@@ -8,6 +8,8 @@
     ./no_sleep.nix
   ];
 
+  services.pipewire.enable = false;
+
   # Virtualization
   virtualisation.vmware.guest.enable = true;
   #virtualisation.docker.storageDriver = "btrfs";

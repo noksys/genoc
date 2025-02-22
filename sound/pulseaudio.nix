@@ -2,7 +2,7 @@
 
 {
   # Sound configuration
-  sound.enable = true;
+  # sound.enable = true; # Deprecated?
 
   # PulseAudio configuration
   hardware.pulseaudio = {
