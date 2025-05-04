@@ -27,8 +27,12 @@ in
         lxqt.enable = lib.mkForce true;   # LXQt enabled
       };
 
-      # X11 Screen Lock
-      xautolock.enable = true; # Enable X11 screen lock
+      # Screen Lock
+      xautolock = {
+        enable = true;
+        time = 8;
+        locker = "${pkgs.betterlockscreen}/bin/betterlockscreen -l";
+      };
     };
 
     # Display Manager without xserver prefix (SDDM)
@@ -41,13 +45,6 @@ in
     gnome.gnome-keyring.enable = true; # GNOME keyring enabled
   };
 
-  environment.etc."pam.d/xscreensaver".text = lib.mkForce ''
-    auth    include        system-auth
-    account include        system-auth
-    password include       system-auth
-    session include        system-auth
-  '';
-  
   users.users.${vars.mainUser} = lib.mkMerge [{
     packages = with pkgs; [
 		gtk3
@@ -68,8 +65,8 @@ in
 		noto-fonts
 		fontconfig
 		openbox
-		xscreensaver
 		xautolock
+		betterlockscreen
     ];
   }];
 }
