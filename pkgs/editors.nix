@@ -15,4 +15,5 @@ with pkgs; [
   sublime
   vim
   vscode
+  texlive.combined.scheme-full
 ]
