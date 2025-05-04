@@ -30,6 +30,7 @@ with pkgs; [
   go
   go-tools
   golangci-lint
+  govulncheck
   jdk23
   jekyll
   libsForQt5.qgpgme
