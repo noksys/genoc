@@ -19,6 +19,7 @@ with pkgs; [
   ganttproject-bin
   gcc
   git
+  gh
   git-annex
   git-crypt
   git-filter-repo
