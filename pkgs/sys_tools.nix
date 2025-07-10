@@ -24,6 +24,7 @@ with pkgs; [
   pv
   rclone
   recoll
+  ripgrep
   rzip
   service-wrapper
   sysfsutils

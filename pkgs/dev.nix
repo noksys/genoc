@@ -57,5 +57,6 @@ with pkgs; [
   scrcpy
   taskjuggler
   typescript
+  trunk
   uv
 ]

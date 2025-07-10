@@ -74,6 +74,7 @@ in
       qt6.qtimageformats          # antes: qt5.qtimageformats
       xdg-desktop-portal-kde
       xdg-desktop-portal-wlr
+      qt6.qtmultimedia
     ];
   }];
 }

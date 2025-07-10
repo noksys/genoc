@@ -66,7 +66,9 @@ in
 		fontconfig
 		openbox
 		xautolock
+		mesa-demos
 		betterlockscreen
+		xorg.xdpyinfo
     ];
   }];
 }

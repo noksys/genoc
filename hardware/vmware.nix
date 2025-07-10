@@ -16,6 +16,11 @@
   virtualisation.docker.enable = true;
   virtualisation.waydroid.enable = true;
 
+  services.xserver.videoDrivers = [ "vmware" ];
+#   services.xserver.deviceSection = ''
+#     Option "NoAccel" "True"
+#   '';
+ 
   environment.systemPackages = lib.mkMerge [
     (with pkgs; [
       open-vm-tools
