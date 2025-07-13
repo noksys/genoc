@@ -13,7 +13,7 @@ in
   # X11 configuration
   services = {
     xserver = {
-      enable = false;
+      enable = true; # TMP
 
       # Display Manager configuration
       displayManager = {
@@ -30,7 +30,7 @@ in
 
     # Display Manager without xserver prefix
     displayManager.sddm.enable = lib.mkForce true;
-    displayManager.sddm.wayland.enable = lib.mkForce true;
+    displayManager.sddm.wayland.enable = lib.mkForce false; # TMP
 
     # Desktop Manager for Plasma (without xserver prefix)
     desktopManager.plasma6.enable = lib.mkForce true;
@@ -61,20 +61,26 @@ in
     packages = with pkgs; [
       dolphin
       gwenview
-      kdePackages.baloo          # antes: libsForQt5.baloo
+      kdePackages.baloo
       kdePackages.kate
-      kdePackages.kdbusaddons     # antes: libsForQt5.kdbusaddons
-      kdePackages.kde-cli-tools   # antes: libsForQt5.kde-cli-tools
+      kdePackages.kconfig
+      kdePackages.kdbusaddons
+      kdePackages.kde-cli-tools
       kdePackages.kdegraphics-thumbnailers
       kdePackages.kdialog
-      kdePackages.kimageformats   # antes: libsForQt5.kimageformats
-      kdePackages.kservice        # antes: libsForQt5.kservice
-      kdePackages.systemsettings  # antes: libsForQt5.systemsettings
+      kdePackages.kimageformats
+      kdePackages.kservice
+      kdePackages.systemsettings
       kio-admin
-      qt6.qtimageformats          # antes: qt5.qtimageformats
+      libsForQt5.kde-cli-tools
+      qt6.full
+      qt6.qtimageformats
+      qt6.qtmultimedia
+      qt6.qttools
       xdg-desktop-portal-kde
       xdg-desktop-portal-wlr
-      qt6.qtmultimedia
+      xorg.xinput
+      xorg.xwininfo
     ];
   }];
 }

@@ -1,6 +1,7 @@
 { pkgs }:
 
 with pkgs; [
+  barrier
   chromium
   cjdns
   curl
@@ -17,12 +18,14 @@ with pkgs; [
   mosh
   mullvad-browser
   ncdu
+  networkmanagerapplet
   nftables
   openssl
   opera
   palemoon-bin
   postman
   rclone
+  signal-cli
   signal-desktop
   speedtest-cli
   syncthing
@@ -30,6 +33,7 @@ with pkgs; [
   tor
   tor-browser-bundle-bin
   torsocks
+  waynergy
   wget
   wireguard-tools
   yubikey-agent

@@ -12,6 +12,7 @@ with pkgs; [
   electron
   encfs
   gparted
+  gptfdisk
   gzip
   inxi
   lsof

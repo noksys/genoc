@@ -25,6 +25,7 @@ with pkgs; [
   p7zip
   parted
   patch
+  poppler_utils
   screen
   speedcrunch
   sqlite

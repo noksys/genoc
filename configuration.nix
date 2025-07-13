@@ -2,6 +2,17 @@
 
 let
   vars = import ../custom_vars.nix;
+  zfsCompatibleKernelPackages = lib.filterAttrs (
+    name: kernelPackages:
+    (builtins.match "linux_[0-9]+_[0-9]+" name) != null
+    && (builtins.tryEval kernelPackages).success
+    && (!kernelPackages.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken)
+  ) pkgs.linuxKernel.packages;
+  latestKernelPackage = lib.last (
+    lib.sort (a: b: (lib.versionOlder a.kernel.version b.kernel.version)) (
+      builtins.attrValues zfsCompatibleKernelPackages
+    )
+  );
 in
 {
   imports =
@@ -9,6 +20,21 @@ in
       # Custom user config
       ../custom_machine.nix
     ];
+
+  # zfs stuff
+  boot.supportedFilesystems = [ "zfs" ];
+  boot.zfs.forceImportRoot = false;
+  boot.kernelPackages = latestKernelPackage;
+  boot.kernelParams = [ "zfs.zfs_arc_max=12884901888" "rd.luks.timeout=1800" ];
+  #boot.extraModprobeConfig = ''
+  #   options zfs l2arc_noprefetch=0 l2arc_write_boost=33554432 l2arc_write_max=16777216 zfs_arc_max=2147483648
+  #'';
+
+  services.zfs.autoScrub.enable = true;
+  services.zfs.trim.enable = true;
+
+  boot.kernelModules = [ "zfs" ];
+  networking.hostId = "17fc173b";
 
   #
   # IMPORTANT!
@@ -42,7 +68,6 @@ in
   fileSystems."/".options = lib.mkDefault [ "noatime" ];
 
   boot.loader.grub.configurationLimit = 5;
-  #boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.initrd.availableKernelModules = lib.mkMerge [ [ "dm_crypt" "zfs" ] ];
 
   system = {
@@ -103,10 +128,17 @@ in
   };
 
   # User config
+  users.mutableUsers = false;
   users.defaultUserShell = pkgs.bash;
+
+  users.users.root = {
+    isNormalUser = false;
+    hashedPassword = vars.rootHashedPassword;
+  };
 
   users.users.${vars.mainUser} = {
     isNormalUser = true;
+    hashedPassword = vars.userHashedPassword;
     description = vars.userFullName;
     extraGroups = [ "networkmanager" "wheel" "audio" "tarsnap" "lp" "tor" "debian-tor" "plugdev" "docker" ];
     packages = lib.mkMerge [

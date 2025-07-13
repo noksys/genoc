@@ -13,4 +13,18 @@
       };
     };
   };
+
+  services.power-profiles-daemon.enable = false;
+
+  services.upower.enable = true;
+  services.upower.ignoreLid = true;
+
+  services.logind = {
+    lidSwitch = "ignore";
+    lidSwitchDocked = "ignore";
+    lidSwitchExternalPower = "ignore";
+    extraConfig = ''
+      IdleAction=ignore
+    '';
+  };
 }

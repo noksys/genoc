@@ -4,6 +4,8 @@ let
   vars = import ../../custom_vars.nix;
 in
 {
+  boot.loader.systemd-boot.enable = false;
+
   boot.loader.grub = {
     enable = true;
     device = "${vars.bootDevice}";

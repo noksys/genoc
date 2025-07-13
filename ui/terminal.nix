@@ -9,38 +9,34 @@ in
     font = "${pkgs.terminus_font}/share/consolefonts/ter-v32b.psf.gz";
   };
 
-#   specialisation = {
-#     tty = {
-#       inheritParentConfig = true;
-#       configuration = {
-#         # Override to disable X server and desktop managers
-#         services.xserver.enable = lib.mkOverride 101 false;
-#         services.xserver.desktopManager.plasma5.enable = lib.mkOverride 101 false;
-#         services.xserver.desktopManager.gnome.enable = lib.mkOverride 101 false;
-#         services.xserver.desktopManager.lxqt.enable = lib.mkOverride 101 false;
-#
-#         # Override display manager sub-options (do not override 'enable' as it is not defined)
-#         services.xserver.displayManager.lightdm.enable = lib.mkOverride 101 false;
-#         services.xserver.displayManager.gdm.enable = lib.mkOverride 101 false;
-#       };
-#     };
-#   };
+  specialisation = {
+    text.configuration = {
+      systemd.services.display-manager.enable = false;
+    };
+  };
 
   users.users.${vars.mainUser} = lib.mkMerge [{
     packages = with pkgs; [
-      fbida
-      terminus_font
-      kbd
-      nerdfonts
-      tamsyn
-      psftools
-      bdfresize
+      aalib
+      bb
       bdf2psf
+      bdfresize
+      browsh
+      fbida
       fontforge
-      otf2bdf
-      w3m
+      kbd
+      libcaca
       links2
       lynx
+      mplayer
+      nerdfonts
+      otf2bdf
+      psftools
+      tamsyn
+      tartube-yt-dlp
+      terminus_font
+      w3m
+      yt-dlp
     ];
   }];
 }
