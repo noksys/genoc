@@ -28,11 +28,13 @@ in
     };
   };
 
+  security.polkit.enable = true;
+
   hardware.wirelessRegulatoryDatabase = true;
 
-  boot.extraModprobeConfig = ''
-    options cfg80211 ieee80211_regdom="UY"
-  '';
+  # boot.extraModprobeConfig = ''
+  #   options cfg80211 ieee80211_regdom="UY"
+  # '';
 
   boot.kernel.sysctl."net.ipv6.conf.all.disable_ipv6" = false;
 
