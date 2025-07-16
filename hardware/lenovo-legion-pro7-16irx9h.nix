@@ -1,17 +1,21 @@
-{ config, lib, pkgs, modulesPath, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   imports = [
-    # Don't forget to run:
-    # sudo nix-channel --add https://github.com/NixOS/nixos-hardware/archive/master.tar.gz nixos-hardware
-    # sudo nix-channel --update
-
     <nixos-hardware/lenovo/legion/16irx8h>
     ./baremetal.nix
   ];
 
+  hardware.firmware = [
+    (pkgs.runCommandNoCC "legion-audio-patch" {} ''
+      mkdir -p $out/lib/firmware
+      cp ${./legion-alc287.patch} $out/lib/firmware/legion-alc287.patch
+    '')
+  ];
+
   boot.extraModprobeConfig = ''
-    options snd-hda-intel model=auto
+    # options snd-hda-intel model=alc287-yoga9-bass-spk-pin
+    options snd-hda-intel patch=legion-alc287.patch
   '';
 
   boot.blacklistedKernelModules = [ "snd_soc_avs" ];
@@ -33,6 +37,8 @@
   };
 
   environment.systemPackages = lib.mkMerge [
+    [ pkgs.hyprlock ]
+
     (with pkgs; [
       nvtopPackages.intel
       nv-codec-headers
