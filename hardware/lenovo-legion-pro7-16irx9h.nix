@@ -37,8 +37,6 @@
   };
 
   environment.systemPackages = lib.mkMerge [
-    [ pkgs.hyprlock ]
-
     (with pkgs; [
       nvtopPackages.intel
       nv-codec-headers
