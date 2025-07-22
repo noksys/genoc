@@ -36,12 +36,6 @@
     MOZ_DISABLE_RDD_SANDBOX = "1";
   };
 
-  # Screenlock
-  environment.plasma5.excludePackages = with pkgs.libsForQt5; [
-    kscreenlocker
-  ];
-
-  # Packages
   environment.systemPackages = lib.mkMerge [
     (with pkgs; [
       nvtopPackages.intel
