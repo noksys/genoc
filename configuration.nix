@@ -82,6 +82,7 @@ in
   # '';
 
   boot.kernel.sysctl."net.ipv6.conf.all.disable_ipv6" = false;
+  boot.kernel.sysctl."kernel.sysrq" = "1";
 
   # System optimization & hacks
   fileSystems."/".options = lib.mkDefault [ "noatime" ];
