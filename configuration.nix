@@ -30,6 +30,23 @@ in
   #   options zfs l2arc_noprefetch=0 l2arc_write_boost=33554432 l2arc_write_max=16777216 zfs_arc_max=2147483648
   #'';
 
+  # Bash scripts compatibility
+  system.activationScripts.binsh = {
+    deps = [ "usrbinenv" ];
+    text = ''
+      mkdir -p /bin
+      mkdir -p /usr/bin
+
+      ln -sf ${pkgs.bash}/bin/bash /bin/bash
+      ln -sf ${pkgs.bash}/bin/sh /bin/sh
+      ln -sf ${pkgs.dash}/bin/dash /bin/dash || ln -sf ${pkgs.bash}/bin/bash /bin/dash
+      ln -sf ${pkgs.coreutils}/bin/env /usr/bin/env
+      ln -sf ${pkgs.python3}/bin/python3 /usr/bin/python3
+      ln -sf ${pkgs.python3}/bin/python /usr/bin/python
+      ln -sf ${pkgs.perl}/bin/perl /usr/bin/perl
+    '';
+  };
+
   services.zfs.autoScrub.enable = true;
   services.zfs.trim.enable = true;
 
