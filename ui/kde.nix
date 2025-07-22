@@ -81,6 +81,7 @@ in
       xdg-desktop-portal-wlr
       xorg.xinput
       xorg.xwininfo
+      colord
     ];
   }];
 }

@@ -238,6 +238,9 @@ in
     };
   };
 
+  # HDR support
+  services.colord.enable = true;
+
   # To avoid any issues with Windows automatic sync time on dual boot machine
   time.hardwareClockInLocalTime = true;
 
