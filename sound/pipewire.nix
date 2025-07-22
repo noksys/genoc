@@ -31,6 +31,8 @@
         wireplumber
         yelp
         zam-plugins
+        alsa-utils
+        alsa-tools
     ])
   ];
 }

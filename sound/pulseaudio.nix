@@ -13,7 +13,7 @@
       load-module module-combine-sink
       load-module module-switch-on-connect
       load-module module-equalizer-sink
-      load-mudule module-dbus-protocol
+      load-module module-dbus-protocol
     ";
   };
 
