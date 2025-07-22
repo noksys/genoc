@@ -38,6 +38,7 @@ with pkgs; [
   mermaid-cli
   nodejs_20
   perl
+  pgadmin4
   playwright-test
   protobuf
   python312Packages.bitbox02
