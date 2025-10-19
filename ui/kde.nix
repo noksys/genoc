@@ -31,6 +31,7 @@ in
     # Display Manager without xserver prefix
     displayManager.sddm.enable = lib.mkForce true;
     displayManager.sddm.wayland.enable = lib.mkForce false; # TMP
+    displayManager.defaultSession = "plasmax11";
 
     # Desktop Manager for Plasma (without xserver prefix)
     desktopManager.plasma6.enable = lib.mkForce true;
@@ -57,19 +58,44 @@ in
     enable = false;
   };
 
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-kde
+      xdg-desktop-portal-gtk
+    ];
+    config = {
+      common = {
+        default = [ "kde" ];
+      };
+    };
+  };
+
+  # Make sure you have these services enabled
+  services.pipewire.enable = true;
+  programs.xwayland.enable = true;
+
+  services.accounts-daemon.enable = true;
+
   users.users.${vars.mainUser} = lib.mkMerge [{
     packages = with pkgs; [
+      colord
       dolphin
       gwenview
       kdePackages.baloo
+      kdePackages.kaccounts-integration
+      kdePackages.kaccounts-providers
       kdePackages.kate
       kdePackages.kconfig
       kdePackages.kdbusaddons
       kdePackages.kde-cli-tools
       kdePackages.kdegraphics-thumbnailers
+      kdePackages.kdepim-addons
       kdePackages.kdialog
       kdePackages.kimageformats
+      kdePackages.kio-gdrive
       kdePackages.kservice
+      kdePackages.plasma-workspace
       kdePackages.systemsettings
       kio-admin
       libsForQt5.kde-cli-tools
@@ -81,7 +107,8 @@ in
       xdg-desktop-portal-wlr
       xorg.xinput
       xorg.xwininfo
-      colord
+      xorg.xdpyinfo
+      libsForQt5.kdbusaddons
     ];
   }];
 }

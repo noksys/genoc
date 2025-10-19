@@ -1,10 +1,11 @@
 { pkgs }:
 
 with pkgs; [
-  #electron-cash
-  electrum
   #bisq-desktop
+  #electron-cash
   bitcoin
+  electrs
+  electrum
   elements
   namecoind
   ncdns

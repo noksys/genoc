@@ -16,4 +16,5 @@ with pkgs; [
   sox
   vlc
   youtube-music
+  noto-fonts-emoji
 ]

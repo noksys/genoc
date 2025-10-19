@@ -1,14 +1,13 @@
 { pkgs }:
 
 with pkgs; [
-  (texlive.withPackages (ps: [
-    ps.scheme-full
-    ps.wrapfig
-    ps.wrapfig2
-    poppler_utils
-    img2pdf
-    python311Packages.img2pdf
-    qpdf
-  ]))
+  img2pdf
   okular
+  pandoc
+  pdfgrep
+  poppler_utils
+  python311Packages.img2pdf
+  qpdf
+  tectonic
+  #texlive.scheme-full
 ]

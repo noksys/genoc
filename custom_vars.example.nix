@@ -12,4 +12,5 @@ in
   timeZone = "America/Sao_Paulo";
   torControlPasswordHash = "16:97DE2B9B1F6198A46076DB9B879BF5291CC71B5CE6F27FE5CF4746C99C"; # tor --hash-password "xpto"
   userFullName = "Lazy Guy";
+  paisaAuth = "admin:$apr1$I.kbKCjq$Ls4LP5ZMOyDkYVvncPcos/";
 }

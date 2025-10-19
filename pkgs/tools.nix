@@ -13,21 +13,27 @@ with pkgs; [
   gawk
   ghostscript
   gnucash
+  findutils
   htop
   jq
   kcalc
   keepassxc
   kitty
+  kooha
   kuro
   ledger
+  pricehist
   libreoffice
   mermaid-cli
   p7zip
   parted
   patch
+  peek
+  findutils
   poppler_utils
   screen
   speedcrunch
+  plocate
   sqlite
   sqlitebrowser
   tmux

@@ -19,6 +19,8 @@ with pkgs; [
   ganttproject-bin
   gcc
   git
+  tig
+  meld
   gh
   git-annex
   git-crypt
@@ -35,6 +37,7 @@ with pkgs; [
   jekyll
   libsForQt5.qgpgme
   lnav
+  maven
   mermaid-cli
   nodejs_20
   perl

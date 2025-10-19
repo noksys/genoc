@@ -11,6 +11,7 @@ with pkgs; [
   firefox
   google-chrome
   gpgme
+  i2pd
   input-leap
   iw
   krdc

@@ -4,9 +4,7 @@ with pkgs; [
   aspell
   aspellDicts.en
   aspellDicts.pt_BR
-  emacs
-  emacs-gtk
-  emacsPackages.emacs
+  (emacs.override { withPgtk = true; })
   featherpad
   gnome-tweaks
   hunspell
@@ -15,5 +13,14 @@ with pkgs; [
   sublime
   vim
   vscode
-  texlive.combined.scheme-full
+  #texlive.scheme-full
+
+  # Doom dependencies
+  ripgrep
+  fd
+  git
+  gcc
+  gnumake
+
+  noto-fonts-emoji
 ]

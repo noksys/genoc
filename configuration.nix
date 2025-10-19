@@ -41,6 +41,7 @@ in
       ln -sf ${pkgs.bash}/bin/sh /bin/sh
       ln -sf ${pkgs.dash}/bin/dash /bin/dash || ln -sf ${pkgs.bash}/bin/bash /bin/dash
       ln -sf ${pkgs.coreutils}/bin/env /usr/bin/env
+      ln -sf ${pkgs.coreutils}/bin/env /bin/env
       ln -sf ${pkgs.python3}/bin/python3 /usr/bin/python3
       ln -sf ${pkgs.python3}/bin/python /usr/bin/python
       ln -sf ${pkgs.perl}/bin/perl /usr/bin/perl
@@ -101,9 +102,9 @@ in
 
   nix.settings.auto-optimise-store = true;
 
-  environment.sessionVariables = {
-    LD_LIBRARY_PATH = "${pkgs.lib.makeLibraryPath [pkgs.libuuid]}:${pkgs.stdenv.cc.cc.lib}/lib";
-  };
+  #environment.sessionVariables = {
+  #  LD_LIBRARY_PATH = "${pkgs.lib.makeLibraryPath [pkgs.libuuid]}:$#{pkgs.stdenv.cc.cc.lib}/lib";
+  #};
 
   time.timeZone = vars.timeZone;
   i18n.defaultLocale = "en_US.UTF-8";
@@ -188,7 +189,16 @@ in
   };
 
   # Enable the OpenSSH daemon
-  #services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    settings = {
+      PermitRootLogin = "no";
+      PubkeyAuthentication = true;
+      PasswordAuthentication = true;
+      KbdInteractiveAuthentication = false;
+      AuthenticationMethods = "publickey,password";
+    };
+  };
 
   # Tor Service Configuration
   services.tor = {
@@ -237,6 +247,9 @@ in
       SafeLogging = 1;
     };
   };
+
+  # PCSCD
+  services.pcscd.enable = true;
 
   # HDR support
   services.colord.enable = true;
