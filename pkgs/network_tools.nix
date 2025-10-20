@@ -7,14 +7,14 @@ with pkgs; [
   curl
   dbus
   docker
-  falkon
+  kdePackages.falkon
   firefox
   google-chrome
   gpgme
   i2pd
   input-leap
   iw
-  krdc
+  kdePackages.krdc
   megasync
   mosh
   mullvad-browser
@@ -22,7 +22,7 @@ with pkgs; [
   networkmanagerapplet
   nftables
   openssl
-  opera
+  #opera
   palemoon-bin
   postman
   rclone
@@ -38,6 +38,6 @@ with pkgs; [
   wget
   wireguard-tools
   yubikey-agent
-  yubikey-manager-qt
+  yubioath-flutter
   yubikey-personalization
 ]

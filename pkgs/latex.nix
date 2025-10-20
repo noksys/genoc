@@ -2,7 +2,7 @@
 
 with pkgs; [
   img2pdf
-  okular
+  kdePackages.okular
   pandoc
   pdfgrep
   poppler_utils

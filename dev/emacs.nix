@@ -14,12 +14,17 @@ in
   environment.systemPackages = with pkgs; [
     emacs30-x11
     emacs30-pgtk
-    (nerdfonts.override { fonts = [ "JetBrainsMono" "FiraCode" ]; })
+
+    # Nerd Fonts (new syntax for NixOS ≥ 25.05)
+    # Add or remove fonts as desired
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.fira-code
+
     cmake
     libtool
     pkg-config
     gnumake
-    gcc          # (stdenv.cc is fine too)
-    libvterm     # the C library required by emacs-libvterm
+    gcc          # stdenv.cc is fine too
+    libvterm     # C library required by emacs-libvterm
   ];
 }

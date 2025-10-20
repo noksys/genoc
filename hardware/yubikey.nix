@@ -7,7 +7,7 @@
   environment.systemPackages = lib.mkMerge [
     (with pkgs; [
       yubikey-agent
-      yubikey-manager-qt
+      yubioath-flutter
       yubikey-personalization
     ])
   ];

@@ -4,46 +4,32 @@ let
   vars = import ../../custom_vars.nix;
 in
 {
-  # Enable nm-applet
-  #programs.nm-applet.enable = true;
-
-  # Enable Picom for X11 compositing
-  #services.picom.enable = true;
-
-  # X11 configuration
+  # services / X11 / Plasma
   services = {
     xserver = {
       enable = true; # TMP
-
-      # Display Manager configuration
       displayManager = {
         lightdm.enable = lib.mkForce false;
         gdm.enable = lib.mkForce false;
       };
-
-      # Desktop Manager configuration
       desktopManager = {
         gnome.enable = lib.mkForce false;
         lxqt.enable = lib.mkForce false;
       };
     };
 
-    # Display Manager without xserver prefix
     displayManager.sddm.enable = lib.mkForce true;
     displayManager.sddm.wayland.enable = lib.mkForce false; # TMP
     displayManager.defaultSession = "plasmax11";
 
-    # Desktop Manager for Plasma (without xserver prefix)
     desktopManager.plasma6.enable = lib.mkForce true;
 
-    # GNOME Keyring
+    accounts-daemon.enable = true;
     # gnome.gnome-keyring.enable = true;
-
-    # X11 Screen Lock
-    # services.xserver.xautolock.enable = true;
+    # xserver.xautolock.enable = true;
   };
 
-  # Fix WiFi
+  # rede
   networking = {
     networkmanager = {
       enable = lib.mkDefault true;
@@ -52,16 +38,17 @@ in
     wireless.iwd.enable = lib.mkForce true;
   };
 
-  # Disable file index
+  # desabilitar indexador Baloo
   systemd.user.services.baloo_file = {
     wantedBy = [ ];
     enable = false;
   };
 
+  # xdg portal
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [
-      xdg-desktop-portal-kde
+      kdePackages.xdg-desktop-portal-kde  # <- era xdg-desktop-portal-kde
       xdg-desktop-portal-gtk
     ];
     config = {
@@ -71,17 +58,16 @@ in
     };
   };
 
-  # Make sure you have these services enabled
+  # áudio/wayland utilidades
   services.pipewire.enable = true;
   programs.xwayland.enable = true;
 
-  services.accounts-daemon.enable = true;
-
+  # pacotes do usuário
   users.users.${vars.mainUser} = lib.mkMerge [{
     packages = with pkgs; [
       colord
-      dolphin
-      gwenview
+      kdePackages.dolphin                  # <- era dolphin
+      kdePackages.gwenview                 # <- era gwenview
       kdePackages.baloo
       kdePackages.kaccounts-integration
       kdePackages.kaccounts-providers
@@ -97,18 +83,22 @@ in
       kdePackages.kservice
       kdePackages.plasma-workspace
       kdePackages.systemsettings
-      kio-admin
-      libsForQt5.kde-cli-tools
+      kdePackages.kio-admin               # <- era kio-admin
+      # Qt5 (legado). Remova se não precisar:
+      # libsForQt5.kde-cli-tools
+      # libsForQt5.kdbusaddons
+
       qt6.full
       qt6.qtimageformats
       qt6.qtmultimedia
       qt6.qttools
-      xdg-desktop-portal-kde
+
+      kdePackages.xdg-desktop-portal-kde  # <- era xdg-desktop-portal-kde
       xdg-desktop-portal-wlr
+
       xorg.xinput
       xorg.xwininfo
       xorg.xdpyinfo
-      libsForQt5.kdbusaddons
     ];
   }];
 }

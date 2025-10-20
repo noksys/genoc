@@ -29,7 +29,17 @@ in
       links2
       lynx
       mplayer
-      nerdfonts
+
+      # Nerd Fonts (replaces the old 'nerdfonts' meta-package)
+      # Add or remove fonts below as you prefer.
+      nerd-fonts.jetbrains-mono
+      nerd-fonts.fira-code
+      nerd-fonts.iosevka
+      nerd-fonts.hack
+      nerd-fonts.caskaydia-cove
+      nerd-fonts.victor-mono
+      nerd-fonts.sauce-code-pro
+
       otf2bdf
       psftools
       tamsyn

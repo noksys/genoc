@@ -3,7 +3,7 @@
 with pkgs; [
   #terminator don't work well with KDE+Wayland
   appimage-run
-  appimagekit
+  #appimagekit
   bash
   bc
   beep
@@ -16,11 +16,12 @@ with pkgs; [
   findutils
   htop
   jq
-  kcalc
+  kdePackages.kcalc
   keepassxc
   kitty
   kooha
   kuro
+  hledger
   ledger
   pricehist
   libreoffice
@@ -45,4 +46,5 @@ with pkgs; [
   wxmaxima
   xlockmore
   xorg.xmessage
+  xclip
 ]

@@ -18,7 +18,8 @@ in
   imports =
     [
       # Custom user config
-      ../custom_machine.nix
+      #../custom_machine.nix
+      /etc/nixos/mica-nixos/mantis-legion-pro-7/custom_machine.nix
     ];
 
   # zfs stuff
