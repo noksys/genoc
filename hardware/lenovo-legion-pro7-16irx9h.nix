@@ -7,39 +7,55 @@
     ./baremetal.nix
   ];
 
-  # ---- Audio firmware patch (unchanged) -----------------------------------
+  # ---- Audio firmware patch -------------------------------------------------
+  # Ship a tiny custom firmware patch for the ALC287 codec.
   hardware.firmware = [
     (pkgs.runCommandNoCC "legion-audio-patch" {} ''
       mkdir -p $out/lib/firmware
       cp ${./legion-alc287.patch} $out/lib/firmware/legion-alc287.patch
     '')
   ];
+
+  # Apply the patch at module load time.
   boot.extraModprobeConfig = ''
     # options snd-hda-intel model=alc287-yoga9-bass-spk-pin
     options snd-hda-intel patch=legion-alc287.patch
   '';
+
+  # Prevent the AVS driver from grabbing the device (keep using snd-hda-intel).
   boot.blacklistedKernelModules = [ "snd_soc_avs" ];
 
-  # ---- Graphics base (PERFORMANCE by default) ------------------------------
+  # ---- Graphics base (PERFORMANCE by default) -------------------------------
+  # Base profile: run the whole desktop on the NVIDIA dGPU for max smoothness.
   hardware.graphics.enable = true;
   services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware.nvidia = {
-    modesetting.enable   = true;      # PRIME infra
-    open                 = false;     # 4090 laptop -> driver proprietário
-    nvidiaSettings       = false;
-    nvidiaPersistenced   = false;
+    # PRIME plumbing and proprietary driver for the 4090 Laptop GPU.
+    modesetting.enable = true;
+    open               = false;
+    nvidiaSettings     = false;
+    nvidiaPersistenced = false;
 
-    # BASE = performance: dGPU primária (sem RTD3)
-    # >>> NÃO usar mkForce aqui; a specialisation 'powersave' vai sobrescrever <<<
-    prime.offload.enable   = false;   # dGPU dirige a sessão
-    prime.sync.enable      = true;    # suavidade se painel é iGPU-wired
-    powerManagement.enable = false;   # não tentar suspender a dGPU no base
-    # (finegrained não se aplica sem offload)
+    # IMPORTANT: do NOT mkForce here; the powersave specialisation will override.
+    # Base = performance: dGPU is primary (no RTD3).
+    prime.offload.enable   = false;  # dGPU drives the session (no offload)
+    prime.sync.enable      = true;   # better smoothness if panel is iGPU-wired
+    powerManagement.enable = false;  # do not try to RTD3 the dGPU in base
+    # finegrained has no effect without offload
   };
 
-  # ---- dGPU runtime power policy via udev (ajuda o RTD3 no powersave) ------
-  # Mantém dGPU "on" no AC e permite autosuspend na bateria.
+  # These env vars "pin" the base session to the NVIDIA stack for X11/GBM.
+  # The powersave specialisation will override these to Mesa/empty.
+  environment.sessionVariables = {
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    __NV_PRIME_RENDER_OFFLOAD = "0";
+    GBM_BACKEND               = "nvidia-drm";
+    MOZ_DISABLE_RDD_SANDBOX   = "1";
+  };
+
+  # ---- dGPU runtime power policy via udev (helps RTD3 when on battery) -----
+  # Keep dGPU "on" when on AC and allow autosuspend (RTD3) when on battery.
   services.udev.extraRules = ''
     ACTION=="change", SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_ONLINE}=="1", \
       RUN+="/bin/sh -c 'echo on > /sys/bus/pci/devices/0000:01:00.0/power/control'"
@@ -48,7 +64,7 @@
       RUN+="/bin/sh -c 'echo auto > /sys/bus/pci/devices/0000:01:00.0/power/control'"
   '';
 
-  # ---- NVIDIA/userland tools (como você tinha) -----------------------------
+  # ---- NVIDIA / userland tools ---------------------------------------------
   environment.systemPackages = with pkgs; [
     nvtopPackages.intel
     nv-codec-headers
@@ -60,17 +76,28 @@
     nvtopPackages.nvidia
   ];
 
-  # ---- Specialisation extra: POWERSAVE (iGPU primária + RTD3) --------------
+  # ---- Specialisation: POWERSAVE (iGPU primary + NVIDIA RTD3) ---------------
+  # Goal: run desktop on Intel iGPU; only wake the dGPU on explicit demand
+  # via prime-run, and allow it to autosuspend when idle.
   specialisation = {
     powersave.configuration = {
       hardware.nvidia = {
-        # Aqui sim usamos mkForce para garantir a sobreposição sobre o base
-        prime.offload.enable        = lib.mkForce true;   # iGPU dirige; use `prime-run` p/ dGPU
-        prime.sync.enable           = lib.mkForce false;  # não usar modo sync com offload
-        powerManagement.enable      = lib.mkForce true;   # RTD3 ligado (dGPU dorme em idle)
-        powerManagement.finegrained = lib.mkForce true;   # permitido somente com offload
+        # Here we DO mkForce to ensure we override the base profile cleanly.
+        prime.offload.enable        = lib.mkForce true;   # iGPU drives; use `prime-run <cmd>` for dGPU
+        prime.sync.enable           = lib.mkForce false;  # sync is mutually exclusive with offload
+        powerManagement.enable      = lib.mkForce true;   # enable RTD3 (runtime suspend)
+        powerManagement.finegrained = lib.mkForce true;   # only valid with offload
       };
-      # Não sobrescreva environment.sessionVariables aqui (preserva NIX_PATH etc).
+
+      # Crucial: stop "pinning" the session to NVIDIA on powersave.
+      # We do NOT clear the whole attribute set (so NIX_PATH etc. remain intact);
+      # we only override the keys that force NVIDIA.
+      environment.sessionVariables = {
+        __GLX_VENDOR_LIBRARY_NAME = lib.mkForce "mesa";  # pick Mesa GLX vendor
+        __NV_PRIME_RENDER_OFFLOAD = lib.mkForce "";      # unset -> no forced offload
+        GBM_BACKEND               = lib.mkForce "";      # let GBM pick defaults
+        # Keep all other session variables inherited from the base system.
+      };
     };
   };
 }
