@@ -63,4 +63,6 @@ with pkgs; [
   typescript
   trunk
   uv
+  systemd
+  pkg-config
 ]

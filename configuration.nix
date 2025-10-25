@@ -22,6 +22,8 @@ in
       /etc/nixos/mica-nixos/mantis-legion-pro-7/custom_machine.nix
     ];
 
+  programs.dconf.enable = true;
+
   # zfs stuff
   boot.supportedFilesystems = [ "zfs" ];
   boot.zfs.forceImportRoot = false;

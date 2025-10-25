@@ -7,7 +7,6 @@ with pkgs; [
   curl
   dbus
   docker
-  kdePackages.falkon
   firefox
   google-chrome
   gpgme
@@ -40,4 +39,5 @@ with pkgs; [
   yubikey-agent
   yubioath-flutter
   yubikey-personalization
+  vivaldi
 ]

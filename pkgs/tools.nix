@@ -23,6 +23,7 @@ with pkgs; [
   kuro
   hledger
   ledger
+  hledger-web
   pricehist
   libreoffice
   mermaid-cli

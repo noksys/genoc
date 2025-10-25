@@ -43,4 +43,5 @@ with pkgs; [
   zip
   zlib
   zsh
+  linuxKernel.packages.linux_6_6.cpupower
 ]

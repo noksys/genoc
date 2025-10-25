@@ -23,4 +23,6 @@ with pkgs; [
   gnumake
 
   noto-fonts-emoji
+  gsettings-desktop-schemas
+  glib
 ]

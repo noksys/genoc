@@ -1,11 +1,11 @@
 { config, pkgs, lib, ... }:
 
 let
-  user       = "felipelalli";
-  home       = "/home/${user}";
+  vars       = import ../../custom_vars.nix;
+  user       = vars.mainUser;
+  home       = vars.homeDirectory;
   paisaFlake = builtins.getFlake "github:ananthakumaran/paisa";
   paisaPkg   = paisaFlake.packages.${pkgs.system}.default;
-  vars       = import ../../custom_vars.nix;
 in {
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
@@ -61,6 +61,21 @@ in {
         port = 8350;   # upstream (nginx)
         inPort = 80;   # I2P-side HTTP port
       };
+    };
+  };
+
+  # Tor
+  services.tor = {
+    relay.onionServices.paisa = {
+      version = 3;
+      path = "/var/lib/tor/paisa";
+      map = [{
+        port = 80;
+        target = {
+          addr = "127.0.0.1";
+          port = 8350;
+        };
+      }];
     };
   };
 }
