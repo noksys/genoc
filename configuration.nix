@@ -271,6 +271,31 @@ in
     fi
   '';
 
+  powerManagement.powertop.enable = false;
+
+  # Economic Powersave mode
+  specialisation = {
+    powersave.configuration = {
+      boot.tmp.useTmpfs = true;
+      services.journald.extraConfig = "SystemMaxUse=100M";
+      powerManagement.powertop.enable = lib.mkForce true;
+      boot.kernel.sysctl = {
+        "vm.laptop_mode" = 5;
+        "vm.dirty_writeback_centisecs" = 6000;
+        "vm.swappiness" = 10;
+        "vm.vfs_cache_pressure" = 50;
+      };
+
+      boot.kernelParams = [ "intel_pstate=passive" "pcie_aspm=force" ];
+      services.thermald.enable = lib.mkForce true;
+
+      boot.extraModprobeConfig = ''
+        options snd_hda_intel power_save=1
+        options snd_ac97_codec power_save=1
+      '';
+    };
+  };
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave

@@ -1,84 +1,143 @@
 #!/usr/bin/env bash
-# refresh-smart.sh — keep current resolution, switch Hz by power source
+# Set panel refresh rate by power source (AC = high Hz, Battery = low Hz)
+# - Keeps current resolution; only changes refresh.
+# - Handles multiple outputs; prefers 60 Hz on battery (fallback to lowest).
+# - Works under X11 via xrandr.
 set -euo pipefail
+shopt -s nullglob  # if glob doesn't match, expand to empty rather than literal
 
-XRANDR=${XRANDR:-xrandr}
-ONLINE=1
-for ac in /sys/class/power_supply/*/online; do
-  [[ -f "$ac" ]] || continue
-  if [[ "$(cat "$ac" 2>/dev/null || echo 1)" == "1" ]]; then ONLINE=1; break; else ONLINE=0; fi
-done
+# --- Power detection ---------------------------------------------------------
+on_ac() {
+  # Return 0 if any mains-like supply is online
+  for ps in /sys/class/power_supply/*; do
+    [[ -d "$ps" ]] || continue
 
-if [[ "$ONLINE" == "1" ]]; then
-  echo "🔌 AC power detected → prefer high refresh"
-else
-  echo "🔋 Battery detected → prefer low refresh"
-fi
+    local type=""
+    if [[ -f "$ps/type" ]]; then
+      type="$(<"$ps/type")"
+    fi
 
-# Escolhe a saída: primária se existir, senão a 1ª conectada
-OUTPUT="$($XRANDR --query | awk '/ connected primary/{print $1; found=1} END{if(!found) exit 0}')" || true
-if [[ -z "${OUTPUT:-}" ]]; then
-  OUTPUT="$($XRANDR --query | awk '/ connected/{print $1; exit}')"
-fi
-[[ -z "${OUTPUT:-}" ]] && { echo "❌ No connected display found"; exit 1; }
+    case "$type" in
+      Mains|USB|USB_C|Wireless)
+        if [[ -f "$ps/online" ]]; then
+          local online
+          online="$(<"$ps/online")"
+          if [[ "$online" = "1" ]]; then
+            return 0
+          fi
+        fi
+        ;;
+    esac
+  done
+  return 1
+}
 
-# Bloco do xrandr referente à saída escolhida
-BLOCK="$($XRANDR --query | awk -v o="$OUTPUT" '
-  $0 ~ "^"o" connected"{print; cap=1; next}
-  cap && NF==0{exit}
-  cap{print}
-')"
+# --- XRANDR helpers ----------------------------------------------------------
+get_connected_outputs() {
+  # Print connected outputs (one per line)
+  xrandr --query | awk '/ connected/{print $1}'
+}
 
-[[ -n "${DEBUG:-}" ]] && { echo "── xrandr block for $OUTPUT ──"; echo "$BLOCK"; echo "──────────────────────────────"; }
-
-# Resolução atual = linha que contém '*'
-CURRENT_RES="$(printf '%s\n' "$BLOCK" | awk '/\*/{print $1; exit}')"
-if [[ -z "${CURRENT_RES:-}" ]]; then
-  # fallback: primeira linha de modo do bloco
-  CURRENT_RES="$(printf '%s\n' "$BLOCK" | awk 'NR>1 && /^[[:space:]]*[0-9]/{print $1; exit}')"
-fi
-[[ -z "${CURRENT_RES:-}" ]] && { echo "⚠️  Could not detect current resolution for $OUTPUT"; exit 0; }
-
-[[ -n "${DEBUG:-}" ]] && echo "Current resolution: $CURRENT_RES"
-
-# Pega a linha da resolução atual
-RES_LINE="$(printf '%s\n' "$BLOCK" | awk -v r="$CURRENT_RES" '$1==r{print; exit}')"
-
-# Extrai TODOS os Hz dessa linha (campos 2..NF), limpando * e +
-MODES="$(printf '%s\n' "$RES_LINE" | awk '
-  {
-    for (i=2; i<=NF; i++) {
-      g=$i
-      gsub(/[*+]/,"",g)
-      gsub(/[^0-9.]/,"",g)   # remove qualquer coisa que não for dígito ou ponto
-      if (g != "") print g
+get_current_res() {
+  # Arg1: output -> prints current resolution (e.g., 2560x1600)
+  local out="$1"
+  xrandr --query | awk -v o="$out" '
+    $1==o { insec=1; next }
+    insec && /^\s/ {
+      if ($0 ~ /\*/) { print $1; exit }
     }
-  }
-')"
+    insec && !/^\s/ { exit }
+  '
+}
 
-if [[ -z "$MODES" ]]; then
-  [[ -n "${DEBUG:-}" ]] && { echo "No modes parsed from line: $RES_LINE"; }
-  echo "⚠️  No refresh rates found for ${OUTPUT} at ${CURRENT_RES}"
-  exit 0
-fi
+get_rates_for_res() {
+  # Args: output, resolution -> prints available Hz for that resolution
+  local out="$1" res="$2"
+  xrandr --query | awk -v o="$out" -v r="$res" '
+    $1==o { insec=1; next }
+    insec && /^\s/ {
+      if ($1==r) {
+        for (i=2; i<=NF; i++) {
+          gsub("[*+]", "", $i)
+          print $i
+        }
+      }
+      next
+    }
+    insec && !/^\s/ { exit }
+  '
+}
 
-[[ -n "${DEBUG:-}" ]] && { echo "Parsed Hz candidates:"; printf '  - %s\n' $MODES; }
+choose_rate_ac() {
+  # Pick the highest Hz from stdin
+  awk 'BEGIN{m=0} {if ($1+0>m) m=$1} END{if (m>0) print m}'
+}
 
-# Decide alvo: maior no AC, menor na bateria
-if [[ "$ONLINE" == "1" ]]; then
-  TARGET="$(printf '%s\n' $MODES | sort -nr | head -n1)"
-else
-  # se existir 60.x, prefira; senão menor mesmo
-  TARGET="$(printf '%s\n' $MODES | awk '/^60(\.0+)?$/{print; hit=1} END{if(!hit) exit 1}') " || true
-  TARGET="${TARGET// }"
-  if [[ -z "$TARGET" ]]; then
-    TARGET="$(printf '%s\n' $MODES | sort -n | head -n1)"
+choose_rate_bat() {
+  # Prefer exactly 60/60.0/60.00; else choose the lowest available
+  awk '
+    /^60(\.0+)?$/ { sixty=$1 }
+    { if (min=="") min=$1; if ($1+0<min+0) min=$1 }
+    END { if (sixty!="") print sixty; else print min }
+  '
+}
+
+apply_rate() {
+  # Args: output, resolution, rate
+  local out="$1" res="$2" rate="$3"
+  xrandr --output "$out" --mode "$res" --rate "$rate"
+}
+
+# --- Main --------------------------------------------------------------------
+main() {
+  local prefer
+  if on_ac; then
+    echo "🔌 AC power detected → prefer high refresh"
+    prefer="ac"
+  else
+    echo "🔋 Battery detected → prefer low refresh"
+    prefer="bat"
   fi
-fi
 
-if [[ -n "${TARGET:-}" ]]; then
-  echo "✅ Setting ${OUTPUT} → ${CURRENT_RES}@${TARGET}"
-  $XRANDR --output "$OUTPUT" --mode "$CURRENT_RES" --rate "$TARGET"
-else
-  echo "⚠️  No suitable refresh rate found."
-fi
+  local outputs=""
+  if ! outputs="$(get_connected_outputs)"; then
+    outputs=""
+  fi
+  [[ -n "$outputs" ]] || { echo "⚠  No connected outputs found."; exit 0; }
+
+  # Iterate outputs line-by-line robustly
+  while IFS= read -r out; do
+    [[ -n "$out" ]] || continue
+
+    local res=""
+    res="$(get_current_res "$out")" || true
+    [[ -n "$res" ]] || { echo "⚠  Could not get current resolution for $out"; continue; }
+
+    local rates=""
+    rates="$(get_rates_for_res "$out" "$res" | sort -u)" || true
+    [[ -n "$rates" ]] || { echo "⚠  No rates found for $out $res"; continue; }
+
+    if [[ "${DEBUG:-}" = "1" ]]; then
+      echo "Parsed Hz candidates for $out $res:"
+      printf '%s\n' "$rates" | sed 's/^/  - /'
+    fi
+
+    local target=""
+    if [[ "$prefer" = "ac" ]]; then
+      target="$(printf '%s\n' "$rates" | choose_rate_ac)"
+    else
+      target="$(printf '%s\n' "$rates" | choose_rate_bat)"
+    fi
+
+    if [[ -n "$target" ]]; then
+      echo "✅ Setting $out → ${res}@${target}"
+      if ! apply_rate "$out" "$res" "$target"; then
+        echo "⚠  xrandr failed for $out"
+      fi
+    else
+      echo "⚠  No suitable refresh rate found for $out"
+    fi
+  done <<<"$outputs"
+}
+
+main "$@"
