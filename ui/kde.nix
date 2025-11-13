@@ -2,6 +2,8 @@
 
 let
   vars = import ../../custom_vars.nix;
+  user = vars.mainUser;
+  home = vars.homeDirectory;
 in
 {
   # services / X11 / Plasma
@@ -58,9 +60,55 @@ in
     };
   };
 
+  # Economic mode
+  specialisation = {
+    powersave.configuration = {
+      # Disable Baloo file indexer via config file (saves CPU and I/O)
+      environment.etc."xdg/baloofilerc".text = ''
+        [Basic Settings]
+        Indexing-Enabled=false
+      '';
+
+      # Stop Baloo if it's running
+      systemd.user.services.baloo-disable = {
+        description = "Disable KDE Baloo indexer";
+        wantedBy = [ "graphical-session.target" ];
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = pkgs.writeShellScript "baloo-disable.sh" ''
+            ${pkgs.kdePackages.baloo}/bin/balooctl6 disable || true
+            ${pkgs.kdePackages.baloo}/bin/balooctl6 suspend || true
+          '';
+        };
+      };
+
+      # Disable geoclue (location services)
+      services.geoclue2.enable = lib.mkForce false;
+    };
+  };
+
   # áudio/wayland utilidades
   services.pipewire.enable = true;
   programs.xwayland.enable = true;
+
+  # fix qt
+  environment.sessionVariables = {
+    QT_AUTO_SCREEN_SCALE_FACTOR = lib.mkForce "1";
+    QT_QPA_PLATFORMTHEME = "kde";
+  };
+
+  systemd.user.services.set-qt-vars = {
+    description = "Set Qt environment variables";
+    wantedBy = [ "graphical-session.target" ];
+    before = [ "graphical-session.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "set-qt-vars.sh" ''
+        systemctl --user set-environment QT_AUTO_SCREEN_SCALE_FACTOR=1
+        systemctl --user set-environment QT_QPA_PLATFORMTHEME=kde
+      '';
+    };
+  };
 
   # pacotes do usuário
   users.users.${vars.mainUser} = lib.mkMerge [{

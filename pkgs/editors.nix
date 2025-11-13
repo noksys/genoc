@@ -25,4 +25,7 @@ with pkgs; [
   noto-fonts-emoji
   gsettings-desktop-schemas
   glib
+
+  drawio
+  dia
 ]

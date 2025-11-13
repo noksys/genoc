@@ -5,7 +5,7 @@ with pkgs; [
   #electron-cash
   bitcoin
   electrs
-  electrum
+  #electrum  # it's better to use the AppImage directly
   elements
   namecoind
   ncdns

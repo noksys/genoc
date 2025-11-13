@@ -44,10 +44,10 @@ with pkgs; [
   pgadmin4
   playwright-test
   protobuf
-  python312Packages.bitbox02
+  # python312Packages.bitbox02 # insecure
   python312Packages.cbor
   python312Packages.certbot-dns-route53
-  python312Packages.ckcc-protocol
+  # python312Packages.ckcc-protocol # insecure
   python312Packages.gpgme
   python312Packages.pip
   python312Packages.pip-tools

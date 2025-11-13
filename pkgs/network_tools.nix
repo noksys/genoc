@@ -40,4 +40,5 @@ with pkgs; [
   yubioath-flutter
   yubikey-personalization
   vivaldi
+  protonvpn-gui
 ]

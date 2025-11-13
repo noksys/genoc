@@ -75,6 +75,19 @@ in
     };
   };
 
+  networking.networkmanager.unmanaged = [
+    # Docker
+    "interface-name:docker*"
+    "interface-name:br-*"
+    "interface-name:veth*"
+
+    # Libvirt / KVM
+    "interface-name:virbr*"
+    "interface-name:vnet*"
+    "interface-name:tap*"
+    "interface-name:tun*"
+  ];
+
   networking.nameservers = [ "8.8.8.8" "8.8.4.4" "1.1.1.1" ];
 
   security.polkit.enable = true;
@@ -280,8 +293,6 @@ in
       services.journald.extraConfig = "SystemMaxUse=100M";
       powerManagement.powertop.enable = lib.mkForce true;
       boot.kernel.sysctl = {
-        "vm.laptop_mode" = 5;
-        "vm.dirty_writeback_centisecs" = 6000;
         "vm.swappiness" = 10;
         "vm.vfs_cache_pressure" = 50;
       };
@@ -293,8 +304,26 @@ in
         options snd_hda_intel power_save=1
         options snd_ac97_codec power_save=1
       '';
+
+      systemd.services.override-sysctl = {
+        description = "Override sysctl after powertop";
+        after = [ "powertop.service" ];
+        wantedBy = [ "multi-user.target" ];
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = pkgs.writeShellScript "override-sysctl.sh" ''
+            echo 5 > /proc/sys/vm/laptop_mode
+            echo 6000 > /proc/sys/vm/dirty_writeback_centisecs
+          '';
+        };
+      };
     };
   };
+
+  nixpkgs.config.permittedInsecurePackages = [
+  #  "python3.12-ecdsa-0.19.1"
+    "gradle-7.6.6"
+  ];
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
