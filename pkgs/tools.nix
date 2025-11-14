@@ -48,4 +48,5 @@ with pkgs; [
   xlockmore
   xorg.xmessage
   xclip
+  libnotify
 ]

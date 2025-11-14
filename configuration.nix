@@ -177,7 +177,7 @@ in
     isNormalUser = true;
     hashedPassword = vars.userHashedPassword;
     description = vars.userFullName;
-    extraGroups = [ "networkmanager" "wheel" "audio" "tarsnap" "lp" "tor" "debian-tor" "plugdev" "docker" ];
+    extraGroups = [ "networkmanager" "nginx" "wheel" "audio" "tarsnap" "lp" "tor" "debian-tor" "plugdev" "docker" ];
     packages = lib.mkMerge [
       (import ./pkgs/default_user.nix { pkgs = pkgs; })
     ];

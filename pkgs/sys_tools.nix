@@ -3,6 +3,8 @@
 with pkgs; [
   binutils
   boost
+  btop
+  iotop
   btrfs-progs
   busybox
   bzip2

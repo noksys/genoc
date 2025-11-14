@@ -6,6 +6,10 @@ let
   home       = vars.homeDirectory;
   paisaFlake = builtins.getFlake "github:ananthakumaran/paisa";
   paisaPkg   = paisaFlake.packages.${pkgs.system}.default;
+
+  # Internal app port and public reverse-proxy port
+  paisaPort = 7500;
+  publicPort  = 8350;
 in {
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
@@ -37,9 +41,9 @@ in {
     recommendedProxySettings = true;
 
     virtualHosts."paisa.local" = {
-      listen = [{ addr = "127.0.0.1"; port = 8350; }];
+      listen = [{ addr = "127.0.0.1"; port = publicPort; }];
       locations."/" = {
-        proxyPass = "http://127.0.0.1:7500";
+        proxyPass = "http://127.0.0.1:${toString paisaPort}";
         extraConfig = ''
           auth_basic "Restricted Area";
           auth_basic_user_file /etc/paisa/.htpasswd;
@@ -49,7 +53,7 @@ in {
   };
   environment.etc."paisa/.htpasswd".text = vars.paisaAuth;
 
-  # I2P inbound tunnel (ye2k.i2p -> localhost:8350)
+ #  I2P inbound tunnel (ye2k.i2p -> localhost:8350)
   services.i2pd = {
     enable = true;
     inTunnels = {
@@ -58,13 +62,13 @@ in {
         keys = "paisa_site.dat";
         address = "127.0.0.1";
         destination = "127.0.0.1";
-        port = 8350;   # upstream (nginx)
+        port = publicPort;   # upstream (nginx)
         inPort = 80;   # I2P-side HTTP port
       };
     };
   };
 
-  # Tor
+# Tor
   services.tor = {
     relay.onionServices.paisa = {
       version = 3;
@@ -73,7 +77,7 @@ in {
         port = 80;
         target = {
           addr = "127.0.0.1";
-          port = 8350;
+          port = publicPort;
         };
       }];
     };

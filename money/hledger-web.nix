@@ -63,9 +63,10 @@ in {
         --conf ${workDir}/hledger.conf \
         -- \
         --port ${toString hledgerPort} \
+        --base-url / \
         --serve
-      # NOTE: do NOT set --base-url here; Nginx will rewrite Location: headers.
     '';
+
   };
 
   # Nginx reverse proxy with Basic Auth and Location rewrite
@@ -94,8 +95,12 @@ in {
 
           # Rewrite upstream absolute redirects to the actual requested host (incl. port if present).
           # $http_host preserves "host:port" from the client (e.g., 127.0.0.1:8351, localhost, or a .b32.i2p host).
+          # proxy_set_header Host $http_host;
+
           proxy_redirect http://127.0.0.1:${toString hledgerPort}/ $scheme://$http_host/;
           proxy_redirect http://127.0.0.1/ $scheme://$http_host/;
+          proxy_redirect http://localhost:${toString hledgerPort}/ $scheme://$http_host/;
+          proxy_redirect http://localhost/ $scheme://$http_host/;
 
           # (optional) Slightly more tolerant timeouts if you browse heavy reports:
           # proxy_read_timeout 120s;
@@ -116,7 +121,7 @@ in {
   # Basic Auth credentials file (Apache htpasswd format)
   environment.etc."hledger/.htpasswd".text = vars.paisaAuth;
 
-  # I2P inbound tunnel (exposes hledger.local through a .b32.i2p address)
+#  I2P inbound tunnel (exposes hledger.local through a .b32.i2p address)
   services.i2pd = {
     enable = true;
 
