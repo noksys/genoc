@@ -31,6 +31,10 @@ in {
       WorkingDirectory = "${home}/Documents/paisa";
       ExecStart = "${paisaPkg}/bin/paisa serve";
       Restart = "on-failure";
+
+      # Allow only localhost (127.0.0.1 / ::1) for this service
+      #IPAddressAllow = "localhost";
+      #IPAddressDeny  = "any";
     };
   };
 
@@ -72,7 +76,7 @@ in {
   services.tor = {
     relay.onionServices.paisa = {
       version = 3;
-      path = "/var/lib/tor/paisa";
+      path = "/var/lib/tor/onion/paisa";
       map = [{
         port = 80;
         target = {

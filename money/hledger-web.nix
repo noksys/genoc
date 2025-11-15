@@ -142,7 +142,7 @@ in {
   services.tor = {
     relay.onionServices.hledger = {
       version = 3;
-      path = "/var/lib/tor/hledger";
+      path = "/var/lib/tor/onion/hledger";
       map = [{
         port = 80;
         target = {
