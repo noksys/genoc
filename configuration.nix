@@ -55,7 +55,14 @@ in
   services.zfs.trim.enable = true;
 
   boot.kernelModules = [ "zfs" ];
-  networking.hostId = "17fc173b";
+
+  environment.interactiveShellInit = ''
+    # Auto-logout
+    if [ "$TERM" = linux ]; then
+      TMOUT=600
+      export TMOUT
+    fi
+  '';
 
   #
   # IMPORTANT!
@@ -273,6 +280,13 @@ in
   # To avoid any issues with Windows automatic sync time on dual boot machine
   time.hardwareClockInLocalTime = true;
 
+  # GC
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 14d";
+  };
+
   # Commands with space at start won't be saved:
   environment.shellInit = ''
     if [ -n "$BASH_VERSION" ]; then
@@ -289,6 +303,7 @@ in
   # Economic Powersave mode
   specialisation = {
     powersave.configuration = {
+      networking.networkmanager.wifi.powersave = lib.mkForce true;
       boot.tmp.useTmpfs = true;
       services.journald.extraConfig = "SystemMaxUse=100M";
       powerManagement.powertop.enable = lib.mkForce true;

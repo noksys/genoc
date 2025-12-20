@@ -9,10 +9,13 @@ in
     font = "${pkgs.terminus_font}/share/consolefonts/ter-v32b.psf.gz";
   };
 
-  specialisation = {
-    text.configuration = {
-      systemd.services.display-manager.enable = false;
-    };
+  specialisation.text.configuration = {
+    services.xserver.enable = lib.mkForce false;
+
+    services.xserver.displayManager.lightdm.enable = lib.mkForce false;
+
+    services.displayManager.gdm.enable = lib.mkForce false;
+    services.displayManager.sddm.enable = lib.mkForce false;
   };
 
   users.users.${vars.mainUser} = lib.mkMerge [{
@@ -30,8 +33,6 @@ in
       lynx
       mplayer
 
-      # Nerd Fonts (replaces the old 'nerdfonts' meta-package)
-      # Add or remove fonts below as you prefer.
       nerd-fonts.jetbrains-mono
       nerd-fonts.fira-code
       nerd-fonts.iosevka

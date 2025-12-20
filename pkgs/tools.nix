@@ -9,7 +9,7 @@ with pkgs; [
   beep
   calibre
   certbot
-  clickup
+  #clickup
   gawk
   ghostscript
   gnucash
@@ -32,7 +32,7 @@ with pkgs; [
   patch
   peek
   findutils
-  poppler_utils
+  poppler-utils
   screen
   speedcrunch
   plocate

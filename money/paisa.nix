@@ -29,12 +29,14 @@ in {
       User = user;
       Group = "users";
       WorkingDirectory = "${home}/Documents/paisa";
-      ExecStart = "${paisaPkg}/bin/paisa serve";
       Restart = "on-failure";
+      ExecStart = "${paisaPkg}/bin/paisa serve";
 
       # Allow only localhost (127.0.0.1 / ::1) for this service
       #IPAddressAllow = "localhost";
       #IPAddressDeny  = "any";
+      #RestrictAddressFamilies = [ "AF_UNIX" "AF_INET" ];
+      #PrivateNetwork = true;
     };
   };
 

@@ -1,49 +1,33 @@
 { config, lib, pkgs, modulesPath, ... }:
 
 {
-  # Enable nm-applet
-  # programs.nm-applet.enable = false;
+  # X11 base (ainda necessário para alguns componentes; no GNOME 49 a sessão X11 não existe mais,
+  # mas manter services.xserver.enable não costuma atrapalhar e pode ser útil para bits legacy.)
+  services.xserver.enable = true;
 
-  # Enable Picom for X11 compositing
-  # services.picom.enable = false;
+  # Display managers (novo path)
+  services.displayManager = {
+    lightdm.enable = lib.mkForce false;
+    gdm.enable = lib.mkForce true;
 
-  # X11 configuration
-  services = {
-    xserver = {
-      enable = true;
-
-      # Display Manager configuration
-      displayManager = {
-        lightdm.enable = lib.mkForce false; # LightDM disabled
-        gdm.enable = lib.mkForce true;      # GDM enabled
-
-        # Desktop Manager configuration
-        desktopManager = {
-          gnome.enable = lib.mkForce true;  # GNOME enabled
-          lxqt.enable = lib.mkForce false;  # LXQt disabled
-        };
-      };
-    };
-
-    # Display Manager without xserver prefix
-    displayManager.sddm.enable = lib.mkForce false; # SDDM disabled
-
-    # Desktop Manager for Plasma (without xserver prefix)
-    desktopManager.plasma6.enable = lib.mkForce false; # Plasma 6 disabled
-
-    # GNOME Keyring
-    gnome.gnome-keyring.enable = true; # GNOME keyring enabled
-
-    # X11 Screen Lock
-    # services.xserver.xautolock.enable = true;
+    sddm.enable = lib.mkForce false;
   };
 
-  environment.systemPackages = lib.mkMerge [
-    (with pkgs; [
-      gnome.gnome-shell
-      gnome.gnome-shell-extensions
-      gnomeExtensions.dash-to-dock
-      webkitgtk
-    ])
+  # Desktop managers (novo path)
+  services.desktopManager = {
+    gnome.enable = lib.mkForce true;
+    lxqt.enable = lib.mkForce false;
+    plasma6.enable = lib.mkForce false;
+  };
+
+  # GNOME Keyring (path ok)
+  services.gnome.gnome-keyring.enable = true;
+
+  # Pacotes extras
+  environment.systemPackages = with pkgs; [
+    gnome.gnome-shell
+    gnome.gnome-shell-extensions
+    gnomeExtensions.dash-to-dock
+    webkitgtk
   ];
 }

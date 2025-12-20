@@ -5,9 +5,14 @@ with pkgs; [
   kdePackages.okular
   pandoc
   pdfgrep
-  poppler_utils
+  poppler-utils
   python311Packages.img2pdf
   qpdf
+  unscii
   tectonic
   #texlive.scheme-full
+  pdftk
+  enscript
+  mupdf
+  ocrmypdf
 ]

@@ -4,7 +4,7 @@ with pkgs; [
   claws-mail
   dino
   discord
-  gossip
+  #gossip
   mumble
   telegram-desktop
   vesktop # allow screen sharing on Discord

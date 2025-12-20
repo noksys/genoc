@@ -1,6 +1,7 @@
 { pkgs }:
 
 with pkgs; [
+  alacritty
   binutils
   boost
   btop
@@ -17,6 +18,7 @@ with pkgs; [
   gptfdisk
   gzip
   inxi
+  kitty
   lsof
   lzip
   nmap
@@ -32,6 +34,7 @@ with pkgs; [
   service-wrapper
   sysfsutils
   szip
+  tcpflow
   tarsnap
   tcpdump
   testdisk
@@ -45,5 +48,8 @@ with pkgs; [
   zip
   zlib
   zsh
+  wezterm
+  ptyxis
+  ccze
   linuxKernel.packages.linux_6_6.cpupower
 ]

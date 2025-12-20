@@ -5,6 +5,8 @@ let
   gitsh = import ../dev/gitsh.nix { inherit pkgs; };
 in
 with pkgs; [
+  # python3Packages.bitbox02 # insecure
+  # python3Packages.ckcc-protocol # insecure
   #nodejs_22
   angle-grinder
   asdf-vm
@@ -14,18 +16,17 @@ with pkgs; [
   bundix
   bundler
   cargo
+  dbeaver-bin
   deno
   fenix.complete.toolchain
   ganttproject-bin
   gcc
-  git
-  tig
-  meld
   gh
+  git
   git-annex
   git-crypt
   git-filter-repo
-  gitAndTools.gitFull
+  gitFull
   gitsh.git-sh
   gnum4
   gnumake
@@ -33,36 +34,36 @@ with pkgs; [
   go-tools
   golangci-lint
   govulncheck
-  jdk23
+  jdk
   jekyll
   libsForQt5.qgpgme
   lnav
   maven
+  meld
   mermaid-cli
   nodejs_20
   perl
   pgadmin4
+  pkg-config
   playwright-test
   protobuf
-  # python312Packages.bitbox02 # insecure
-  python312Packages.cbor
-  python312Packages.certbot-dns-route53
-  # python312Packages.ckcc-protocol # insecure
-  python312Packages.gpgme
-  python312Packages.pip
-  python312Packages.pip-tools
-  python312Packages.playwright
-  python312Packages.uv
-  python3Full
+  python3
+  python3Packages.cbor
+  python3Packages.certbot-dns-route53
+  python3Packages.gpgme
+  python3Packages.pip
+  python3Packages.pip-tools
+  python3Packages.playwright
+  python3Packages.uv
   racket
   ruby
   rubyPackages.dotenv
   rubyPackages.jekyll-theme-midnight
   scrcpy
-  taskjuggler
-  typescript
-  trunk
-  uv
   systemd
-  pkg-config
+  taskjuggler
+  tig
+  trunk
+  typescript
+  uv
 ]

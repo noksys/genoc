@@ -1,7 +1,6 @@
 { pkgs }:
 
 with pkgs; [
-  barrier
   chromium
   cjdns
   curl
@@ -23,7 +22,7 @@ with pkgs; [
   openssl
   #opera
   palemoon-bin
-  postman
+  #postman
   rclone
   signal-cli
   signal-desktop
@@ -31,9 +30,8 @@ with pkgs; [
   syncthing
   telegram-desktop
   tor
-  tor-browser-bundle-bin
+  tor-browser
   torsocks
-  waynergy
   wget
   wireguard-tools
   yubikey-agent

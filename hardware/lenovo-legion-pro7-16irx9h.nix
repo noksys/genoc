@@ -10,7 +10,7 @@
   # ---- Audio firmware patch -------------------------------------------------
   # Ship a tiny custom firmware patch for the ALC287 codec.
   hardware.firmware = [
-    (pkgs.runCommandNoCC "legion-audio-patch" {} ''
+    (pkgs.runCommand "legion-audio-patch" {} ''
       mkdir -p $out/lib/firmware
       cp ${./legion-alc287.patch} $out/lib/firmware/legion-alc287.patch
     '')

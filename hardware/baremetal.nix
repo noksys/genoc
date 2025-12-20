@@ -19,7 +19,7 @@
       clinfo
       evtest
       fwupd
-      glxinfo
+      mesa-demos
       libusb1
       lm_sensors
       pciutils
