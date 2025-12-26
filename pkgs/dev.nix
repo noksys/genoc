@@ -66,4 +66,5 @@ with pkgs; [
   trunk
   typescript
   uv
+  lua
 ]

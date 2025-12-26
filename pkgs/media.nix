@@ -12,6 +12,7 @@ with pkgs; [
   optipng
   pick-colour-picker
   pngquant
+  mpv
 
   # ProjectM update:
   # - 'projectm' (old) has been split since version 4
