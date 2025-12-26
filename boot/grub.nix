@@ -13,5 +13,5 @@ in
     splashImage = ./bg.png;
   };
 
-  boot.loader.timeout = 5;
+  boot.loader.timeout = 60;
 }
