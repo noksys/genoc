@@ -131,6 +131,7 @@ in
 
   time.timeZone = vars.timeZone;
   i18n.defaultLocale = "en_US.UTF-8";
+  services.timesyncd.enable = true;
 
   services.xserver = {
     # Configure XKB with multiple layouts (BR and US with SHIFT+SHIFT alternation)
@@ -276,9 +277,6 @@ in
 
   # HDR support
   services.colord.enable = true;
-
-  # To avoid any issues with Windows automatic sync time on dual boot machine
-  time.hardwareClockInLocalTime = true;
 
   # GC
   nix.gc = {
