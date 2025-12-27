@@ -47,19 +47,22 @@ in
     # ./genoc/policies/networking/ssh/base.nix     # Password and Key (Balanced)
     # ./genoc/policies/networking/ssh/paranoid.nix # Requires BOTH Key and Password (MFA)
 
-    # ---- System Policies ----------------------------------------------------
+    # ---- System Behavior & Policies -----------------------------------------
     ./genoc/policies/security/sudo/wheel-no-password.nix # Allow sudo without password
     ./genoc/policies/security/polkit/base.nix    # Basic GUI authorization support
     ./genoc/policies/security/gpg/agent.nix      # GPG agent with SSH support
     ./genoc/policies/system/shells/zsh.nix       # Zsh shell with modern defaults
     # ./genoc/policies/system/shells/bash.nix     # Classic Bash shell
+    # ./genoc/policies/system/behavior/prevent-sleep.nix # Disables automatic sleep
+    # ./genoc/policies/system/behavior/prevent-hibernation.nix # Disables hibernation
+    # ./genoc/policies/system/behavior/server-uptime.nix # Optimized for long uptime
 
     # =========================================================================
     # PROFILES (Mixins - Add as many as you want)
     # =========================================================================
 
     # ---- Development Profiles -----------------------------------------------
-    ./genoc/profiles/development/backend-go-god.nix # The ultimate Go/Crypto backend stack
+    # ./genoc/profiles/development/backend-go-god.nix # The ultimate Go/Crypto backend stack
     # ./genoc/profiles/development/fullstack-god.nix # Fullstack development environment
     # ./genoc/profiles/development/dev-hacker.nix   # Minimalist hacker-oriented tools
     # ./genoc/profiles/development/backend-rust.nix # Rust developer environment
@@ -73,6 +76,7 @@ in
     # ./genoc/profiles/development/embedded-engineer.nix # Embedded systems and firmware tools
 
     # ---- Business & Office --------------------------------------------------
+    # ./genoc/profiles/business/office-maniac.nix   # The ultimate LaTeX and bibliography stack
     # ./genoc/profiles/business/office-rat.nix      # Standard office productivity suite
     # ./genoc/profiles/business/office-light-eco.nix # Minimalist and efficient office tools
     # ./genoc/profiles/business/academic-researcher.nix # Academic research and writing tools
@@ -84,6 +88,7 @@ in
     # ./genoc/profiles/business/trader-pro.nix      # Professional trading and market analysis
 
     # ---- Security & Privacy -------------------------------------------------
+    # ./genoc/profiles/security/crypto-anarchist.nix # Bitcoin, Liquid, I2P and privacy tools
     # ./genoc/profiles/security/privacy-paranoid.nix # Maximum privacy and anonymity tools
     # ./genoc/profiles/security/red-team.nix        # Pentesting and offensive security
     # ./genoc/profiles/security/forensic-analyst.nix # Digital forensics and investigation
@@ -104,6 +109,11 @@ in
     # ./genoc/profiles/gaming/simulation-rig.nix    # Optimized for heavy simulation games
     # ./genoc/profiles/gaming/minecraft-server.nix  # Local Minecraft server setup
 
+    # ---- Power Management Profiles ------------------------------------------
+    # ./genoc/profiles/power/balanced.nix           # Preset for balanced usage
+    # ./genoc/profiles/power/performance.nix        # Preset for high performance
+    # ./genoc/profiles/power/endurance.nix          # Preset for long battery life
+
     # ---- Social & Communication ---------------------------------------------
     # ./genoc/profiles/social/chatterbox-god.nix    # All major communication apps
     # ./genoc/profiles/social/irc-veteran.nix       # IRC clients and classic chat tools
@@ -114,13 +124,10 @@ in
     # ./genoc/profiles/web/hoarder.nix              # Web archiving and heavy browsing
     # ./genoc/profiles/web/surfer.nix               # Lightweight and fast browsing
 
-    # ---- System Behavior ----------------------------------------------------
+    # ---- System Configuration -----------------------------------------------
     # ./genoc/profiles/system/minimal-server.nix    # Minimal server configuration
     # ./genoc/profiles/system/kiosk-mode.nix        # Full-screen kiosk for public displays
     # ./genoc/profiles/system/parental-control.nix  # Content filtering and restrictions
-    # ./genoc/profiles/system/behavior/prevent-sleep.nix # Disables automatic sleep
-    # ./genoc/profiles/system/behavior/prevent-hibernation.nix # Disables hibernation
-    # ./genoc/profiles/system/behavior/server-uptime.nix # Optimized for long uptime
   ];
 
   # =========================================================================
@@ -155,11 +162,7 @@ in
     office.configuration = {
       system.nixos.tags = [ "office-maniac" ];
       imports = [
-        ./genoc/profiles/business/office-rat.nix
-      ];
-      environment.systemPackages = with pkgs; [
-        texlive.combined.scheme-full # The complete LaTeX scheme (5GB+)
-        pandoc                       # Universal document converter
+        ./genoc/profiles/business/office-maniac.nix
       ];
     };
 
@@ -167,7 +170,7 @@ in
     theater.configuration = {
       system.nixos.tags = [ "theater-mode" ];
       imports = [
-        ./genoc/profiles/system/behavior/prevent-sleep.nix
+        ./genoc/policies/system/behavior/prevent-sleep.nix
         ./genoc/modules/domains/multimedia/vlc.nix
         ./genoc/modules/domains/multimedia/codecs.nix
       ];

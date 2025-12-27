@@ -11,11 +11,7 @@
     ../../modules/virtualization/containers/base.nix
     ../../modules/domains/crypto/base.nix
     ../../modules/domains/crypto/elements.nix
-  ];
-
-  environment.systemPackages = with pkgs; [
-    vim # Legendary text editor
-    gnumake # Build tool
-    postman # API testing
+    ../../modules/dev-domains/backend-tools.nix
+    ../../modules/ui/desktop-entries/web-browsers.nix
   ];
 }
