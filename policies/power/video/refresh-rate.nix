@@ -70,6 +70,11 @@ let
 
     # --- Main --------------------------------------------------------------------
     main() {
+      if [[ -z "${DISPLAY-}" ]] || ! xrandr --query >/dev/null 2>&1; then
+        echo "Skipping refresh rate: no X11 display detected."
+        exit 0
+      fi
+
       local prefer
       if on_ac;
         echo "🔌 AC power detected → prefer high refresh"

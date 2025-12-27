@@ -17,17 +17,26 @@ echo "Backup created at: $backup_dir"
 cd /etc/nixos
 
 if [[ ! -d "./genoc" ]]; then
-  git clone git@github.com:noksys/genoc.git
+  git clone https://github.com/noksys/genoc.git
   cd genoc
   git submodule update --init --recursive
   cd -
 fi
 
 ./genoc/bin/setup-unstable-channel.sh
-ln -s ./genoc/configuration.nix
+ln -sfn ./genoc/configuration.nix
 
-cp ./genoc/custom_machine.example.nix ./custom_machine.nix
-cp ./genoc/custom_vars.example.nix ./custom_vars.nix
+if [[ ! -f ./custom_machine.nix ]]; then
+  cp ./genoc/custom_machine.example.nix ./custom_machine.nix
+else
+  echo "custom_machine.nix already exists; leaving as is."
+fi
+
+if [[ ! -f ./custom_vars.nix ]]; then
+  cp ./genoc/custom_vars.example.nix ./custom_vars.nix
+else
+  echo "custom_vars.nix already exists; leaving as is."
+fi
 
 cd -
 
