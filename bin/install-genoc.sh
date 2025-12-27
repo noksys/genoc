@@ -12,7 +12,7 @@ backup_dir="/etc/nixos/backup/${timestamp}"
 mkdir -p "$backup_dir"
 rsync -aP --exclude 'backup' -l /etc/nixos/ $backup_dir
 
-echo "Backup created at: $backup_file"
+echo "Backup created at: $backup_dir"
 
 cd /etc/nixos
 

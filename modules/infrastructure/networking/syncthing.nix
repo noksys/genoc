@@ -1,0 +1,1 @@
+{ pkgs, ... }: { services.syncthing = { enable = true; user = (import ../../../../custom_vars.nix).mainUser; dataDir = "/home/${(import ../../../../custom_vars.nix).mainUser}/.config/syncthing"; configDir = "/home/${(import ../../../../custom_vars.nix).mainUser}/.config/syncthing"; }; }

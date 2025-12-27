@@ -1,0 +1,1 @@
+{ pkgs, ... }: { users.users.${(import ../../../../custom_vars.nix).mainUser}.extraGroups = [ "video" ]; environment.systemPackages = [ pkgs.libva-utils pkgs.vdpauinfo ]; hardware.graphics.enable = true; }
