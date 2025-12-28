@@ -53,7 +53,7 @@ in
 
     # ---- System Behavior & Policies -----------------------------------------
     ./genoc/policies/security/sudo/wheel-no-password.nix # Allow sudo without password
-    ./genoc/policies/security/polkit/base.nix    # Basic GUI authorization support
+    ./genoc/modules/security/polkit/base.nix    # Basic GUI authorization support
     ./genoc/policies/security/gpg/agent.nix      # GPG agent with SSH support
     ./genoc/policies/system/shells/zsh.nix       # Zsh shell with modern defaults
     # ./genoc/policies/system/shells/bash.nix     # Classic Bash shell
