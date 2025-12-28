@@ -7,7 +7,6 @@
     whatsapp-for-linux # WhatsApp desktop client
     zoom-us            # Zoom client
     teams-for-linux    # Microsoft Teams client
-    skypeforlinux      # Skype client
     viber              # Viber client
     weechat            # IRC TUI client
   ];
