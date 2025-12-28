@@ -5,7 +5,7 @@ let
   user       = vars.mainUser;
   home       = vars.homeDirectory;
   paisaFlake = builtins.getFlake "github:ananthakumaran/paisa";
-  paisaPkg   = paisaFlake.packages.${pkgs.system}.default;
+  paisaPkg   = paisaFlake.packages.${pkgs.stdenv.hostPlatform.system}.default;
 in {
   imports = [ ./package.nix ];
 
