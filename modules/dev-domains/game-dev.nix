@@ -3,8 +3,8 @@
 {
   environment.systemPackages = with pkgs; [
     # Engines
-    godot_4
-    unityhub
+    godot_4  # Godot Engine
+    unityhub # Unity Hub
     
     # Tools
     ldtk          # 2D Level Editor

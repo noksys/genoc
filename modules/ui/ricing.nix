@@ -2,16 +2,16 @@
 
 {
   environment.systemPackages = with pkgs; [
-    neofetch
-    fastfetch
-    cmatrix
-    pipes-sh
-    cbonsai
-    htop
-    btop
-    polybar
-    rofi
-    picom
-    starship
+    neofetch  # System info CLI
+    fastfetch # Fast system info CLI
+    cmatrix   # Terminal Matrix effect
+    pipes-sh  # Terminal pipes animation
+    cbonsai   # Terminal bonsai generator
+    htop      # Interactive process viewer
+    btop      # Resource monitor
+    polybar   # Status bar
+    rofi      # App launcher
+    picom     # Compositor for X11
+    starship  # Shell prompt
   ];
 }

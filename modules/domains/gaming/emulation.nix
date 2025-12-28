@@ -2,10 +2,10 @@
 
 {
   environment.systemPackages = with pkgs; [
-    retroarchFull
-    dosbox
-    scummvm
-    dolphin-emu
-    pcsx2
+    retroarchFull # Multi-system emulator frontend
+    dosbox        # DOS emulator
+    scummvm       # Classic point-and-click engine
+    dolphin-emu   # GameCube/Wii emulator
+    pcsx2         # PlayStation 2 emulator
   ];
 }

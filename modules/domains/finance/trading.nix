@@ -2,8 +2,8 @@
 
 {
   environment.systemPackages = with pkgs; [
-    galculator
-    gnumeric
+    galculator # Scientific calculator
+    gnumeric   # Lightweight spreadsheet
     # tradingview # Not in nixpkgs, use browser
   ];
 }

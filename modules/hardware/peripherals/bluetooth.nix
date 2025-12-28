@@ -42,6 +42,6 @@
   };
 
   environment.systemPackages = with pkgs; [
-      bluez
+      bluez # Bluetooth stack tools
   ];
 }

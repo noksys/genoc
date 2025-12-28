@@ -13,14 +13,14 @@ in
   boot.initrd.kernelModules = [ "tpm" "tpm_tis" "tpm_crb" ];
 
   environment.systemPackages = with pkgs; [
-    tpm2-abrmd
-    tpm2-tools
-    tpm2-tss
+    tpm2-abrmd # TPM2 access broker
+    tpm2-tools # TPM2 CLI tools
+    tpm2-tss   # TPM2 software stack
     # Other security tools that were coupled with TPM previously
-    clevis
-    cryptsetup
-    rng-tools
-    jose
-    pamtester
+    clevis    # Network-bound disk encryption
+    cryptsetup # LUKS tooling
+    rng-tools # Hardware RNG tools
+    jose      # JOSE utilities
+    pamtester # PAM testing tool
   ];
 }

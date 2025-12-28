@@ -5,8 +5,8 @@
   services.udev.packages = [ pkgs.yubikey-personalization ];
 
   environment.systemPackages = with pkgs; [
-    yubikey-agent
-    yubioath-flutter
-    yubikey-personalization
+    yubikey-agent          # SSH agent using YubiKey
+    yubioath-flutter       # OATH management tool
+    yubikey-personalization # YubiKey personalization tools
   ];
 }

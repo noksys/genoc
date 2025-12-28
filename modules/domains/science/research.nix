@@ -2,7 +2,7 @@
 
 {
   environment.systemPackages = with pkgs; [
-    zotero
-    jabref
+    zotero # Reference manager
+    jabref # BibTeX manager
   ];
 }

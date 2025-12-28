@@ -2,7 +2,7 @@
 
 {
   environment.systemPackages = with pkgs; [
-    flightgear
+    flightgear    # Flight simulator
     opentrack     # Head tracking
     joystickwake  # Keep screen on when using joystick
   ];

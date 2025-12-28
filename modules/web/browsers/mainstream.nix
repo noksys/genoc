@@ -2,7 +2,7 @@
 
 {
   environment.systemPackages = with pkgs; [
-    firefox
-    google-chrome
+    firefox       # Firefox browser
+    google-chrome # Google Chrome
   ];
 }

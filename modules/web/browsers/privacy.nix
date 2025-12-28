@@ -2,8 +2,8 @@
 
 {
   environment.systemPackages = with pkgs; [
-    tor-browser
-    mullvad-browser
-    librewolf
+    tor-browser     # Tor Browser
+    mullvad-browser # Mullvad Browser
+    librewolf       # Privacy-focused Firefox fork
   ];
 }

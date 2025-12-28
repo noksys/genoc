@@ -2,7 +2,7 @@
 
 {
   environment.systemPackages = with pkgs; [
-    signal-desktop
+    signal-desktop # Signal desktop client
     tdesktop # Telegram
   ];
 }

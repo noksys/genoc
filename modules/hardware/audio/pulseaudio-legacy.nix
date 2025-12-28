@@ -24,7 +24,7 @@
   nixpkgs.config.pulseaudio = true;
 
   environment.systemPackages = with pkgs; [
-    pavucontrol
-    pulseaudio
+    pavucontrol # PulseAudio volume control
+    pulseaudio  # PulseAudio daemon
   ];
 }

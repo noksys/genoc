@@ -32,13 +32,13 @@ let
 in
 {
   environment.systemPackages = with pkgs; [
-    git
-    git-lfs
-    git-crypt
-    git-filter-repo
-    tig
-    gh
-    git-annex
-    git-sh
+    git             # Git CLI
+    git-lfs         # Large file support
+    git-crypt       # Repo encryption helper
+    git-filter-repo # History rewrite tool
+    tig             # TUI for Git
+    gh              # GitHub CLI
+    git-annex       # Content-addressed file manager
+    git-sh          # Git shell environment
   ];
 }

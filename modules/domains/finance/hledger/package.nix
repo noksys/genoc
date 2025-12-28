@@ -1,8 +1,8 @@
 { pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
-    hledger
-    hledger-ui
-    hledger-web
+    hledger     # CLI accounting tool
+    hledger-ui  # TUI interface
+    hledger-web # Web UI
   ];
 }

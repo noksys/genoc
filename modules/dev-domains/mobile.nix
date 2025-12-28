@@ -3,13 +3,13 @@
 {
   environment.systemPackages = with pkgs; [
     # Android
-    android-studio
+    android-studio # Android IDE
     android-tools # adb, fastboot
     scrcpy        # Screen mirroring
     
     # Cross-platform
-    flutter
-    dart
+    flutter       # Flutter SDK
+    dart          # Dart SDK
   ];
   
   programs.adb.enable = true;

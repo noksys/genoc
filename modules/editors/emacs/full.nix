@@ -4,11 +4,11 @@
 
   environment.systemPackages = with pkgs; [
     # Tools for Emacs (Doom/Spacemacs deps)
-    fd
-    ripgrep
-    git
-    shellcheck
-    editorconfig-core-c
+    fd                  # Fast file finder
+    ripgrep             # Fast search
+    git                 # Version control
+    shellcheck          # Shell linting
+    editorconfig-core-c # EditorConfig CLI
     sqlite                # For org-roam
     zstd                  # For undo-fu-session/vterm
   ];

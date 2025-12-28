@@ -7,6 +7,6 @@
     digikam       # Photo management
     hugin         # Panorama stitcher
     displaycal    # Monitor calibration
-    exiftool
+    exiftool      # EXIF metadata tool
   ];
 }

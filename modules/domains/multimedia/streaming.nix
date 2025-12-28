@@ -2,8 +2,8 @@
 
 {
   environment.systemPackages = with pkgs; [
-    obs-studio
-    obs-studio-plugins.wlrobs
-    chatterino2
+    obs-studio              # Streaming/recording software
+    obs-studio-plugins.wlrobs # Wayland screen capture plugin
+    chatterino2             # Twitch chat client
   ];
 }

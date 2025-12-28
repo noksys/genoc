@@ -8,7 +8,7 @@
   '';
 
   environment.systemPackages = with pkgs; [
-    libusb1
-    udev
+    libusb1 # USB access library/tools
+    udev    # Device manager tools
   ];
 }

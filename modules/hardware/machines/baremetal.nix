@@ -12,20 +12,20 @@
   virtualisation.vmware.guest.enable = false;
 
   environment.systemPackages = with pkgs; [
-    acpid
-    aha
-    brightnessctl
-    clinfo
-    evtest
-    fwupd
-    mesa-demos
-    libusb1
-    lm_sensors
-    pciutils
-    tlp
-    udev
-    vulkan-tools
-    wayland-utils
-    xorg.xrandr
+    acpid         # ACPI event daemon
+    aha           # Hardware info (ahasyst)
+    brightnessctl # Backlight control
+    clinfo        # OpenCL info
+    evtest        # Input device tester
+    fwupd         # Firmware updates
+    mesa-demos    # OpenGL demos
+    libusb1       # USB access library/tools
+    lm_sensors    # Hardware sensors
+    pciutils      # PCI utilities
+    tlp           # Power management
+    udev          # Device manager tools
+    vulkan-tools  # Vulkan tools
+    wayland-utils # Wayland diagnostics
+    xorg.xrandr   # X11 display config tool
   ];
 }

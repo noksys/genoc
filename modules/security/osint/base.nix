@@ -2,9 +2,9 @@
 
 {
   environment.systemPackages = with pkgs; [
-    sherlock
-    maltego
-    theharvester
-    holehe
+    sherlock    # Username enumeration
+    maltego     # OSINT graph analysis
+    theharvester # Email/domain OSINT
+    holehe      # Email account discovery
   ];
 }

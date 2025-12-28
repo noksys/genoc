@@ -2,9 +2,9 @@
 
 {
   environment.systemPackages = with pkgs; [
-    gnucash
-    homebank
+    gnucash     # Personal finance manager
+    homebank    # Personal accounting
     gnumeric    # Lightweight spreadsheet
-    kmymoney
+    kmymoney    # KDE finance manager
   ];
 }

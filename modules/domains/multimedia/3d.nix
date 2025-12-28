@@ -2,8 +2,8 @@
 
 {
   environment.systemPackages = with pkgs; [
-    blender
-    meshlab
-    freecad
+    blender # 3D creation suite
+    meshlab # Mesh processing
+    freecad # Parametric CAD
   ];
 }

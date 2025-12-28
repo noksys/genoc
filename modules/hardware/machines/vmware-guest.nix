@@ -22,7 +22,7 @@
 #   '';
  
   environment.systemPackages = with pkgs; [
-    open-vm-tools
+    open-vm-tools # VMware guest tools
   ];
 
   fileSystems."/mnt/hgfs" = {

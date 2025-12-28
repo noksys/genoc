@@ -2,9 +2,9 @@
 
 {
   environment.systemPackages = with pkgs; [
-    weechat
-    irssi
-    hexchat
-    znc           # IRC Bouncer
+    weechat  # IRC TUI client
+    irssi    # IRC TUI client
+    hexchat  # IRC GUI client
+    znc      # IRC bouncer
   ];
 }

@@ -2,7 +2,7 @@
 
 {
   environment.systemPackages = with pkgs; [
-    minecraft
+    minecraft     # Minecraft launcher
     prismlauncher # Open source launcher
     minetest      # Open source voxel game engine
   ];

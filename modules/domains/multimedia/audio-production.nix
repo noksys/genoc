@@ -11,6 +11,6 @@
     vital         # Wavetable synth
     helm          # Synth
     calf          # LV2 plugins
-    lsp-plugins
+    lsp-plugins   # LSP audio plugins
   ];
 }

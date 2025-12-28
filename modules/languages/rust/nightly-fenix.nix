@@ -6,6 +6,6 @@ let
 in
 {
   environment.systemPackages = [
-    fenix.complete.toolchain
+    fenix.complete.toolchain # Rust nightly toolchain (fenix)
   ];
 }

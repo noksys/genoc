@@ -66,14 +66,14 @@
 
   # ---- NVIDIA / userland tools ---------------------------------------------
   environment.systemPackages = with pkgs; [
-    nvtopPackages.intel
-    nv-codec-headers
-    nvidia-container-toolkit
-    nvidia-optical-flow-sdk
-    nvidia-system-monitor-qt
-    nvidia-texture-tools
-    nvidia-vaapi-driver
-    nvtopPackages.nvidia
+    nvtopPackages.intel     # Intel GPU monitor
+    nv-codec-headers        # NVENC/NVDEC headers
+    nvidia-container-toolkit # NVIDIA container runtime
+    nvidia-optical-flow-sdk # Optical flow SDK
+    nvidia-system-monitor-qt # NVIDIA system monitor
+    nvidia-texture-tools    # NVIDIA texture tools
+    nvidia-vaapi-driver     # VA-API driver for NVIDIA
+    nvtopPackages.nvidia    # NVIDIA GPU monitor
   ];
 
   # ---- Specialisation: POWERSAVE (iGPU primary + NVIDIA RTD3) ---------------

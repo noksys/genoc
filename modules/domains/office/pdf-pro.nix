@@ -2,9 +2,9 @@
 
 {
   environment.systemPackages = with pkgs; [
-    masterpdfeditor
-    pdftk
+    masterpdfeditor # PDF editor
+    pdftk           # PDF toolkit
     okular        # Excellent PDF reader with annotation support
-    ghostscript
+    ghostscript     # PostScript/PDF engine
   ];
 }
