@@ -1,4 +1,4 @@
-{ config, lib, pkgs, modulesPath, ... }:
+{ pkgs, ... }:
 
 let
   vars = import ../custom_vars.nix;
@@ -12,6 +12,17 @@ in
       # Core Modules
       ./modules/sys-utils-base.nix
     ];
+
+  nix.settings = {
+    substituters = [
+      "https://cache.nixos.org"
+      "https://cache.nixos-cuda.org"
+      "https://noksys.cachix.org"
+    ];
+    trusted-public-keys = [
+      "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
+    ];
+  };
 
   # Network
   networking.hostName = vars.hostName;
