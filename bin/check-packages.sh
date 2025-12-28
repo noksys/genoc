@@ -10,10 +10,14 @@ pkg_list="$tmp_dir/packages.txt"
 missing_list="$tmp_dir/missing.txt"
 
 nix_env=()
-if [[ -n "${SUDO_USER:-}" ]]; then
-  sudo_channel="/nix/var/nix/profiles/per-user/${SUDO_USER}/channels/nixos"
-  if [[ -e "$sudo_channel" ]]; then
-    nix_env=(env "NIX_PATH=nixpkgs=${sudo_channel}:${NIX_PATH:-}")
+preferred_user="${SUDO_USER:-}"
+if [[ -z "$preferred_user" ]] && command -v logname >/dev/null 2>&1; then
+  preferred_user="$(logname 2>/dev/null || true)"
+fi
+if [[ -n "$preferred_user" && "$preferred_user" != "root" ]]; then
+  user_channel="/nix/var/nix/profiles/per-user/${preferred_user}/channels/nixos"
+  if [[ -e "$user_channel" ]]; then
+    nix_env=(env "NIX_PATH=nixpkgs=${user_channel}:${NIX_PATH:-}")
   fi
 fi
 
