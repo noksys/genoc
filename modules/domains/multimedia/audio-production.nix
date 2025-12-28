@@ -12,5 +12,7 @@
     helm          # Synth
     calf          # LV2 plugins
     lsp-plugins   # LSP audio plugins
+    mda_lv2       # MDA LV2 plugins
+    zam-plugins   # ZAM audio plugins
   ];
 }

@@ -3,8 +3,7 @@
 {
   imports = [
     ../../modules/security/vpn/mullvad.nix
-    ../../modules/security/privacy/tor.nix
-    ../../modules/security/privacy/i2p.nix
+    ../../modules/security/privacy/anonymity.nix
     ../../modules/security/hardening/firejail.nix
   ];
 

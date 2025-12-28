@@ -1,13 +1,25 @@
 { config, pkgs, lib, ... }:
 
 {
-  # Fixing cedilla ć -> ç
-  environment.variables = {
-    QT_IM_MODULE = lib.mkForce "cedilla";
-    GTK_IM_MODULE = lib.mkForce "cedilla";
-    XMODIFIERS = lib.mkForce "@im=cedilla";
-    XCOMPOSEFILE = lib.mkForce "/etc/XCompose";
+  # Fixing cedilla ć -> ç (X11 only; avoid forcing IM modules in Wayland)
+  services.xserver.displayManager.sessionCommands = ''
+    if [ "''${XDG_SESSION_TYPE}" = "x11" ]; then
+      export QT_IM_MODULE=cedilla
+      export GTK_IM_MODULE=cedilla
+      export XMODIFIERS=@im=cedilla
+      export XCOMPOSEFILE=/etc/XCompose
+    fi
+  '';
+
+  # Keyboard layouts: US Intl + PT-BR with Shift+Shift toggle.
+  services.xserver.xkb = {
+    layout = "us,br";
+    variant = "intl,abnt2";
+    options = "grp:shifts_toggle";
   };
+
+  # Keep TTYs aligned with the XKB layout (Wayland/X11).
+  console.useXkbConfig = true;
 
   environment.etc."XCompose".text = ''
     # Cedilla

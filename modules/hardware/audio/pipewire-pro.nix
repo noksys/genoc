@@ -12,6 +12,5 @@
   environment.systemPackages = with pkgs; [
     qjackctl          # JACK Audio Connection Kit - Qt GUI Interface
     easyeffects       # Audio effects for PipeWire applications
-    lsp-plugins       # Linux Studio Plugins Project
   ];
 }

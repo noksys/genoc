@@ -18,6 +18,7 @@ in
 
       extraConfig = ''
         InputTimeout=0
+        Font=DejaVu Sans 32
       '';
     };
 

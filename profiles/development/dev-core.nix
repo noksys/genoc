@@ -5,6 +5,7 @@
     ../../modules/virtualization/containers/base.nix
     ../../modules/dev-domains/dev-debug/full.nix
     ../../modules/dev-domains/git.nix
+    ../../modules/dev-domains/dev-newbie.nix
     ../../modules/editors/vscode/full.nix
     ../../modules/editors/emacs/base.nix
   ];

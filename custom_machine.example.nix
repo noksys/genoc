@@ -66,8 +66,8 @@ in
     # =========================================================================
 
     # ---- Development Profiles -----------------------------------------------
-    # ./genoc/profiles/development/backend-go-god.nix # The ultimate Go/Crypto backend stack
-    # ./genoc/profiles/development/fullstack-god.nix # Fullstack development environment
+    # ./genoc/profiles/development/backend-go-legend.nix # The ultimate Go/Crypto backend stack
+    # ./genoc/profiles/development/fullstack-overlord.nix # Fullstack development environment
     # ./genoc/profiles/development/dev-hacker.nix   # Minimalist hacker-oriented tools
     # ./genoc/profiles/development/backend-rust.nix # Rust developer environment
     # ./genoc/profiles/development/backend-go.nix   # Standard Go developer environment
@@ -106,7 +106,7 @@ in
     # ./genoc/profiles/creative/streamer.nix        # Live streaming and content creation
     # ./genoc/profiles/creative/vector-designer.nix # Vector graphics and design tools
     # ./genoc/profiles/creative/vfx-astronaut.nix   # Visual effects and 3D animation
-    # ./genoc/profiles/creative/ricing-god.nix      # Deep system UI customization tools
+    # ./genoc/profiles/creative/ricing-obsessed.nix      # Deep system UI customization tools
 
     # ---- Gaming -------------------------------------------------------------
     # ./genoc/profiles/gaming/steam-heavy.nix       # Optimized Steam gaming environment
@@ -120,14 +120,15 @@ in
     # ./genoc/profiles/power/endurance.nix          # Preset for long battery life
 
     # ---- Social & Communication ---------------------------------------------
-    # ./genoc/profiles/social/chatterbox-god.nix    # All major communication apps
+    # ./genoc/profiles/social/chatterbox-maniac.nix    # All major communication apps
     # ./genoc/profiles/social/irc-veteran.nix       # IRC clients and classic chat tools
     # ./genoc/profiles/social/minimalist.nix        # Minimalist communication tools
 
     # ---- Web Browsing -------------------------------------------------------
     # ./genoc/profiles/web/hacker.nix               # Hardened and dev-oriented browsers
     # ./genoc/profiles/web/hoarder.nix              # Web archiving and heavy browsing
-    # ./genoc/profiles/web/surfer.nix               # Lightweight and fast browsing
+    # ./genoc/profiles/web/surfer-light.nix         # Lightweight and fast browsing
+    # ./genoc/profiles/web/surfer-maniac.nix        # All-in browser stack
 
     # ---- System Configuration -----------------------------------------------
     # ./genoc/profiles/system/minimal-server.nix    # Minimal server configuration
@@ -142,9 +143,9 @@ in
 
     # ---- REGULAR DEV: The God Stack with full networking --------------------
     dev.configuration = {
-      system.nixos.tags = [ "backend-go-god" ];
+      system.nixos.tags = [ "backend-go-legend" ];
       imports = [
-        ./genoc/profiles/development/backend-go-god.nix
+        ./genoc/profiles/development/backend-go-legend.nix
         ./genoc/modules/infrastructure/networking/syncthing.nix
         ./genoc/policies/networking/firewall/open-p2p-crypto.nix
         ./genoc/policies/networking/firewall/open-syncthing.nix

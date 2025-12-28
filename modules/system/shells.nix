@@ -2,6 +2,6 @@
 
 {
   imports = [
-    ./ricing/full.nix
+    ./shells/full.nix
   ];
 }
