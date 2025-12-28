@@ -4,6 +4,6 @@
   imports = [
     ./service.nix
     ./web-proxy.nix
-    ./darknet.nix
+    ./privacy-networks.nix
   ];
 }

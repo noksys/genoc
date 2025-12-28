@@ -10,7 +10,6 @@ in {
         enable = true;
         keys = "paisa_site.dat";
         address = "127.0.0.1";
-        destination = "127.0.0.1";
         port = publicPort;
         inPort = 80;
       };

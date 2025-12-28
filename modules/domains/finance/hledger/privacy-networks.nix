@@ -8,7 +8,6 @@
         enable = true;
         keys = "hledger_site.dat";
         address = "127.0.0.1";
-        destination = "127.0.0.1";
         port = 8351;
         inPort = 80;
       };
