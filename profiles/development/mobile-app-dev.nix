@@ -1,8 +1,8 @@
-{ pkgs, ... }:
+{ ... }:
 
 {
   imports = [
     ../../modules/dev-domains/mobile.nix
-    ../../modules/languages/jvm/java.nix # Often needed for Android
+    ../../modules/languages/jvm/java-base.nix # Often needed for Android
   ];
 }

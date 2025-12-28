@@ -2,6 +2,6 @@
 
 {
   imports = [
-    ../../modules/ui/kiosk.nix
+    ../../modules/desktop/kiosk.nix
   ];
 }
