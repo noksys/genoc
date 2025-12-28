@@ -9,6 +9,14 @@ trap 'rm -rf "$tmp_dir"' EXIT
 pkg_list="$tmp_dir/packages.txt"
 missing_list="$tmp_dir/missing.txt"
 
+nix_env=()
+if [[ -n "${SUDO_USER:-}" ]]; then
+  sudo_channel="/nix/var/nix/profiles/per-user/${SUDO_USER}/channels/nixos"
+  if [[ -e "$sudo_channel" ]]; then
+    nix_env=(env "NIX_PATH=nixpkgs=${sudo_channel}:${NIX_PATH:-}")
+  fi
+fi
+
 python - "$root_dir" <<'PY' > "$pkg_list"
 import re
 import sys
@@ -98,7 +106,7 @@ print(payload)
 print("''; in builtins.filter (path: !(lib.hasAttrByPath path pkgs)) names")
 PY
 
-  nix eval --impure --json --expr "$(cat "$nix_expr")" > "$missing_list"
+  "${nix_env[@]}" nix eval --impure --json --expr "$(cat "$nix_expr")" > "$missing_list"
 fi
 
 if [[ -s "$missing_list" && "$(cat "$missing_list")" != "[]" ]]; then
