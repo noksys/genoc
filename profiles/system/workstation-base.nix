@@ -7,6 +7,7 @@
     ../../modules/ui/common-gui.nix
     ../../modules/ui/terminal-emulators/base.nix
     ../../modules/system/shells/base.nix
+    ../../modules/domains/multimedia/audio-cli.nix
     ../../modules/ui/fonts/emoji.nix
     ../../modules/hardware/peripherals/bluetooth.nix
     ../../modules/hardware/peripherals/xbox-controller.nix

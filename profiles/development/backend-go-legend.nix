@@ -12,6 +12,5 @@
     ../../modules/domains/crypto/base.nix
     ../../modules/domains/crypto/elements.nix
     ../../modules/dev-domains/backend-tools.nix
-    ../../modules/ui/desktop-entries/web-browsers.nix
   ];
 }
