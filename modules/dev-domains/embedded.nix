@@ -16,5 +16,5 @@
     pkgsCross.arm-embedded.buildPackages.gcc # ARM bare-metal toolchain
   ];
   
-  users.users.${(import ../../custom_vars.nix).mainUser}.extraGroups = ["dialout"];
+  users.users.${(import ../../../custom_vars.nix).mainUser}.extraGroups = ["dialout"];
 }

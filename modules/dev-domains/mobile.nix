@@ -13,5 +13,5 @@
   ];
   
   programs.adb.enable = true;
-  users.users.${(import ../../custom_vars.nix).mainUser}.extraGroups = ["adbusers"];
+  users.users.${(import ../../../custom_vars.nix).mainUser}.extraGroups = ["adbusers"];
 }

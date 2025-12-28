@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  vars       = import ../../../../custom_vars.nix;
+  vars       = import ../../../../../custom_vars.nix;
   user       = vars.mainUser;
   home       = vars.homeDirectory;
   paisaFlake = builtins.getFlake "github:ananthakumaran/paisa";

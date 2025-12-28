@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  vars = import ../../../custom_vars.nix;
+  vars = import ../../../../custom_vars.nix;
 in
 {
   security.tpm2.enable = true;

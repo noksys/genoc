@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  vars = import ../../../../custom_vars.nix;
+  vars = import ../../../../../custom_vars.nix;
   hledgerPort = 7501;
   publicPort  = 8351;
 in {

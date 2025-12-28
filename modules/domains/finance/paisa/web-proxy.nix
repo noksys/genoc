@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  vars = import ../../../../custom_vars.nix;
+  vars = import ../../../../../custom_vars.nix;
   paisaPort = 7500;
   publicPort  = 8350;
 in {

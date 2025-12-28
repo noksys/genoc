@@ -1,7 +1,7 @@
 { config, lib, pkgs, modulesPath, ... }:
 
 let
-  vars = import ../../custom_vars.nix;
+  vars = import ../../../custom_vars.nix;
 in
 {
   imports = [
