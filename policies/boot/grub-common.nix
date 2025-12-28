@@ -15,8 +15,8 @@ in
     splashImage = ./theme/bg.png;
     font = "${grubFont}/DejaVuSansMono36.pf2";
     extraConfig = ''
-      set color_normal=black/-
-      set color_highlight=white/black
+      set color_normal=black/transparent
+      set color_normal=blue/transparent
     '';
   };
 
