@@ -18,8 +18,9 @@
     options = "grp:shifts_toggle";
   };
 
-  # Keep TTYs aligned with the XKB layout (Wayland/X11).
-  console.useXkbConfig = true;
+  # Avoid console.useXkbConfig: it injects a derivation into console.keyMap,
+  # which breaks in 25.11+ where the option expects only string/path.
+  console.useXkbConfig = false;
 
   environment.etc."XCompose".text = ''
     # Cedilla
