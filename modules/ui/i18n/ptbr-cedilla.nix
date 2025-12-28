@@ -5,8 +5,8 @@
   environment.variables = {
     QT_IM_MODULE = lib.mkForce "cedilla";
     GTK_IM_MODULE = lib.mkForce "cedilla";
-    XMODIFIERS = "@im=cedilla";
-    XCOMPOSEFILE = "/etc/XCompose";
+    XMODIFIERS = lib.mkForce "@im=cedilla";
+    XCOMPOSEFILE = lib.mkForce "/etc/XCompose";
   };
 
   environment.etc."XCompose".text = ''
