@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   imports = [
-    ../../hardware/video/base.nix
+    ../../modules/hardware/video/base.nix
   ];
 
   # Enable the X11 windowing system (still needed for GDM implementation details)
