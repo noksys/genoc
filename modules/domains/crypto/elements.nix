@@ -1,8 +1,9 @@
 { pkgs, ... }:
 {
-  environment.systemPackages = [
-    pkgs.elementsd
-    (pkgs.writeTextFile {
+  environment.systemPackages = with pkgs; [
+    elementsd
+    elements
+    (writeTextFile {
       name = "elements-qt.desktop";
       destination = "/share/applications/elements-qt.desktop";
       text = ''
@@ -20,3 +21,4 @@
     })
   ];
 }
+

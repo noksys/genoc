@@ -14,5 +14,6 @@
     nmap       # Network scanner
     mtr        # Network diagnostics tracer
     bind       # DNS tools (dig, nslookup)
+    jq         # JSON manipulation
   ];
 }
