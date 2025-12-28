@@ -9,7 +9,7 @@ trap 'rm -rf "$tmp_dir"' EXIT
 pkg_list="$tmp_dir/packages.txt"
 missing_list="$tmp_dir/missing.txt"
 
-python - <<'PY' "$root_dir" > "$pkg_list"
+python - "$root_dir" <<'PY' > "$pkg_list"
 import re
 import sys
 from pathlib import Path
@@ -41,7 +41,8 @@ for pkg in sorted(pkgs):
     print(pkg)
 PY
 
-echo "Checking $(wc -l < "$pkg_list") packages..."
+pkg_count="$(wc -l < "$pkg_list")"
+echo "Checking ${pkg_count} packages..."
 
 while read -r pkg; do
   if ! nix eval --impure --raw --expr "with import <nixpkgs> {}; builtins.hasAttr \"${pkg}\" pkgs" >/dev/null 2>&1; then
