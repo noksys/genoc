@@ -1,5 +1,7 @@
 { config, lib, ... }:
 {
+  services.power-profiles-daemon.enable = false;
+
   # ULTRA ECO MODE: Cap CPU frequencies hard.
   services.tlp = {
     enable = true;
