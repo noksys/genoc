@@ -7,7 +7,7 @@
     opera       # Opera browser
     nyxt        # Keyboard-driven browser
     qutebrowser # Keyboard-driven browser
-    falkon      # KDE browser
+    kdePackages.falkon # KDE browser
     epiphany    # GNOME Web
   ];
 }

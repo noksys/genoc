@@ -4,6 +4,6 @@
   imports = [ ./regular.nix ];
 
   environment.systemPackages = with pkgs; [
-    scratch # Visual programming for kids
+    # scratch not available in nixos-25.11
   ];
 }

@@ -8,7 +8,6 @@
     monero-gui            # Monero Wallet
     
     # --- Tools ---
-    vanitygen             # Bitcoin vanity address generator
     # python3Packages.bitbox02 # BitBox02 hardware wallet library
   ];
 }

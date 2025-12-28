@@ -4,7 +4,7 @@
   environment.systemPackages = with pkgs; [
     anki          # Flashcards
     focuswriter   # Distraction-free writing
-    kalgebra      # Graph calculator
-    kgeography    # Geography trainer
+    kdePackages.kalgebra   # Graph calculator
+    kdePackages.kgeography # Geography trainer
   ];
 }

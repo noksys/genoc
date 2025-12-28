@@ -2,10 +2,10 @@
 
 {
   environment.systemPackages = with pkgs; [
-    supertux      # Classic platformer
-    supertuxkart  # Kart racing game
+    superTux      # Classic platformer
+    superTuxKart  # Kart racing game
     pingus        # Lemmings-style puzzle game
-    tuxmath       # Math arcade game
+    tuxtype       # Typing arcade game (tuxmath not in nixos-25.11)
     tuxpaint      # Drawing/painting for kids
   ];
 }

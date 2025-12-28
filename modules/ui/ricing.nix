@@ -5,7 +5,7 @@
     neofetch  # System info CLI
     fastfetch # Fast system info CLI
     cmatrix   # Terminal Matrix effect
-    pipes-sh  # Terminal pipes animation
+    pipes-rs  # Terminal pipes animation
     cbonsai   # Terminal bonsai generator
     htop      # Interactive process viewer
     btop      # Resource monitor

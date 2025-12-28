@@ -17,8 +17,9 @@ from pathlib import Path
 root = Path(sys.argv[1])
 skip = ("/_archived/", "/modules/ui/desktop-entries/")
 
-sys_re = re.compile(r"environment\.systemPackages\s*=\s*[^\[]*\[(.*?)\];", re.S)
+sys_re = re.compile(r"environment\.systemPackages\s*=\s*([^\[]*)\[(.*?)\];", re.S)
 item_re = re.compile(r"[A-Za-z0-9_][A-Za-z0-9_.-]*")
+quoted_re = re.compile(r'(?:pkgs\.)?([A-Za-z0-9_]+)\."([^"]+)"')
 
 pkgs = set()
 
@@ -27,19 +28,46 @@ for path in root.rglob("*.nix"):
     if any(x in s for x in skip):
         continue
     text = path.read_text()
-    for block in sys_re.findall(text):
+    for prelude, block in sys_re.findall(text):
+        base_prefix = None
+        if "with pkgs.kdePackages" in prelude:
+            base_prefix = "kdePackages"
+        elif "with pkgs.gnome" in prelude:
+            base_prefix = "gnome"
         # strip line comments
         block = re.sub(r"#.*", "", block)
+        for prefix, quoted in quoted_re.findall(block):
+            if prefix == "pkgs":
+                pkgs.add((quoted,))
+            else:
+                pkgs.add((prefix, quoted))
+        block = quoted_re.sub("", block)
+
         for token in item_re.findall(block):
             if token.endswith("."):
                 continue
             if token in {"with", "pkgs", "kdePackages", "gnome"}:
                 continue
-            if token.startswith(("pkgs.", "kdePackages.", "gnome.")):
+            if token in {"paisaPkg", "git-sh"} or token.startswith("fenix."):
+                continue
+            if token.startswith("pkgs."):
                 token = token.split(".", 1)[1]
-            pkgs.add(token)
+            if "." in token:
+                pkgs.add(token)
+                continue
+            if base_prefix is not None:
+                pkgs.add((base_prefix, token))
+            else:
+                pkgs.add(token)
 
-for pkg in sorted(pkgs):
+normalized = set()
+for pkg in pkgs:
+    if isinstance(pkg, tuple):
+        normalized.add(".".join(pkg))
+    else:
+        normalized.add(pkg)
+
+for pkg in sorted(normalized):
     print(pkg)
 PY
 
