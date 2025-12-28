@@ -2,7 +2,7 @@
 
 {
   environment.systemPackages = with pkgs; [
-    transmission-gtk # BitTorrent client (GTK)
+    transmission_4-gtk # BitTorrent client (GTK)
     transmission-cli # CLI tools (transmission-remote)
   ];
 }
