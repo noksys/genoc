@@ -1,14 +1,14 @@
 { pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
-    bitcoind
-    bitcoin
+    bitcoind-knots
+    bitcoin-knots
     (writeTextFile {
       name = "bitcoin-qt.desktop";
       destination = "/share/applications/bitcoin-qt.desktop";
       text = ''
         [Desktop Entry]
-        Name=Bitcoin-Qt
+        Name=Bitcoin Knots
         Comment=Connect to the Bitcoin P2P Network
         Exec=bitcoin-qt %u
         Terminal=false
