@@ -1,7 +1,7 @@
 { pkgs, lib, ... }:
 {
   imports = [
-    ../../modules/hardware/video/base.nix
+    ../../../modules/hardware/video/base.nix
   ];
 
   # Enable the X11 windowing system (required as a base for SDDM even in Wayland)
