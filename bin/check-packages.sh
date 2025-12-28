@@ -9,24 +9,37 @@ trap 'rm -rf "$tmp_dir"' EXIT
 pkg_list="$tmp_dir/packages.txt"
 missing_list="$tmp_dir/missing.txt"
 
-rg --glob '!_archived/**' --glob '!modules/ui/desktop-entries/**' -n "environment.systemPackages" "$root_dir" \
-  | cut -d: -f1 \
-  | sort -u \
-  | while read -r file; do
-      # Extract the package list block
-      awk '
-        /environment\\.systemPackages/ { inlist=1; next }
-        inlist && /\\];/ { inlist=0; exit }
-        inlist { print }
-      ' "$file"
-    done \
-  | sed -E 's/#.*$//' \
-  | tr -s '[:space:]' ' ' \
-  | tr ' ' '\n' \
-  | sed -E 's/^pkgs\\.//; s/^kdePackages\\.//; s/^gnome\\.//;' \
-  | grep -E '^[A-Za-z0-9_][A-Za-z0-9_\\.-]*$' \
-  | grep -vE '^(with|pkgs|kdePackages|gnome)$' \
-  | sort -u > "$pkg_list"
+python - <<'PY' "$root_dir" > "$pkg_list"
+import re
+import sys
+from pathlib import Path
+
+root = Path(sys.argv[1])
+skip = ("/_archived/", "/modules/ui/desktop-entries/")
+
+sys_re = re.compile(r"environment\\.systemPackages\\s*=\\s*[^\\[]*\\[(.*?)\\];", re.S)
+item_re = re.compile(r"[A-Za-z0-9_][A-Za-z0-9_.-]*")
+
+pkgs = set()
+
+for path in root.rglob("*.nix"):
+    s = str(path)
+    if any(x in s for x in skip):
+        continue
+    text = path.read_text()
+    for block in sys_re.findall(text):
+        # strip line comments
+        block = re.sub(r"#.*", "", block)
+        for token in item_re.findall(block):
+            if token.startswith(("pkgs.", "kdePackages.", "gnome.")):
+                token = token.split(".", 1)[1]
+            if token in {"with", "pkgs", "kdePackages", "gnome"}:
+                continue
+            pkgs.add(token)
+
+for pkg in sorted(pkgs):
+    print(pkg)
+PY
 
 echo "Checking $(wc -l < "$pkg_list") packages..."
 
