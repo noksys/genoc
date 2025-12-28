@@ -1,6 +1,9 @@
 { pkgs, ... }:
 {
-  imports = [ ./base.nix ];
+  imports = [
+    ./base.nix
+    ./music.nix
+  ];
   
   environment.systemPackages = with pkgs; [
     # --- Light Editing ---
