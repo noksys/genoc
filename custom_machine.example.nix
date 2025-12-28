@@ -78,6 +78,7 @@ in
     # ./genoc/profiles/development/game-engine-dev.nix # Game engine development stack
     # ./genoc/profiles/development/mobile-app-dev.nix # Android and Flutter development
     # ./genoc/profiles/development/embedded-engineer.nix # Embedded systems and firmware tools
+    # ./genoc/profiles/development/dev-testing.nix # Playwright + testing tools
 
     # ---- Business & Office --------------------------------------------------
     # ./genoc/profiles/business/office-maniac.nix   # The ultimate LaTeX and bibliography stack
