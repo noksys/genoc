@@ -4,6 +4,6 @@
     dejavu_fonts
     liberation_ttf
     noto-fonts
-    ubuntu_font_family
+    ubuntu-classic
   ];
 }
