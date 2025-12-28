@@ -2,7 +2,7 @@
 
 {
   environment.systemPackages = with pkgs; [
-    kturtle # KDE educational Turtle graphics
+    kdePackages.kturtle # KDE educational Turtle graphics
     ucblogo # Logo interpreter
   ];
 }
