@@ -11,7 +11,6 @@
     
     # Search Tools
     ddgr    # DuckDuckGo terminal client
-    googler # Google terminal client
 
     # AI Tools
     tgpt # ChatGPT without API Key (web-like)
