@@ -10,6 +10,7 @@
     networkmanagerapplet  # NetworkManager control applet
     yad                   # Yet Another Dialog (simple GUI prompts)
     appimage-run          # Run AppImages with desktop integration
+    wmctrl                # Used for transparency in windows
   ];
   
   # Enable fonts
