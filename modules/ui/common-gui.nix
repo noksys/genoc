@@ -11,6 +11,7 @@
     yad                   # Yet Another Dialog (simple GUI prompts)
     appimage-run          # Run AppImages with desktop integration
     wmctrl                # Used for transparency in windows
+    xkeyboard_config      # XKB data for libxkbcommon (Wayland/AppImage)
   ];
   
   # Enable fonts
@@ -18,4 +19,7 @@
 
   # DConf is required for GSettings (GTK apps)
   programs.dconf.enable = true;
+
+  # Ensure xkbcommon finds XKB data under /nix/store (AppImages expect /usr/share/X11/xkb).
+  environment.sessionVariables.XKB_CONFIG_ROOT = "${pkgs.xkeyboard_config}/share/X11/xkb";
 }
