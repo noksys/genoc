@@ -5,7 +5,7 @@
     fortune  # Classic terminal fortune cookies
     htop     # Interactive process viewer
     btop     # Resource monitor
-    picom    # Compositor for X11
+    # picom    # Compositor for X11
     starship # Shell prompt
   ];
 }

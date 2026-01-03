@@ -10,5 +10,6 @@ in
 
   environment.systemPackages = with pkgs; [
     docker-compose # Multi-container orchestration tool
+    docker-buildx
   ];
 }

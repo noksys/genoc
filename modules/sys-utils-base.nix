@@ -12,5 +12,8 @@
     # Network
     inetutils # Basic network utilities (ping, telnet, etc.)
     dnsutils  # DNS lookup tools (dig, nslookup)
+
+    # Disk
+    gparted # Disk partition manager
   ];
 }

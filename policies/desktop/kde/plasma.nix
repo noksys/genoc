@@ -10,6 +10,8 @@
   # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
+
+  services.picom.enable = false;
   
   # Ensure Wayland support is active for SDDM
   services.displayManager.sddm.wayland.enable = true;
