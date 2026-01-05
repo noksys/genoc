@@ -59,6 +59,7 @@ in
     # ./genoc/policies/system/shells/bash.nix     # Classic Bash shell
     # ./genoc/policies/system/behavior/prevent-sleep.nix # Disables automatic sleep
     # ./genoc/policies/system/behavior/prevent-hibernation.nix # Disables hibernation
+    # ./genoc/policies/system/behavior/seamless-switch.nix # Prevent service restart on switch
     # ./genoc/policies/system/behavior/server-uptime.nix # Optimized for long uptime
 
     # =========================================================================
