@@ -7,5 +7,7 @@
     encfs     # FUSE-based encrypted filesystem
     libfido2
     age-plugin-fido2-hmac
+    age
+    coreutils
   ];
 }
