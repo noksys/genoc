@@ -12,6 +12,7 @@ in
   boot.loader.grub = {
     enable = true;
     useOSProber = true;
+    configurationLimit = 20;
     splashImage = ./theme/bg.png;
     font = "${grubFont}/DejaVuSansMono36.pf2";
     extraConfig = ''

@@ -15,7 +15,14 @@
   ];
   
   # Enable fonts
-  fonts.fontconfig.enable = true;
+  fonts.fontconfig = {
+    enable = true;
+    antialias = true;
+    hinting.enable = true;
+    hinting.style = "full";
+    subpixel.rgba = "rgb";
+    subpixel.lcdfilter = "default";
+  };
 
   # DConf is required for GSettings (GTK apps)
   programs.dconf.enable = true;

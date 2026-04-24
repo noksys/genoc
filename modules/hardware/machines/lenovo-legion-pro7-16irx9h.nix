@@ -30,6 +30,7 @@
   # Prevent the AVS driver from grabbing the device (keep using snd-hda-intel).
   boot.blacklistedKernelModules = [ "snd_soc_avs" ];
 
+
   # ---- Graphics base (PERFORMANCE by default) -------------------------------
   # Base profile: run the whole desktop on the NVIDIA dGPU for max smoothness.
   hardware.graphics.enable = true;

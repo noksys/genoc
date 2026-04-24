@@ -7,6 +7,12 @@ in
   boot = {
     initrd.systemd.enable = true;
 
+    # Drop-in: extend LUKS password timeout to 30 min (only affects cryptsetup units)
+    initrd.systemd.units."systemd-cryptsetup@.service.d/timeout.conf".text = ''
+      [Service]
+      TimeoutSec=1800
+    '';
+
     plymouth = {
       enable = true;
       theme = "${vars.plymouthTheme}";

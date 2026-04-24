@@ -11,7 +11,7 @@
 
   environment.systemPackages = with pkgs; [
     tmux    # Terminal multiplexer
-    zellij  # Modern terminal multiplexer
+    # zellij  # Modern terminal multiplexer (disabled: requires rust 1.92, nixpkgs has 1.91)
     strace  # Trace system calls
     ltrace  # Trace library calls
     binwalk # Firmware analysis tool

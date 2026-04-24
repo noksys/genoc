@@ -6,6 +6,7 @@
     #../audio/pulseaudio-legacy.nix
     ../audio/pipewire.nix
     ../peripherals/bluetooth.nix
+    ../backlight.nix
   ];
 
   # Virtualization

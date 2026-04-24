@@ -70,6 +70,7 @@ in
   };
 
   # Shell Init (History, Auto-logout)
+
   environment.interactiveShellInit = ''
     if [ "$TERM" = linux ]; then
       TMOUT=600
