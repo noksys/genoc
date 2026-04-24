@@ -1,11 +1,9 @@
 { config, pkgs, lib, ... }:
 
 let
-  vars       = import ../../../../../custom_vars.nix;
-  user       = vars.mainUser;
-  home       = vars.homeDirectory;
-  paisaFlake = builtins.getFlake "github:ananthakumaran/paisa";
-  paisaPkg   = paisaFlake.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  vars = import ../../../../../custom_vars.nix;
+  user = vars.mainUser;
+  home = vars.homeDirectory;
 in {
   imports = [ ./package.nix ];
 
@@ -20,7 +18,7 @@ in {
       Group = "users";
       WorkingDirectory = "${home}/Documents/paisa";
       Restart = "on-failure";
-      ExecStart = "${paisaPkg}/bin/paisa serve";
+      ExecStart = "${pkgs.paisa}/bin/paisa serve";
     };
   };
 }
