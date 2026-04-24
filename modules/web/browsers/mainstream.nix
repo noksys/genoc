@@ -29,7 +29,7 @@
         [Desktop Entry]
         Version=1.0
         Name=Google Chrome (3D)
-        Exec=google-chrome-stable --enable-gpu-sandbox --use-gl=desktop %U
+        Exec=env __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia __VK_LAYER_NV_optimus=NVIDIA_only google-chrome-stable --ozone-platform=x11 --gl=egl-angle --angle=opengl %U
         Terminal=false
         Icon=google-chrome
         Type=Application

@@ -1,6 +1,14 @@
 { pkgs, ... }:
 
 {
+
+  imports = [
+    ../../modules/languages/lisp-family/scheme.nix
+  ];
+
+  # Enable Magic SysRq in safe mode (REISUB without dangerous memory dumps)
+  boot.kernel.sysctl."kernel.sysrq" = 244;
+
   environment.systemPackages = with pkgs; [
     tmux    # Terminal multiplexer
     zellij  # Modern terminal multiplexer

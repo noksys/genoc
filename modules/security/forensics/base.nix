@@ -2,7 +2,7 @@
 
 {
   environment.systemPackages = with pkgs; [
-    autopsy     # Digital forensics platform
+    # autopsy     # Digital forensics platform
     binwalk     # Firmware analysis
     sleuthkit   # File system forensics
     ddrescue    # Data recovery tool

@@ -6,6 +6,7 @@
     ../../modules/dev-domains/dev-debug/full.nix
     ../../modules/dev-domains/git.nix
     ../../modules/dev-domains/dev-newbie.nix
+    ../../modules/dev-domains/dev-hacker.nix
     ../../modules/editors/vscode/full.nix
     ../../modules/editors/emacs/base.nix
   ];

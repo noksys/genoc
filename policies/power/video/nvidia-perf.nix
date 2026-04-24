@@ -9,6 +9,8 @@ in
   config = lib.mkIf hasNvidia {
     hardware.nvidia = {
       prime.offload.enable = lib.mkForce false;
+      prime.offload.enableOffloadCmd = lib.mkForce false;
+      powerManagement.finegrained = lib.mkForce false;
       prime.sync.enable = lib.mkForce true;      # Force dGPU to drive the display
       powerManagement.enable = lib.mkForce false; # Disable RTD3
     };
