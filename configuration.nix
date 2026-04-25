@@ -28,7 +28,10 @@ in
   boot.supportedFilesystems = [ "zfs" ];
   boot.zfs.forceImportRoot = false;
   boot.kernelPackages = latestKernelPackage;
-  boot.kernelParams = [ "zfs.zfs_arc_max=12884901888" "rd.luks.timeout=1800" ];
+  # Note: zfs.zfs_arc_max moved to ./hardware/zfs.nix (machine-imported).
+  # rd.luks.timeout=1800 keeps the kernel-level LUKS prompt at 30min;
+  # genoc/boot/plymouth.nix adds a complementary systemd-level cap.
+  boot.kernelParams = [ "rd.luks.timeout=1800" ];
   #boot.extraModprobeConfig = ''
   #   options zfs l2arc_noprefetch=0 l2arc_write_boost=33554432 l2arc_write_max=16777216 zfs_arc_max=2147483648
   #'';
@@ -95,7 +98,7 @@ in
     "interface-name:tun*"
   ];
 
-  networking.nameservers = [ "8.8.8.8" "8.8.4.4" "1.1.1.1" ];
+  networking.nameservers = [ "1.1.1.1" "8.8.8.8" "9.9.9.9" ];
 
   security.polkit.enable = true;
 
@@ -107,11 +110,15 @@ in
 
   boot.kernel.sysctl."net.ipv6.conf.all.disable_ipv6" = false;
   boot.kernel.sysctl."kernel.sysrq" = "1";
+  # Keep idle long-running TCP connections alive (Telegram/Signal/SSH on flaky NAT).
+  boot.kernel.sysctl."net.ipv4.tcp_keepalive_time" = 60;
+  boot.kernel.sysctl."net.ipv4.tcp_keepalive_intvl" = 30;
+  boot.kernel.sysctl."net.ipv4.tcp_keepalive_probes" = 6;
 
   # System optimization & hacks
   fileSystems."/".options = lib.mkDefault [ "noatime" ];
 
-  boot.loader.grub.configurationLimit = 5;
+  # configurationLimit moved to ./boot/grub.nix (= 20, brought from v2.x).
   boot.initrd.availableKernelModules = lib.mkMerge [ [ "dm_crypt" "zfs" ] ];
 
   system = {

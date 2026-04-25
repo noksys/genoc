@@ -7,6 +7,14 @@ in
   boot = {
     initrd.systemd.enable = true;
 
+    # Drop-in: extend LUKS password timeout to 30 min (only affects cryptsetup units).
+    # Complements rd.luks.options=timeout=0 below — kernel waits forever for input,
+    # systemd hard-caps the unit at 30 min so a stuck prompt eventually reboots.
+    initrd.systemd.units."systemd-cryptsetup@.service.d/timeout.conf".text = ''
+      [Service]
+      TimeoutSec=1800
+    '';
+
     plymouth = {
       enable = true;
       theme = "${vars.plymouthTheme}";
@@ -18,6 +26,7 @@ in
 
       extraConfig = ''
         InputTimeout=0
+        Font=DejaVu Sans 32
       '';
     };
 
