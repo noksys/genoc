@@ -92,6 +92,22 @@ in
         };
       };
 
+      # Stop KDE side-services that idle but still wake the CPU periodically:
+      # Akonadi (PIM backend — only needed if you read mail in KMail/Kontact)
+      # KDE Connect daemon (phone integration). Re-enable manually if needed.
+      systemd.user.services.kde-extras-disable = {
+        description = "Stop Akonadi + KDE Connect in powersave";
+        wantedBy = [ "graphical-session.target" ];
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = pkgs.writeShellScript "kde-extras-disable.sh" ''
+            ${pkgs.kdePackages.akonadi}/bin/akonadictl stop || true
+            ${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect-cli --refresh || true
+            pkill -f kdeconnectd || true
+          '';
+        };
+      };
+
       services.geoclue2.enable = lib.mkForce false;
     };
   };
