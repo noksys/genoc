@@ -12,16 +12,12 @@
       fira-code
       fira-code-symbols
       font-awesome_4
-      ipafont
-      joypixels
-      kochi-substitute
-      liberation_ttf
-      migmix
       google-fonts              # huge family for design work (creative profile)
-      mplus-outline-fonts.githubRelease
+      joypixels
+      liberation_ttf
       nerd-fonts.fira-code      # system-wide so kmscon (TTY) can render it
       noto-fonts
-      noto-fonts-cjk-sans
+      noto-fonts-cjk-sans       # CJK fallback for misc apps; cheap, keep
       noto-fonts-color-emoji
       powerline-fonts
       proggyfonts

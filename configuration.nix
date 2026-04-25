@@ -344,10 +344,10 @@ in
     };
   };
 
-  nixpkgs.config.permittedInsecurePackages = [
-  #  "python3.12-ecdsa-0.19.1"
-    "gradle-7.6.6"
-  ];
+  # No insecure packages currently allowed at the genoc level. If a build
+  # complains about gradle-7.6.6 / python3.12-ecdsa / etc., re-add the exact
+  # name here with a Phase 2 follow-up to find what pulls it.
+  nixpkgs.config.permittedInsecurePackages = [];
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

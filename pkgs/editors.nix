@@ -9,7 +9,6 @@ with pkgs; [
   hunspell
   ispell
   neovim
-  sublime
   vim
   vscode
   #texlive.scheme-full

@@ -26,7 +26,7 @@ with pkgs; [
   inxi
   iotop
   kitty
-  linuxKernel.packages.linux_6_6.cpupower
+  linuxPackages.cpupower   # follows running kernel (6.12 LTS pinned in lenovo-legion)
   lsof
   lzip
   mtr           # network path diagnostics

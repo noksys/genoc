@@ -40,7 +40,6 @@ with pkgs; [
   git-crypt
   git-filter-repo
   git-lfs                # large file support
-  gitFull
   github-desktop
   gitsh.git-sh
   gnum4
