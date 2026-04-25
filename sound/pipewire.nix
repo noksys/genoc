@@ -1,5 +1,8 @@
 { config, lib, pkgs, modulesPath, ... }:
 
+let
+  vars = import ../../custom_vars.nix;
+in
 {
   # Sound configuration
   # sound.enable = true; // Deprecated?
@@ -16,6 +19,9 @@
     #jack.enable = lib.mkDefault true;
     wireplumber.enable = true;
   };
+
+  # Some Pipewire/JACK apps still expect the user in 'audio' for direct device access.
+  users.users.${vars.mainUser}.extraGroups = [ "audio" ];
 
   nixpkgs.config.pulseaudio = true;
 

@@ -36,9 +36,17 @@
     #   "dejavu_fonts"
     # ];
 
-    fontconfig.defaultFonts.emoji = [
-      # "Noto Color Emoji"  # Uncomment if needed
-      "JoyPixels"
-    ];
+    fontconfig = {
+      antialias = true;
+      hinting.enable = true;
+      hinting.style = "full";
+      subpixel.rgba = "rgb";
+      subpixel.lcdfilter = "default";
+
+      defaultFonts.emoji = [
+        # "Noto Color Emoji"  # Uncomment if needed
+        "JoyPixels"
+      ];
+    };
   };
 }
