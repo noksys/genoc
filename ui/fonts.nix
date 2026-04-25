@@ -17,6 +17,7 @@
       kochi-substitute
       liberation_ttf
       migmix
+      google-fonts              # huge family for design work (creative profile)
       mplus-outline-fonts.githubRelease
       nerd-fonts.fira-code      # system-wide so kmscon (TTY) can render it
       noto-fonts
