@@ -141,11 +141,13 @@ in
   services.timesyncd.enable = true;
 
   services.xserver = {
-    # Configure XKB with multiple layouts (BR and US with SHIFT+SHIFT alternation)
+    # Configure XKB with US Intl as default + PT-BR ABNT2 as alternate
+    # (Shift+Shift to toggle). v3 follows v2's order — physical EN-INT
+    # keyboards expect US Intl active by default.
     xkb = {
-      layout = "br,us";              # First layout is Brazilian (br), second is US (us)
-      variant = ",alt-intl";         # No variant for "br", "alt-intl" for the "us" layout
-      options = "grp:shifts_toggle"; # Toggle between layouts with Shift+Shift
+      layout = "us,br";
+      variant = "intl,abnt2";
+      options = "grp:shifts_toggle";
     };
   };
 

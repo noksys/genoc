@@ -24,7 +24,10 @@ in
     gdm.enable = lib.mkForce false;
 
     sddm.enable = lib.mkDefault true;
-    sddm.wayland.enable = lib.mkForce false;
+    # SDDM as a Wayland greeter — picks up the monitor's native DPI and
+    # renders the login screen at sane size on HiDPI panels. The user's
+    # session can still be X11 via defaultSession below.
+    sddm.wayland.enable = true;
 
     defaultSession = "plasmax11";
   };
@@ -101,6 +104,8 @@ in
   environment.sessionVariables = {
     QT_AUTO_SCREEN_SCALE_FACTOR = lib.mkForce "1";
     QT_QPA_PLATFORMTHEME = "kde";
+    # Plasma 6 was auto-picking 48px on HiDPI; 24 matches the comfortable v2 size.
+    XCURSOR_SIZE = "24";
   };
 
   systemd.user.services.set-qt-vars = {
