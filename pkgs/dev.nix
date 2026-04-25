@@ -16,6 +16,7 @@ with pkgs; [
   bundix
   bundler
   cargo
+  code-cursor
   dbeaver-bin
   deno
   fenix.complete.toolchain

@@ -14,6 +14,7 @@ with pkgs; [
   ghostscript
   gnucash
   findutils
+  galculator
   htop
   jq
   kdePackages.kcalc

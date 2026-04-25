@@ -24,6 +24,7 @@ with pkgs; [
   nmap
   ntfs3g
   openssl
+  parallel-full
   pkg-config
   psmisc
   pv
@@ -42,6 +43,7 @@ with pkgs; [
   unzip
   usbutils
   util-linux
+  xkeyboard_config
   xorg.xrdb
   yad
   zfs

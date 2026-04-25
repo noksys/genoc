@@ -17,6 +17,7 @@ with pkgs; [
   mosh
   mullvad-browser
   ncdu
+  netbird-ui
   networkmanagerapplet
   nftables
   openssl

@@ -8,6 +8,7 @@ with pkgs; [
   poppler-utils
   python311Packages.img2pdf
   qpdf
+  typst
   unscii
   tectonic
   #texlive.scheme-full
