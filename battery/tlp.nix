@@ -35,6 +35,9 @@
       PLATFORM_PROFILE_ON_AC = "balanced";
       PLATFORM_PROFILE_ON_BAT = "low-power";
 
+      # WiFi powersave on battery (TLP-side; complements NM's wifi.powersave).
+      WIFI_PWR_ON_BAT = "on";
+
       # Optional: also cap absolute frequency on battery so `cpupower` shows the lower range.
       # (Not required for efficiency; purely for visibility/consistency.)
       # CPU_SCALING_MIN_FREQ_ON_BAT = "800000";   # 0.8 GHz
