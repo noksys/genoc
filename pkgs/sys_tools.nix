@@ -51,7 +51,6 @@ with pkgs; [
   tcpflow
   testdisk
   testdisk-qt
-  tgpt          # ChatGPT-style CLI without API key
   unzip
   usbutils
   util-linux

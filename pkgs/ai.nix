@@ -1,7 +1,6 @@
 { pkgs }:
 
 with pkgs; [
-  llama-cpp
-  lmstudio
-  shell-gpt   # ChatGPT-style assistant from the shell
+  llama-cpp        # llama.cpp — local LLM inference (CPU/GPU)
+  lmstudio         # GUI for browsing/running local models
 ]

@@ -51,6 +51,8 @@ with pkgs; [
   gopls                  # Go LSP
   gotestsum              # human-friendly `go test` runner
   govulncheck
+  guile                  # GNU Scheme implementation
+  chicken                # practical Scheme system (compiles to C)
   hexedit
   jdk
   jekyll

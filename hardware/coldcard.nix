@@ -2,15 +2,15 @@
 
 {
   services.udev.extraRules = ''
-    # Coldcard rules
-    SUBSYSTEMS=="usb", ATTRS{idVendor}=="d13e", ATTRS{idProduct}=="cc10", GROUP="plugdev", MODE="0666"
-    KERNEL=="hidraw*", ATTRS{idVendor}=="d13e", ATTRS{idProduct}=="cc10", GROUP="plugdev", MODE="0666"
+    # Coldcard rules — match the device on the immediate node (SUBSYSTEM/ATTR)
+    # rather than walking the parent chain (SUBSYSTEMS/ATTRS). MODE=0666 lets
+    # the user open the device without 'plugdev' group dependency.
+    SUBSYSTEM=="usb", ATTR{idVendor}=="d13e", ATTR{idProduct}=="cc10", MODE="0666"
+    KERNEL=="hidraw*", ATTRS{idVendor}=="d13e", ATTRS{idProduct}=="cc10", MODE="0666"
   '';
 
-  environment.systemPackages = lib.mkMerge [
-    (with pkgs; [
-      libusb1
-      udev
-    ])
+  environment.systemPackages = with pkgs; [
+    libusb1   # USB access library (CLI tools and pyusb backend)
+    udev      # device manager utilities
   ];
 }
