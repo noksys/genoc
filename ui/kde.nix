@@ -100,12 +100,19 @@ in
       systemd.user.services.kde-extras-disable = {
         description = "Stop Akonadi + KDE Connect + caffeine-ng in powersave";
         wantedBy = [ "graphical-session.target" ];
+        # Run AFTER caffeine.service so its main process exists when we
+        # ask systemd-user to stop it (avoids the race where pkill fires
+        # before caffeine has even started).
+        after = [ "caffeine.service" ];
         serviceConfig = {
           Type = "oneshot";
           ExecStart = pkgs.writeShellScript "kde-extras-disable.sh" ''
             ${pkgs.kdePackages.akonadi}/bin/akonadictl stop || true
             ${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect-cli --refresh || true
             pkill -f kdeconnectd || true
+            # systemctl stop tells the user manager NOT to restart caffeine;
+            # the pkill is just belt-and-suspenders for any forked child.
+            ${pkgs.systemd}/bin/systemctl --user stop caffeine.service 2>/dev/null || true
             pkill -f caffeine || true
           '';
         };
