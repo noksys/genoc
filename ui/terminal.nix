@@ -44,7 +44,6 @@ in
       otf2bdf
       psftools
       tamsyn
-      tartube-yt-dlp
       terminus_font
       w3m
       yt-dlp

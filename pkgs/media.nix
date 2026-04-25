@@ -5,7 +5,6 @@ with pkgs; [
   audacity
   blender                 # 3D suite
   darktable               # photography / RAW workflow
-  dia
   drawing                 # simple Paint-like editor (GNOME-friendly)
   feh                     # lightweight image viewer
   ffmpeg_6-full

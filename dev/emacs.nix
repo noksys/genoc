@@ -29,6 +29,5 @@
     glib
 
     drawio
-    dia
   ];
 }

@@ -53,6 +53,7 @@ with pkgs; [
   govulncheck
   guile                  # GNU Scheme implementation
   chicken                # practical Scheme system (compiles to C)
+  chez                   # Cisco Chez Scheme (Apache 2.0 since 2017)
   hexedit
   jdk
   jekyll

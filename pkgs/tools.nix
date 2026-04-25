@@ -43,7 +43,6 @@ with pkgs; [
   veracrypt
   virt-manager
   waydroid
-  wkhtmltopdf
   wl-clipboard
   wxmaxima
   xlockmore
