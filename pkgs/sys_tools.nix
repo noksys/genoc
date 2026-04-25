@@ -7,6 +7,7 @@ with pkgs; [
   binutils                   # ld / as / objdump / nm
   boost                      # Boost C++ libraries
   btop                       # modern resource monitor (htop's prettier cousin)
+  cpupower-gui               # GUI / runtime tuning for CPU frequency scaling
   btrfs-progs                # btrfs userspace
   busybox                    # minimal coreutils-like emergency toolkit
   bzip2                      # bz2 compressor
