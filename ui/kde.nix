@@ -95,8 +95,10 @@ in
       # Stop KDE side-services that idle but still wake the CPU periodically:
       # Akonadi (PIM backend — only needed if you read mail in KMail/Kontact)
       # KDE Connect daemon (phone integration). Re-enable manually if needed.
+      # caffeine-ng (user enables it via home-manager — not relevant in powersave
+      # since the whole point is to let the system idle/suspend).
       systemd.user.services.kde-extras-disable = {
-        description = "Stop Akonadi + KDE Connect in powersave";
+        description = "Stop Akonadi + KDE Connect + caffeine-ng in powersave";
         wantedBy = [ "graphical-session.target" ];
         serviceConfig = {
           Type = "oneshot";
@@ -104,6 +106,7 @@ in
             ${pkgs.kdePackages.akonadi}/bin/akonadictl stop || true
             ${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect-cli --refresh || true
             pkill -f kdeconnectd || true
+            pkill -f caffeine || true
           '';
         };
       };
