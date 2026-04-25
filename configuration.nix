@@ -319,15 +319,44 @@ in
       boot.kernel.sysctl = {
         "vm.swappiness" = 10;
         "vm.vfs_cache_pressure" = 50;
+        # Reduce timer wakeups and disable kernel watchdog to save CPU cycles.
+        "kernel.nmi_watchdog" = 0;
+        "kernel.timer_migration" = 0;
+        # Buffer more dirty pages in RAM (writeback delayed → fewer disk flushes).
+        "vm.dirty_ratio" = 60;
+        "vm.dirty_background_ratio" = 40;
+        # Allow lazytime mtime/atime updates to age 24h before flushing.
+        "vm.dirtytime_expire_seconds" = 86400;
       };
 
-      boot.kernelParams = [ "intel_pstate=passive" "pcie_aspm=force" ];
+      boot.kernelParams = [
+        "intel_pstate=passive"           # kernel takes the freq decisions (no HWP delegation)
+        "pcie_aspm=force"                # force PCIe ASPM L1
+        "pcie_aspm.policy=powersupersave" # most aggressive ASPM policy
+        "nosmt"                          # disable SMT/Hyper-Threading (lower idle floor)
+        "nvme_core.default_ps_max_latency_us=5500"  # let NVMe enter PS4 deep idle
+        "i915.enable_dc=4"               # iGPU display engine deep-sleep states
+        "i915.enable_psr=1"              # panel self-refresh
+        "i915.enable_fbc=1"              # framebuffer compression
+        "usbcore.autosuspend=1"          # autosuspend USB devices after 1s idle
+      ];
       services.thermald.enable = lib.mkForce true;
+
+      # Bluetooth + Xbox controller off in powersave (saves ~0.5W idle).
+      hardware.bluetooth.enable = lib.mkForce false;
+      hardware.bluetooth.powerOnBoot = lib.mkForce false;
+      services.blueman.enable = lib.mkForce false;
+      hardware.xpadneo.enable = lib.mkForce false;
 
       boot.extraModprobeConfig = ''
         options snd_hda_intel power_save=1
         options snd_ac97_codec power_save=1
       '';
+
+      # Drop screen brightness to 30% (148 / 496 max) when entering powersave.
+      # Overrides the genoc/hardware/backlight.nix backlight-default that sets 50%.
+      systemd.services.backlight-default.serviceConfig.ExecStart =
+        lib.mkForce "/bin/sh -c 'echo 148 > /sys/class/backlight/intel_backlight/brightness'";
 
       systemd.services.override-sysctl = {
         description = "Override sysctl after powertop";
