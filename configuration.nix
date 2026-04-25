@@ -374,7 +374,12 @@ in
       systemd.services.override-sysctl = {
         description = "Override sysctl after powertop";
         after = [ "powertop.service" ];
-        wantedBy = [ "multi-user.target" ];
+        # NOTE: previously wantedBy=multi-user.target — caused an ordering
+        # cycle (override-sysctl had implicit Before=multi-user, powertop
+        # had After=multi-user). Pulling it via powertop.service breaks
+        # the cycle: powertop runs after multi-user, then override-sysctl
+        # runs after powertop.
+        wantedBy = [ "powertop.service" ];
         serviceConfig = {
           Type = "oneshot";
           ExecStart = pkgs.writeShellScript "override-sysctl.sh" ''
