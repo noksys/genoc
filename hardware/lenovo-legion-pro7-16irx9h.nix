@@ -7,6 +7,11 @@
     ./baremetal.nix
   ];
 
+  # Pin to LTS 6.12 — NVIDIA proprietary drivers (580.x) fail to build on 6.19+
+  # (struct vm_area_struct dropped __vm_flags in 6.19).
+  # lib.mkForce overrides zfs.nix dynamic selection (6.12 is ZFS-compatible).
+  boot.kernelPackages = lib.mkForce pkgs.linuxPackages_6_12;
+
   # ---- Audio firmware patch -------------------------------------------------
   # Ship a tiny custom firmware patch for the ALC287 codec.
   hardware.firmware = [
@@ -52,6 +57,11 @@
     __NV_PRIME_RENDER_OFFLOAD = "0";
     GBM_BACKEND               = "nvidia-drm";
     MOZ_DISABLE_RDD_SANDBOX   = "1";
+
+    # Force software cursor — works around NVIDIA Bug 5983006 where the
+    # hardware cursor framebuffer triggers a NULL deref in nvidia-drm-fb.c
+    # (non_scanout_mem_backed sets pSurface=NULL on hybrid laptops).
+    KWIN_FORCE_SW_CURSOR      = "1";
   };
 
   # ---- dGPU runtime power policy via udev (helps RTD3 when on battery) -----
@@ -83,10 +93,11 @@
     powersave.configuration = {
       hardware.nvidia = {
         # Here we DO mkForce to ensure we override the base profile cleanly.
-        prime.offload.enable        = lib.mkForce true;   # iGPU drives; use `prime-run <cmd>` for dGPU
-        prime.sync.enable           = lib.mkForce false;  # sync is mutually exclusive with offload
-        powerManagement.enable      = lib.mkForce true;   # enable RTD3 (runtime suspend)
-        powerManagement.finegrained = lib.mkForce true;   # only valid with offload
+        prime.offload.enable           = lib.mkForce true;   # iGPU drives; use `prime-run <cmd>` for dGPU
+        prime.offload.enableOffloadCmd = lib.mkForce true;   # exposes the `prime-run` wrapper
+        prime.sync.enable              = lib.mkForce false;  # sync is mutually exclusive with offload
+        powerManagement.enable         = lib.mkForce true;   # enable RTD3 (runtime suspend)
+        powerManagement.finegrained    = lib.mkForce true;   # only valid with offload
       };
 
       # Crucial: stop "pinning" the session to NVIDIA on powersave.
