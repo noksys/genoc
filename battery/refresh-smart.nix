@@ -10,12 +10,16 @@ let
 in
 {
   # =============================================================================
-  # UDEV RULE: Trigger service when AC power is plugged/unplugged
+  # UDEV RULE: Trigger service when AC / USB-C power is plugged/unplugged
   # =============================================================================
   # This rule detects power supply changes and dispatches to systemd user service
-  # instead of running commands directly (which would lack X11/Wayland access)
+  # instead of running commands directly (which would lack X11/Wayland access).
+  # Matches BOTH Mains (legacy barrel jack) AND USB_C — the Legion Pro 7
+  # charges via USB-C, so without the USB_C line the trigger never fired when
+  # (un)plugging the USB-C adapter. v1 had only Mains; v2 added USB_C.
   services.udev.extraRules = ''
     SUBSYSTEM=="power_supply", ATTR{type}=="Mains", TAG+="systemd", ENV{SYSTEMD_USER_WANTS}+="refresh-smart-ac.service"
+    SUBSYSTEM=="power_supply", ATTR{type}=="USB_C", TAG+="systemd", ENV{SYSTEMD_USER_WANTS}+="refresh-smart-ac.service"
   '';
 
   # =============================================================================
