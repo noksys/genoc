@@ -109,7 +109,9 @@ in
   # '';
 
   boot.kernel.sysctl."net.ipv6.conf.all.disable_ipv6" = false;
-  boot.kernel.sysctl."kernel.sysrq" = "1";
+  # Magic SysRq in safe mode (REISUB without dangerous memory dumps).
+  # Was =1 (everything); v2's dev-hacker.nix narrowed to 244 — safer.
+  boot.kernel.sysctl."kernel.sysrq" = 244;
   # Keep idle long-running TCP connections alive (Telegram/Signal/SSH on flaky NAT).
   boot.kernel.sysctl."net.ipv4.tcp_keepalive_time" = 60;
   boot.kernel.sysctl."net.ipv4.tcp_keepalive_intvl" = 30;
