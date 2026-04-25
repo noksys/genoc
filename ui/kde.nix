@@ -104,8 +104,9 @@ in
   environment.sessionVariables = {
     QT_AUTO_SCREEN_SCALE_FACTOR = lib.mkForce "1";
     QT_QPA_PLATFORMTHEME = "kde";
-    # Plasma 6 was auto-picking 48px on HiDPI; 24 matches the comfortable v2 size.
-    XCURSOR_SIZE = "24";
+    # Plasma 6 was auto-picking 48px on HiDPI; 32 is comfortable on the
+    # Legion's panel without the giant 48px overshoot.
+    XCURSOR_SIZE = "32";
   };
 
   systemd.user.services.set-qt-vars = {
