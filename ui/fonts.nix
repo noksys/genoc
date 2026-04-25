@@ -18,7 +18,7 @@
       liberation_ttf
       migmix
       mplus-outline-fonts.githubRelease
-      #nerdfonts
+      nerd-fonts.fira-code      # system-wide so kmscon (TTY) can render it
       noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-color-emoji

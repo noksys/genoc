@@ -65,12 +65,13 @@
     # laptops the nvidia-drm-fb.c "non_scanout_mem_backed" path can hand KWin
     # a framebuffer with pSurface=NULL, which the driver then dereferences.
     # Symptoms: invisible/frozen cursor, KWin restart loop, occasional kernel
-    # oops on Wayland.
+    # oops on Wayland — historically only triggered on this machine when running
+    # dual-monitor; uncomment if it comes back on multi-display setups.
     #
     # Cost: a few ms of cursor latency, negligible CPU. Drop this line once
     # the NVIDIA proprietary driver ships a fix or the dGPU is no longer
     # session-primary on this machine.
-    KWIN_FORCE_SW_CURSOR      = "1";
+    # KWIN_FORCE_SW_CURSOR      = "1";
   };
 
   # ---- dGPU runtime power policy via udev (helps RTD3 when on battery) -----
