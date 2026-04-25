@@ -159,6 +159,13 @@ in
       kdePackages.xdg-desktop-portal-kde
       xdg-desktop-portal-wlr
 
+      # apps-full additions from v2 dev-gui
+      kdePackages.ark            # archive manager
+      kdePackages.filelight      # disk usage visualizer
+      kdePackages.kcolorchooser  # color picker
+      kdePackages.kruler         # on-screen ruler
+      kdePackages.spectacle      # screenshot tool
+
       xorg.xinput
       xorg.xwininfo
       xorg.xdpyinfo
