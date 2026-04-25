@@ -58,9 +58,18 @@
     GBM_BACKEND               = "nvidia-drm";
     MOZ_DISABLE_RDD_SANDBOX   = "1";
 
-    # Force software cursor — works around NVIDIA Bug 5983006 where the
-    # hardware cursor framebuffer triggers a NULL deref in nvidia-drm-fb.c
-    # (non_scanout_mem_backed sets pSurface=NULL on hybrid laptops).
+    # Force KWin to draw the cursor in software (CPU compositing path) instead
+    # of using the NVIDIA hardware cursor plane.
+    #
+    # Workaround for NVIDIA Bug 5983006: on hybrid (Intel iGPU + NVIDIA dGPU)
+    # laptops the nvidia-drm-fb.c "non_scanout_mem_backed" path can hand KWin
+    # a framebuffer with pSurface=NULL, which the driver then dereferences.
+    # Symptoms: invisible/frozen cursor, KWin restart loop, occasional kernel
+    # oops on Wayland.
+    #
+    # Cost: a few ms of cursor latency, negligible CPU. Drop this line once
+    # the NVIDIA proprietary driver ships a fix or the dGPU is no longer
+    # session-primary on this machine.
     KWIN_FORCE_SW_CURSOR      = "1";
   };
 
