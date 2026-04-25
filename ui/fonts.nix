@@ -43,10 +43,11 @@
       subpixel.rgba = "rgb";
       subpixel.lcdfilter = "default";
 
-      defaultFonts.emoji = [
-        # "Noto Color Emoji"  # Uncomment if needed
-        "JoyPixels"
-      ];
+      # defaultFonts.emoji is set in mantis-legion-pro-7/common.nix to
+      # "Noto Color Emoji" — that wins by being loaded later, so the line
+      # here was dead config (and contradicting JoyPixels). Removed.
+      # joypixels package stays in fonts.packages above, available if
+      # opted-in elsewhere.
     };
   };
 }

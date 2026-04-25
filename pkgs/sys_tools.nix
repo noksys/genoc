@@ -2,8 +2,10 @@
 
 with pkgs; [
   alacritty
+  bashInteractive
   binutils
   boost
+  xterm
   btop
   iotop
   btrfs-progs
