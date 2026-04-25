@@ -1,11 +1,19 @@
 {
-  # Fixing cedilla ć -> ç
-  environment.variables = {
-    QT_IM_MODULE = "cedilla";
-    GTK_IM_MODULE = "cedilla";
-    XMODIFIERS = "@im=cedilla";
-    XCOMPOSEFILE = "/etc/XCompose";
-  };
+  # Fixing cedilla ć -> ç (X11 only; avoid forcing IM modules in Wayland —
+  # KDE Plasma 6 sessions handle compose natively).
+  services.xserver.displayManager.sessionCommands = ''
+    if [ "''${XDG_SESSION_TYPE}" = "x11" ]; then
+      export QT_IM_MODULE=cedilla
+      export GTK_IM_MODULE=cedilla
+      export XMODIFIERS=@im=cedilla
+      export XCOMPOSEFILE=/etc/XCompose
+    fi
+  '';
+
+  # Avoid console.useXkbConfig: it injects a derivation into console.keyMap,
+  # which breaks in 25.11+ where the option expects only string/path
+  # (https://github.com/NixOS/nixpkgs/issues/411374).
+  console.useXkbConfig = false;
 
   environment.etc."XCompose".text = ''
     # Cedilla
