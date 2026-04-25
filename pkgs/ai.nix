@@ -1,6 +1,7 @@
 { pkgs }:
 
 with pkgs; [
-  lmstudio
   llama-cpp
+  lmstudio
+  shell-gpt   # ChatGPT-style assistant from the shell
 ]

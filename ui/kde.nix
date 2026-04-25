@@ -100,6 +100,9 @@ in
   services.pipewire.enable = true;
   programs.xwayland.enable = true;
 
+  # Use KDE's ksshaskpass for SSH passphrase prompts (instead of GNOME seahorse).
+  programs.ssh.askPassword = lib.mkForce "${pkgs.kdePackages.ksshaskpass}/bin/ksshaskpass";
+
   # Fix Qt
   environment.sessionVariables = {
     QT_AUTO_SCREEN_SCALE_FACTOR = lib.mkForce "1";
