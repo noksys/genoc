@@ -96,28 +96,40 @@
     nvtopPackages.nvidia
   ];
 
-  # ---- Specialisation: POWERSAVE (iGPU primary + NVIDIA RTD3) ---------------
-  # Goal: run desktop on Intel iGPU; only wake the dGPU on explicit demand
-  # via prime-run, and allow it to autosuspend when idle.
+  # ---- Specialisation: POWERSAVE (iGPU only, NVIDIA fully off) --------------
+  # Goal: run desktop on Intel iGPU; the NVIDIA dGPU is COMPLETELY blacklisted
+  # so the kernel doesn't touch it at all. This is the most aggressive battery
+  # mode (~4-7W less than RTD3-offload). Trade-off: prime-run will not work in
+  # this specialisation; CUDA / Steam GPU games / Blender GPU render fail until
+  # you reboot back to the default. NVreg_DynamicPowerManagement is set as a
+  # safety net for the case where the user later un-blacklists nvidia and
+  # falls back to RTD3 D3cold without rebuilding the whole spec.
   specialisation = {
     powersave.configuration = {
+      services.xserver.videoDrivers = lib.mkForce [ "modesetting" ];
+
+      boot.blacklistedKernelModules = [
+        "nvidia" "nvidia_drm" "nvidia_uvm" "nvidia_modeset"
+      ];
+
+      boot.extraModprobeConfig = ''
+        # Even when not blacklisted, force the deepest dynamic PM state (D3cold).
+        options nvidia "NVreg_DynamicPowerManagement=0x02"
+      '';
+
       hardware.nvidia = {
-        # Here we DO mkForce to ensure we override the base profile cleanly.
-        prime.offload.enable           = lib.mkForce true;   # iGPU drives; use `prime-run <cmd>` for dGPU
-        prime.offload.enableOffloadCmd = lib.mkForce true;   # exposes the `prime-run` wrapper
-        prime.sync.enable              = lib.mkForce false;  # sync is mutually exclusive with offload
-        powerManagement.enable         = lib.mkForce true;   # enable RTD3 (runtime suspend)
-        powerManagement.finegrained    = lib.mkForce true;   # only valid with offload
+        prime.offload.enable           = lib.mkForce false;
+        prime.offload.enableOffloadCmd = lib.mkForce false;
+        prime.sync.enable              = lib.mkForce false;
+        powerManagement.enable         = lib.mkForce false;
+        powerManagement.finegrained    = lib.mkForce false;
       };
 
-      # Crucial: stop "pinning" the session to NVIDIA on powersave.
-      # We do NOT clear the whole attribute set (so NIX_PATH etc. remain intact);
-      # we only override the keys that force NVIDIA.
+      # Stop "pinning" the session to NVIDIA on powersave.
       environment.sessionVariables = {
-        __GLX_VENDOR_LIBRARY_NAME = lib.mkForce "mesa";  # pick Mesa GLX vendor
-        __NV_PRIME_RENDER_OFFLOAD = lib.mkForce "";      # unset -> no forced offload
-        GBM_BACKEND               = lib.mkForce "";      # let GBM pick defaults
-        # Keep all other session variables inherited from the base system.
+        __GLX_VENDOR_LIBRARY_NAME = lib.mkForce "mesa";
+        __NV_PRIME_RENDER_OFFLOAD = lib.mkForce "";
+        GBM_BACKEND               = lib.mkForce "";
       };
     };
   };
