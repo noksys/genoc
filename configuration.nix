@@ -132,6 +132,15 @@ in
     IOWeight = 100;
   };
 
+  # Shutdown timeouts — default systemd is 90s per service.
+  # The user@1000.service was hanging for ~1m49s waiting for some KDE
+  # background service to terminate; cap shutdown at 15s for both system
+  # and user managers. After 15s a SIGKILL ends the holdout.
+  systemd.settings.Manager.DefaultTimeoutStopSec = "15s";
+  systemd.user.extraConfig = ''
+    DefaultTimeoutStopSec=15s
+  '';
+
   nix.settings.auto-optimise-store = true;
 
   #environment.sessionVariables = {
@@ -285,6 +294,10 @@ in
 
   # PCSCD
   services.pcscd.enable = true;
+
+  # cpupower-gui needs its dbus/systemd service to do privileged frequency
+  # changes; without it the GUI fails to start.
+  services.cpupower-gui.enable = true;
 
   # HDR support
   services.colord.enable = true;
