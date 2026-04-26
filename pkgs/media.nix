@@ -6,8 +6,10 @@
 
 with pkgs; [
   feh                     # lightweight image viewer
+  ffmpeg-full             # codec/protocol-complete ffmpeg (used by everything)
   flameshot               # screenshot tool with annotations
   imagemagick             # convert / mogrify / display
+  libva                   # VA-API video acceleration runtime (Intel/NVIDIA)
   mpv                     # mpv media player
   optipng                 # PNG optimizer
   pick-colour-picker      # GTK color picker

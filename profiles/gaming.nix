@@ -27,6 +27,9 @@ in {
     # manifest under share/vulkan/implicit_layer.d/, which goes into
     # /run/current-system/sw and is rediscovered on every rebuild — so
     # we skip the home-manager xdg workaround that re-symlinked it.
-    environment.systemPackages = [ pkgs.mangohud ];
+    environment.systemPackages = with pkgs; [
+      mangohud
+      wineWow64Packages.waylandFull   # Wine 64-bit + Wayland support, for Windows games via Steam Proton
+    ];
   };
 }

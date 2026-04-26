@@ -8,6 +8,8 @@ with pkgs; [
   ddrescue                  # robust data recovery for failing disks
   jose                      # JOSE (JSON Web Token / JWS / JWE) tooling
   libfido2                  # FIDO2 / WebAuthn library + CLI
+  mkpasswd                  # crypt(3) password hash CLI (mkpasswd -m sha-512)
+  pam                       # PAM userspace
   pam_u2f                   # PAM module for FIDO U2F/CTAP1
   pamtester                 # exercise/test PAM stacks from CLI
   rng-tools                 # /dev/random feeder (RDRAND/jitter/etc.)
