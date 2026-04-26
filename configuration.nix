@@ -212,9 +212,9 @@ in
     hashedPassword = vars.userHashedPassword;
     description = vars.userFullName;
     extraGroups = [ "networkmanager" "nginx" "wheel" "audio" "tarsnap" "lp" "tor" "debian-tor" "plugdev" "docker" ];
-    packages = lib.mkMerge [
-      (import ./pkgs/default_user.nix { pkgs = pkgs; })
-    ];
+    # Per-user packages live in profiles or in machine config (e.g.,
+    # KDE-specific user packages in genoc/ui/kde.nix).
+    packages = [];
   };
 
   # Nix Configuration
