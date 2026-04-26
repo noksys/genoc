@@ -10,6 +10,6 @@ with pkgs; [
   ispell            # legacy spell checker (some scripts still expect it)
   neovim            # Vim fork, modern plugin runtime
   vim               # original Vi IMproved
-  vscode            # Visual Studio Code (open build)
+  # vscode lives in the dev profile (genoc/profiles/dev.nix, tasks.editors-gui)
   #texlive.scheme-full  # full TeX Live (huge; commented — pull on demand)
 ]

@@ -2,14 +2,14 @@
 #
 # Two orthogonal knobs:
 #
-#   genoc.profile.dev.langs.<lang> = "default" | "full"
-#       Per-language toolchain depth. "default" = compiler/runtime + LSP;
-#       "full" = + debuggers, framework helpers, advanced lint/test tooling.
-#       Languages absent from the attrset get nothing.
+#   genoc.profile.dev.langs.<lang> = "min" | "full"
+#       Per-language toolchain depth. "min" = compiler/runtime + LSP;
+#       "full" = + debuggers, framework helpers, advanced lint/test tooling,
+#       niche extras.  Languages absent from the attrset get nothing.
 #
-#   genoc.profile.dev.tasks.<task> = "default" | "full"
+#   genoc.profile.dev.tasks.<task> = "min" | "full"
 #       Cross-cutting workflow buckets that span languages (databases,
-#       cloud CLIs, container runtimes, GUI editors, …).
+#       cloud CLIs, container runtimes, GUI editors, planning…).
 #       Tasks absent from the attrset get nothing.
 #
 # Overlap between langs and tasks is fine: both can pull `gcc` (cpp lang +
@@ -17,7 +17,9 @@
 # same store path once. Only scalar options conflict, and we don't set any.
 #
 # Always-on when `enable = true`: language-agnostic core (git, gh, neovim,
-# LSPs that have nothing to do with a specific language, file utils).
+# LSPs that have nothing to do with a specific language, file utils,
+# asdf-vm meta version manager). Vim/neovim are NOT here — they live in
+# pkgs/editors.nix as universal system editors regardless of profile.
 { config, lib, pkgs, ... }:
 
 with lib;
@@ -25,15 +27,14 @@ with lib;
 let
   cfg = config.genoc.profile.dev;
 
-  # Helpers: "default" depth fires for both default+full; "full" only fires for full.
+  # "min" depth fires for both min+full; "full" only fires for full.
   lev      = lang: cfg.langs.${lang} or null;
-  isLang   = lang: l: lev lang == l;
-  hasLang  = lang: lev lang == "default" || lev lang == "full";
+  hasLang  = lang: lev lang == "min" || lev lang == "full";
   fullLang = lang: lev lang == "full";
 
-  tlev      = task: cfg.tasks.${task} or null;
-  hasTask   = task: tlev task == "default" || tlev task == "full";
-  fullTask  = task: tlev task == "full";
+  tlev     = task: cfg.tasks.${task} or null;
+  hasTask  = task: tlev task == "min" || tlev task == "full";
+  fullTask = task: tlev task == "full";
 
   fenix = import (fetchTarball "https://github.com/nix-community/fenix/archive/monthly.tar.gz") { };
   gitsh = import ../dev/gitsh.nix { inherit pkgs; };
@@ -42,22 +43,23 @@ in {
     enable = mkEnableOption "developer profile";
 
     langs = mkOption {
-      type = types.attrsOf (types.enum [ "default" "full" ]);
+      type = types.attrsOf (types.enum [ "min" "full" ]);
       default = {};
-      example = { go = "full"; js = "default"; rust = "full"; };
+      example = { go = "full"; js = "min"; haskell = "min"; };
       description = ''
         Per-language toolchain depth. Absent languages install nothing.
-        Recognized keys: go js java python ruby rust scheme lua perl cpp.
+        Recognized keys: go js java python ruby rust scheme lua perl cpp
+        haskell prolog.
       '';
     };
 
     tasks = mkOption {
-      type = types.attrsOf (types.enum [ "default" "full" ]);
+      type = types.attrsOf (types.enum [ "min" "full" ]);
       default = {};
-      example = { cloud = "default"; data = "full"; containers = "full"; };
+      example = { cloud = "min"; data = "full"; containers = "full"; };
       description = ''
         Cross-cutting workflow buckets. Absent tasks install nothing.
-        Recognized keys: cloud data containers editors-gui automation web.
+        Recognized keys: cloud data containers editors-gui planning.
       '';
     };
   };
@@ -95,6 +97,8 @@ in {
         shfmt                          # shell formatter
         gnumake gnum4 pkg-config protobuf tree-sitter
 
+        asdf-vm                        # multi-language version manager (meta)
+
         scrcpy                         # mirror/control Android over USB
         systemd                        # systemd userspace tools
         libsForQt5.qgpgme              # legacy Qt5 GPGME bindings (some plugins want it)
@@ -115,15 +119,13 @@ in {
 
     # JavaScript / TypeScript
     (mkIf (hasLang "js") {
-      environment.systemPackages = with pkgs; [ nodejs_20 ];
+      environment.systemPackages = with pkgs; [ nodejs_20 typescript ];
     })
     (mkIf (fullLang "js") {
-      environment.systemPackages = with pkgs; [
-        deno typescript playwright-test
-      ];
+      environment.systemPackages = with pkgs; [ deno playwright-test ];
     })
 
-    # Java
+    # Java — bare JDK in min; build tools live in full.
     (mkIf (hasLang "java") {
       environment.systemPackages = with pkgs; [ jdk ];
     })
@@ -134,15 +136,12 @@ in {
     # Python
     (mkIf (hasLang "python") {
       environment.systemPackages = with pkgs; [
-        python3
-        python3Packages.pip
-        python3Packages.pip-tools
-        uv
-        python3Packages.uv
+        python3 python3Packages.pip uv python3Packages.uv
       ];
     })
     (mkIf (fullLang "python") {
       environment.systemPackages = with pkgs; [
+        python3Packages.pip-tools
         python3Packages.cbor
         python3Packages.certbot-dns-route53
         python3Packages.gpgme
@@ -160,9 +159,11 @@ in {
       ];
     })
 
-    # Rust
+    # Rust — min is a self-contained workstation.
     (mkIf (hasLang "rust") {
-      environment.systemPackages = with pkgs; [ cargo ];
+      environment.systemPackages = with pkgs; [
+        rustc cargo rust-analyzer clippy rustfmt
+      ];
     })
     (mkIf (fullLang "rust") {
       environment.systemPackages = with pkgs; [
@@ -176,6 +177,21 @@ in {
     })
     (mkIf (fullLang "scheme") {
       environment.systemPackages = with pkgs; [ chez chicken ];
+    })
+
+    # Haskell
+    (mkIf (hasLang "haskell") {
+      environment.systemPackages = with pkgs; [
+        ghc cabal-install haskell-language-server
+      ];
+    })
+    (mkIf (fullLang "haskell") {
+      environment.systemPackages = with pkgs; [ stack hlint ];
+    })
+
+    # Prolog
+    (mkIf (hasLang "prolog") {
+      environment.systemPackages = with pkgs; [ swi-prolog ];
     })
 
     # Lua
@@ -216,18 +232,25 @@ in {
       environment.systemPackages = with pkgs; [ dbeaver-bin pgadmin4 ];
     })
 
-    # Container runtimes
+    # Container runtimes — min stays trim, full is the kitchen sink + k8s.
     (mkIf (hasTask "containers") {
       virtualisation.docker.enable = true;
-      environment.systemPackages = with pkgs; [
-        docker docker-compose docker-buildx podman podman-compose distrobox
-      ];
+      environment.systemPackages = with pkgs; [ docker docker-compose ];
     })
     (mkIf (fullTask "containers") {
-      environment.systemPackages = with pkgs; [ lazydocker dive ];
+      environment.systemPackages = with pkgs; [
+        docker-buildx
+        podman podman-compose
+        distrobox
+        lazydocker dive
+        # Kubernetes
+        kubectl k9s kubernetes-helm kustomize kind minikube
+      ];
     })
 
-    # GUI editors / IDEs (vscode, cursor, emacs, project planners, GUI diff)
+    # GUI editors / IDEs.
+    # min  = vscode + meld (the indispensable GUI baseline).
+    # full = +cursor, +emacs and its build chain, +drawio, +extra coding fonts.
     (mkIf (hasTask "editors-gui") {
       nixpkgs.config = {
         allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [ "vscode" ];
@@ -236,25 +259,26 @@ in {
       environment.systemPackages = with pkgs; [
         vscode
         wmctrl xorg.xprop                          # vscode helpers
-        emacs cmake libtool libvterm gsettings-desktop-schemas glib  # emacs build deps
-        nerd-fonts.jetbrains-mono
-        nerd-fonts.fira-code
-        nerd-fonts.hack
-        noto-fonts-color-emoji
         meld                                       # GUI diff/merge
       ];
     })
     (mkIf (fullTask "editors-gui") {
       environment.systemPackages = with pkgs; [
         code-cursor                                # Cursor IDE (VSCode fork + AI)
+        emacs
+        cmake libtool libvterm gsettings-desktop-schemas glib  # emacs/Doom build chain
+        nerd-fonts.jetbrains-mono                  # extra coding fonts (fira-code is in fonts.nix)
+        nerd-fonts.hack
         drawio                                     # diagram editor
-        ganttproject-bin                           # Gantt planner
       ];
     })
 
-    # Automation / project planning / version managers
-    (mkIf (hasTask "automation") {
-      environment.systemPackages = with pkgs; [ asdf-vm taskjuggler ];
+    # Project planning / task orchestration.
+    (mkIf (hasTask "planning") {
+      environment.systemPackages = with pkgs; [ taskjuggler ];
+    })
+    (mkIf (fullTask "planning") {
+      environment.systemPackages = with pkgs; [ ganttproject-bin ];
     })
   ]);
 }
