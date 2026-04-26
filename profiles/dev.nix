@@ -193,6 +193,9 @@ in {
     (mkIf (hasLang "prolog") {
       environment.systemPackages = with pkgs; [ swi-prolog ];
     })
+    (mkIf (fullLang "prolog") {
+      environment.systemPackages = with pkgs; [ gprolog ];
+    })
 
     # Lua
     (mkIf (hasLang "lua") {
