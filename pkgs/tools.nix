@@ -13,26 +13,18 @@ with pkgs; [
   findutils             # find / locate / xargs
   gawk                  # GNU awk
   ghostscript           # PostScript / PDF interpreter
-  gnucash               # personal/small-business accounting
-  hledger               # plain-text accounting (Haskell)
-  hledger-web           # hledger web UI
   htop                  # interactive process viewer
   jq                    # JSON CLI processor
   kdePackages.kcalc     # KDE calculator
   keepassxc             # KeePass-compatible password manager
   kooha                 # simple GTK screen recorder
-  kuro                  # third-party Microsoft To-Do client
-  ledger                # plain-text accounting (C++, original)
   libnotify             # notify-send and the libnotify lib
-  libreoffice           # full LibreOffice suite
   mermaid-cli           # Mermaid diagram CLI renderer
   p7zip                 # 7-zip archiver
   parted                # partitioning CLI (partprobe lives here)
   patch                 # GNU patch
   peek                  # GIF screen recorder (kept by user choice)
   plocate               # mlocate replacement (faster, smaller db)
-  poppler-utils         # pdfinfo / pdftotext / pdftoppm (also in latex)
-  pricehist             # historical price fetcher for hledger/ledger
   sqlite                # sqlite3 CLI
   sqlitebrowser         # GUI for SQLite databases
   tmux                  # terminal multiplexer
