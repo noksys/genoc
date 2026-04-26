@@ -3,9 +3,7 @@
 let
   vars = import ../../custom_vars.nix;
 in
-{
-  # Sound configuration
-  # sound.enable = true; // Deprecated?
+lib.mkIf (config.genoc.audio == "pipewire") {
   services.pulseaudio.enable = false;
 
   # Enable sound with pipewire.

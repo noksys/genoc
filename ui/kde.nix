@@ -5,7 +5,7 @@ let
   user = vars.mainUser;
   home = vars.homeDirectory;
 in
-{
+lib.mkIf (config.genoc.ui.desktop == "kde") {
   # Display server / sessions
   services.xserver = {
     enable = true; # TMP

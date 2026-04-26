@@ -1,6 +1,6 @@
 { config, lib, pkgs, modulesPath, ... }:
 
-{
+lib.mkIf config.genoc.ui.fonts.enable {
   # Fonts, from: https://github.com/JorelAli/nixos/blob/master/configuration.nix
   fonts.fontDir.enable = true;
 

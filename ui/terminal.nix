@@ -3,7 +3,7 @@
 let
   vars = import ../../custom_vars.nix;
 in
-{
+lib.mkIf config.genoc.ui.consoleEditors.enable {
   console = {
     earlySetup = true;
     font = "${pkgs.terminus_font}/share/consolefonts/ter-v32b.psf.gz";

@@ -1,9 +1,7 @@
-{
-  imports = [
-    ./fix_ptbr_cedilla.nix
-  ];
+{ config, lib, ... }:
 
-  i18n.extraLocaleSettings ={
+lib.mkIf (config.genoc.locale == "ptbr") {
+  i18n.extraLocaleSettings = {
     LC_ADDRESS = "pt_BR.UTF-8";
     LC_IDENTIFICATION = "pt_BR.UTF-8";
     LC_MEASUREMENT = "pt_BR.UTF-8";

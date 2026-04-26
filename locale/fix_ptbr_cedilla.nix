@@ -1,4 +1,6 @@
-{
+{ config, lib, ... }:
+
+lib.mkIf (config.genoc.locale == "ptbr") {
   # Fixing cedilla ć -> ç. Apply unconditionally (X11 + Wayland) — Plasma 6
   # Qt apps still respect QT_IM_MODULE on Wayland, and forcing it system-wide
   # is what produced the desired 'apostrophe + c -> ç' behavior on v1.

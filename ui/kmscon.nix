@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
-{
+lib.mkIf config.genoc.ui.kmscon.enable {
   # kmscon: KMS-based virtual terminal with hwRender + nice font.
   # Mirrors the xkb layout from genoc/configuration.nix (us,br Intl/ABNT2).
   services.kmscon = {

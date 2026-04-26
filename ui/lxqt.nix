@@ -3,7 +3,7 @@
 let
   vars = import ../../custom_vars.nix;
 in
-{
+lib.mkIf (config.genoc.ui.desktop == "lxqt") {
   # nm-applet
   programs.nm-applet.enable = true;
 
@@ -25,9 +25,10 @@ in
     };
   };
 
-  # Display managers (path novo)
+  # Display managers. lightdm enable lives under the legacy xserver path;
+  # gdm/sddm have the new-path options and we force them off here.
+  services.xserver.displayManager.lightdm.enable = lib.mkForce true;
   services.displayManager = {
-    lightdm.enable = lib.mkForce true;
     gdm.enable = lib.mkForce false;
     sddm.enable = lib.mkForce false;
   };

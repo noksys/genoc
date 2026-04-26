@@ -1,9 +1,6 @@
 { config, lib, pkgs, modulesPath, ... }:
 
-{
-  # Sound configuration
-  # sound.enable = true; # Deprecated?
-
+lib.mkIf (config.genoc.audio == "pulseaudio") {
   # PulseAudio configuration
   hardware.pulseaudio = {
     enable = true;
