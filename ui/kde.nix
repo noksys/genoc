@@ -129,9 +129,10 @@ in
   # Use KDE's ksshaskpass for SSH passphrase prompts (instead of GNOME seahorse).
   programs.ssh.askPassword = lib.mkForce "${pkgs.kdePackages.ksshaskpass}/bin/ksshaskpass";
 
-  # Fix Qt
+  # Fix Qt. QT_AUTO_SCREEN_SCALE_FACTOR is intentionally left unset here so
+  # the user's home-manager owns it (avoids a system-vs-home tug-of-war on
+  # the Qt scaling knob).
   environment.sessionVariables = {
-    QT_AUTO_SCREEN_SCALE_FACTOR = lib.mkForce "1";
     QT_QPA_PLATFORMTHEME = "kde";
     # Plasma 6 was auto-picking 48px on HiDPI; 32 is comfortable on the
     # Legion's panel without the giant 48px overshoot.
@@ -145,7 +146,6 @@ in
     serviceConfig = {
       Type = "oneshot";
       ExecStart = pkgs.writeShellScript "set-qt-vars.sh" ''
-        systemctl --user set-environment QT_AUTO_SCREEN_SCALE_FACTOR=1
         systemctl --user set-environment QT_QPA_PLATFORMTHEME=kde
       '';
     };
@@ -155,6 +155,7 @@ in
   users.users.${vars.mainUser} = lib.mkMerge [{
     packages = with pkgs; [
       colord
+      kdePackages.colord-kde      # Plasma GUI for colord ICC profiles
 
       kdePackages.dolphin
       kdePackages.gwenview

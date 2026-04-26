@@ -69,6 +69,8 @@ in
 
   environment.shellAliases = {
     chez = "scheme";
+    # Force WezTerm onto the NVIDIA dGPU via PRIME render offload.
+    wezterm = "__NV_PRIME_RENDER_OFFLOAD=1 __VK_LAYER_NV_optimus=NVIDIA_only __GLX_VENDOR_LIBRARY_NAME=nvidia command wezterm";
   };
 
   #

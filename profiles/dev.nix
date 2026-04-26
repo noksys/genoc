@@ -56,10 +56,10 @@ in {
     tasks = mkOption {
       type = types.attrsOf (types.enum [ "min" "full" ]);
       default = {};
-      example = { cloud = "min"; data = "full"; containers = "full"; };
+      example = { cloud = "min"; data = "full"; containers = "full"; ai = "min"; };
       description = ''
         Cross-cutting workflow buckets. Absent tasks install nothing.
-        Recognized keys: cloud data containers editors-gui planning.
+        Recognized keys: cloud data containers editors-gui planning ai.
       '';
     };
   };
@@ -70,6 +70,25 @@ in {
       programs.git = {
         enable = true;
         config.init.defaultBranch = "main";
+      };
+
+      # Allowlist for unfree/insecure packages this profile may install
+      # (across all tasks/langs). Setting it once at the always-on level
+      # avoids fragmenting the predicate across mkIf branches.
+      nixpkgs.config = {
+        allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+          "vscode"
+          "code-cursor"
+          "obsidian"
+          "claude-code"
+          "codex"
+          "gemini-cli"
+          "lmstudio"
+        ];
+        permittedInsecurePackages = [
+          "openssl-1.1.1u"
+          "qtwebkit-5.212.0-alpha4"
+        ];
       };
 
       environment.systemPackages = with pkgs; [
@@ -122,7 +141,7 @@ in {
       environment.systemPackages = with pkgs; [ nodejs_20 typescript ];
     })
     (mkIf (fullLang "js") {
-      environment.systemPackages = with pkgs; [ deno playwright-test ];
+      environment.systemPackages = with pkgs; [ deno bun playwright-test ];
     })
 
     # Java — bare JDK in min; build tools live in full.
@@ -255,10 +274,6 @@ in {
     # min  = vscode + meld (the indispensable GUI baseline).
     # full = +cursor, +emacs and its build chain, +drawio, +extra coding fonts.
     (mkIf (hasTask "editors-gui") {
-      nixpkgs.config = {
-        allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [ "vscode" ];
-        permittedInsecurePackages = [ "openssl-1.1.1u" "qtwebkit-5.212.0-alpha4" ];
-      };
       environment.systemPackages = with pkgs; [
         vscode
         wmctrl xorg.xprop                          # vscode helpers
@@ -268,6 +283,7 @@ in {
     (mkIf (fullTask "editors-gui") {
       environment.systemPackages = with pkgs; [
         code-cursor                                # Cursor IDE (VSCode fork + AI)
+        obsidian                                   # markdown notes / second brain
         emacs
         cmake libtool libvterm gsettings-desktop-schemas glib  # emacs/Doom build chain
         nerd-fonts.jetbrains-mono                  # extra coding fonts (fira-code is in fonts.nix)
@@ -282,6 +298,38 @@ in {
     })
     (mkIf (fullTask "planning") {
       environment.systemPackages = with pkgs; [ ganttproject-bin ];
+    })
+
+    # AI assistants (CLI agents in min, local LLM stack in full).
+    # API keys live in the user's home-manager (per-user secrets); the
+    # binaries themselves are system-wide.
+    #
+    # Caffeine ships in min: long agent runs would otherwise be interrupted
+    # by screen blank / suspend. The powersave specialisation in
+    # genoc/ui/kde.nix already kills caffeine.service on activation, so
+    # there's no battery cost when the user explicitly chooses powersave.
+    (mkIf (hasTask "ai") {
+      environment.systemPackages = with pkgs; [
+        claude-code                                # Anthropic Claude CLI
+        codex                                      # OpenAI Codex CLI
+        gemini-cli                                 # Google Gemini CLI
+        caffeine-ng                                # screen-blank / suspend inhibitor (tray)
+      ];
+
+      systemd.user.services.caffeine = {
+        description = "Caffeine — inhibit screen blank and suspend (long-running AI agents)";
+        wantedBy = [ "graphical-session.target" ];
+        serviceConfig = {
+          ExecStart = "${pkgs.caffeine-ng}/bin/caffeine";
+          Restart = "on-failure";
+        };
+      };
+    })
+    (mkIf (fullTask "ai") {
+      environment.systemPackages = with pkgs; [
+        llama-cpp                                  # local LLM inference (CPU/GPU)
+        lmstudio                                   # GUI for browsing/running local models
+      ];
     })
   ]);
 }
