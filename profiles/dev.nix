@@ -1,179 +1,260 @@
-# Developer profile: IDEs, compilers, debuggers, language toolchains, DB
-# clients, container runtimes. Everything that turns this machine into a
-# software-engineering workstation.
+# Developer profile.
 #
-# Today this is one big bucket. If a `minimal` flavor (headless / no GUI)
-# becomes useful later, split here without changing callers.
+# Two orthogonal knobs:
+#
+#   genoc.profile.dev.langs.<lang> = "default" | "full"
+#       Per-language toolchain depth. "default" = compiler/runtime + LSP;
+#       "full" = + debuggers, framework helpers, advanced lint/test tooling.
+#       Languages absent from the attrset get nothing.
+#
+#   genoc.profile.dev.tasks.<task> = "default" | "full"
+#       Cross-cutting workflow buckets that span languages (databases,
+#       cloud CLIs, container runtimes, GUI editors, …).
+#       Tasks absent from the attrset get nothing.
+#
+# Overlap between langs and tasks is fine: both can pull `gcc` (cpp lang +
+# systems-style task) and the package list just unions — Nix references the
+# same store path once. Only scalar options conflict, and we don't set any.
+#
+# Always-on when `enable = true`: language-agnostic core (git, gh, neovim,
+# LSPs that have nothing to do with a specific language, file utils).
 { config, lib, pkgs, ... }:
 
 with lib;
 
 let
   cfg = config.genoc.profile.dev;
+
+  # Helpers: "default" depth fires for both default+full; "full" only fires for full.
+  lev      = lang: cfg.langs.${lang} or null;
+  isLang   = lang: l: lev lang == l;
+  hasLang  = lang: lev lang == "default" || lev lang == "full";
+  fullLang = lang: lev lang == "full";
+
+  tlev      = task: cfg.tasks.${task} or null;
+  hasTask   = task: tlev task == "default" || tlev task == "full";
+  fullTask  = task: tlev task == "full";
+
   fenix = import (fetchTarball "https://github.com/nix-community/fenix/archive/monthly.tar.gz") { };
   gitsh = import ../dev/gitsh.nix { inherit pkgs; };
 in {
   options.genoc.profile.dev = {
     enable = mkEnableOption "developer profile";
-  };
 
-  config = mkIf cfg.enable {
-    # Docker engine (daemon). data-root override stays in custom_machine.nix.
-    virtualisation.docker.enable = true;
-
-    # Git default branch.
-    programs.git = {
-      enable = true;
-      config.init.defaultBranch = "main";
+    langs = mkOption {
+      type = types.attrsOf (types.enum [ "default" "full" ]);
+      default = {};
+      example = { go = "full"; js = "default"; rust = "full"; };
+      description = ''
+        Per-language toolchain depth. Absent languages install nothing.
+        Recognized keys: go js java python ruby rust scheme lua perl cpp.
+      '';
     };
 
-    # vscode + qtwebkit/openssl1.1 are flagged unfree/insecure; allowlist them.
-    nixpkgs.config = {
-      allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [ "vscode" ];
-      permittedInsecurePackages = [
-        "openssl-1.1.1u"
-        "qtwebkit-5.212.0-alpha4"
+    tasks = mkOption {
+      type = types.attrsOf (types.enum [ "default" "full" ]);
+      default = {};
+      example = { cloud = "default"; data = "full"; containers = "full"; };
+      description = ''
+        Cross-cutting workflow buckets. Absent tasks install nothing.
+        Recognized keys: cloud data containers editors-gui automation web.
+      '';
+    };
+  };
+
+  config = mkIf cfg.enable (mkMerge [
+    # ── Always-on core (when enable=true) ────────────────────────────────────
+    {
+      programs.git = {
+        enable = true;
+        config.init.defaultBranch = "main";
+      };
+
+      environment.systemPackages = with pkgs; [
+        git                            # Git VCS
+        gh                             # GitHub CLI
+        git-annex                      # large file content management on git
+        git-crypt                      # transparent file encryption in git
+        git-filter-repo                # history rewrite (replaces filter-branch)
+        git-lfs                        # large file storage extension
+        gitsh.git-sh                   # custom build of vlad2/git-sh
+        tig                            # ncurses TUI for Git
+
+        bat                            # cat with syntax highlighting
+        eza                            # modern ls replacement
+        fd                             # user-friendly find
+        file                           # MIME / file format identification
+        tldr                           # simplified man pages
+        lnav                           # log file navigator (TUI)
+        angle-grinder                  # streaming aggregator for log lines
+        mermaid-cli                    # Mermaid diagrams CLI renderer
+
+        nil                            # Nix LSP
+        nixpkgs-fmt                    # Nix formatter
+        shellcheck                     # shell script linter
+        shfmt                          # shell formatter
+        gnumake gnum4 pkg-config protobuf tree-sitter
+
+        scrcpy                         # mirror/control Android over USB
+        systemd                        # systemd userspace tools
+        libsForQt5.qgpgme              # legacy Qt5 GPGME bindings (some plugins want it)
       ];
-    };
+    }
 
-    environment.systemPackages = with pkgs; [
-      # ── Editors / IDEs ────────────────────────────────────────────────────
-      code-cursor                    # Cursor IDE (VSCode fork with built-in AI)
-      emacs
-      vscode
-      drawio                         # diagram editor (used inside Emacs workflows)
+    # ── Languages ────────────────────────────────────────────────────────────
 
-      # vscode helpers (Wayland/X11 window control)
-      wmctrl
-      xorg.xprop
+    # Go
+    (mkIf (hasLang "go") {
+      environment.systemPackages = with pkgs; [ go go-tools gopls ];
+    })
+    (mkIf (fullLang "go") {
+      environment.systemPackages = with pkgs; [
+        delve golangci-lint gotestsum govulncheck air
+      ];
+    })
 
-      # Emacs build deps (libvterm + Doom prerequisites)
-      cmake
-      libtool
-      libvterm
-      gsettings-desktop-schemas
-      glib
+    # JavaScript / TypeScript
+    (mkIf (hasLang "js") {
+      environment.systemPackages = with pkgs; [ nodejs_20 ];
+    })
+    (mkIf (fullLang "js") {
+      environment.systemPackages = with pkgs; [
+        deno typescript playwright-test
+      ];
+    })
 
-      # ── Compilers / debuggers / binary inspection ─────────────────────────
-      gcc                            # GNU C/C++ compiler
-      gdb                            # GNU debugger
-      gdbgui                         # browser-based GDB frontend
-      gnum4                          # GNU m4 macro processor
-      gnumake                        # GNU make
-      pkg-config                     # build-time dependency lookup helper
-      elfutils                       # readelf / eu-* binary inspection
-      hexedit                        # ncurses hex editor
-      ltrace                         # trace library calls
-      strace                         # trace system calls
-      rr                             # record-replay debugger
-      valgrind                       # memory debugger / profiler
-      binwalk                        # firmware analysis / extraction
+    # Java
+    (mkIf (hasLang "java") {
+      environment.systemPackages = with pkgs; [ jdk ];
+    })
+    (mkIf (fullLang "java") {
+      environment.systemPackages = with pkgs; [ maven ];
+    })
 
-      # ── Language toolchains ───────────────────────────────────────────────
-      cargo                          # Rust package manager (also via fenix below)
-      fenix.complete.toolchain       # Rust nightly toolchain (rustup-style)
-      go                             # Go toolchain
-      go-tools                       # godoc / goimports / etc.
-      golangci-lint                  # Go linter aggregator
-      gopls                          # Go LSP server
-      gotestsum                      # human-friendly `go test` runner
-      govulncheck                    # Go vulnerability scanner
-      air                            # live reload for Go apps
-      delve                          # Go debugger
-      jdk                            # OpenJDK
-      maven                          # Java build tool
-      jekyll                         # Ruby static-site generator
-      ruby                           # MRI Ruby
-      rubyPackages.dotenv            # .env loader
-      rubyPackages.jekyll-theme-midnight
-      bundix                         # Ruby Bundler ↔ Nix integration
-      bundler                        # Ruby Bundler (gem dependency manager)
-      lua                            # Lua interpreter
-      perl                           # Perl 5
-      python3                        # default Python 3
-      python3Packages.cbor
-      python3Packages.certbot-dns-route53
-      python3Packages.gpgme
-      python3Packages.pip
-      python3Packages.pip-tools
-      python3Packages.playwright
-      python3Packages.uv
-      uv                             # uv (top-level CLI)
-      nodejs_20                      # Node.js 20 LTS
-      deno                           # secure JS/TS runtime
-      typescript                     # TypeScript compiler (tsc)
-      racket                         # Racket Scheme dialect
-      guile                          # GNU Scheme implementation
-      chez                           # Cisco Chez Scheme (R6RS+R7RS)
-      chicken                        # practical Scheme (compiles to C)
-      asdf-vm                        # multi-language version manager
-      tree-sitter                    # parser generator (Neovim plugin dep)
+    # Python
+    (mkIf (hasLang "python") {
+      environment.systemPackages = with pkgs; [
+        python3
+        python3Packages.pip
+        python3Packages.pip-tools
+        uv
+        python3Packages.uv
+      ];
+    })
+    (mkIf (fullLang "python") {
+      environment.systemPackages = with pkgs; [
+        python3Packages.cbor
+        python3Packages.certbot-dns-route53
+        python3Packages.gpgme
+        python3Packages.playwright
+      ];
+    })
 
-      # ── LSP / formatters / linters ────────────────────────────────────────
-      nil                            # Nix LSP
-      nixpkgs-fmt                    # Nix formatter
-      shellcheck                     # shell script linter
-      shfmt                          # shell formatter
+    # Ruby
+    (mkIf (hasLang "ruby") {
+      environment.systemPackages = with pkgs; [ ruby bundler bundix ];
+    })
+    (mkIf (fullLang "ruby") {
+      environment.systemPackages = with pkgs; [
+        rubyPackages.dotenv rubyPackages.jekyll-theme-midnight jekyll
+      ];
+    })
 
-      # ── Cloud / serverless CLIs ───────────────────────────────────────────
-      awscli2                        # AWS CLI v2
-      azure-cli                      # Azure CLI
-      azure-functions-core-tools     # Azure Functions local dev runtime
+    # Rust
+    (mkIf (hasLang "rust") {
+      environment.systemPackages = with pkgs; [ cargo ];
+    })
+    (mkIf (fullLang "rust") {
+      environment.systemPackages = with pkgs; [
+        fenix.complete.toolchain trunk
+      ];
+    })
 
-      # ── Databases / query tools ───────────────────────────────────────────
-      dbeaver-bin                    # universal SQL/NoSQL GUI client
-      pgadmin4                       # Postgres admin GUI
-      pgcli                          # Postgres CLI with autocomplete
-      postgresql_16                  # PostgreSQL engine + client tools
+    # Scheme
+    (mkIf (hasLang "scheme") {
+      environment.systemPackages = with pkgs; [ racket guile ];
+    })
+    (mkIf (fullLang "scheme") {
+      environment.systemPackages = with pkgs; [ chez chicken ];
+    })
 
-      # ── Containers / orchestration ────────────────────────────────────────
-      docker
-      docker-compose
-      docker-buildx
-      lazydocker
-      podman
-      podman-compose
-      distrobox
-      dive
+    # Lua
+    (mkIf (hasLang "lua") {
+      environment.systemPackages = with pkgs; [ lua ];
+    })
 
-      # ── Git tooling ───────────────────────────────────────────────────────
-      git                            # Git VCS
-      gh                             # GitHub CLI
-      git-annex                      # large file content management on git
-      git-crypt                      # transparent file encryption in git
-      git-filter-repo                # history rewrite (replaces filter-branch)
-      git-lfs                        # large file storage extension
-      gitsh.git-sh                   # custom build of vlad2/git-sh
-      tig                            # ncurses TUI for Git
+    # Perl
+    (mkIf (hasLang "perl") {
+      environment.systemPackages = with pkgs; [ perl ];
+    })
 
-      # ── CLI productivity / file utils ─────────────────────────────────────
-      bat                            # cat with syntax highlighting
-      eza                            # modern ls replacement
-      fd                             # user-friendly find
-      file                           # MIME / file format identification
-      tldr                           # simplified man pages
-      lnav                           # log file navigator (TUI)
-      angle-grinder                  # streaming aggregator for log lines
-      mermaid-cli                    # Mermaid diagrams CLI renderer
+    # C / C++ + low-level systems debugging
+    (mkIf (hasLang "cpp") {
+      environment.systemPackages = with pkgs; [ gcc gdb ];
+    })
+    (mkIf (fullLang "cpp") {
+      environment.systemPackages = with pkgs; [
+        gdbgui valgrind ltrace strace rr binwalk hexedit elfutils
+      ];
+    })
 
-      # ── Test / automation / project planning ──────────────────────────────
-      playwright-test
-      taskjuggler                    # project planning DSL + reports
-      ganttproject-bin               # Gantt chart project planner
-      meld                           # GUI diff/merge tool
+    # ── Tasks ────────────────────────────────────────────────────────────────
 
-      # ── Other build / interop ─────────────────────────────────────────────
-      protobuf                       # Protocol Buffers compiler
-      trunk                          # Rust WASM web build tool
-      libsForQt5.qgpgme              # legacy Qt5 GPGME bindings (some plugins want it)
-      systemd                        # systemd userspace tools
-      scrcpy                         # mirror/control Android over USB
+    # Cloud CLIs
+    (mkIf (hasTask "cloud") {
+      environment.systemPackages = with pkgs; [ awscli2 azure-cli ];
+    })
+    (mkIf (fullTask "cloud") {
+      environment.systemPackages = with pkgs; [ azure-functions-core-tools ];
+    })
 
-      # ── Nerd Fonts (used by Emacs config and terminals) ───────────────────
-      nerd-fonts.jetbrains-mono
-      nerd-fonts.fira-code
-      nerd-fonts.hack
-      noto-fonts-color-emoji
-    ];
-  };
+    # Data / databases
+    (mkIf (hasTask "data") {
+      environment.systemPackages = with pkgs; [ postgresql_16 pgcli ];
+    })
+    (mkIf (fullTask "data") {
+      environment.systemPackages = with pkgs; [ dbeaver-bin pgadmin4 ];
+    })
+
+    # Container runtimes
+    (mkIf (hasTask "containers") {
+      virtualisation.docker.enable = true;
+      environment.systemPackages = with pkgs; [
+        docker docker-compose docker-buildx podman podman-compose distrobox
+      ];
+    })
+    (mkIf (fullTask "containers") {
+      environment.systemPackages = with pkgs; [ lazydocker dive ];
+    })
+
+    # GUI editors / IDEs (vscode, cursor, emacs, project planners, GUI diff)
+    (mkIf (hasTask "editors-gui") {
+      nixpkgs.config = {
+        allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [ "vscode" ];
+        permittedInsecurePackages = [ "openssl-1.1.1u" "qtwebkit-5.212.0-alpha4" ];
+      };
+      environment.systemPackages = with pkgs; [
+        vscode
+        wmctrl xorg.xprop                          # vscode helpers
+        emacs cmake libtool libvterm gsettings-desktop-schemas glib  # emacs build deps
+        nerd-fonts.jetbrains-mono
+        nerd-fonts.fira-code
+        nerd-fonts.hack
+        noto-fonts-color-emoji
+        meld                                       # GUI diff/merge
+      ];
+    })
+    (mkIf (fullTask "editors-gui") {
+      environment.systemPackages = with pkgs; [
+        code-cursor                                # Cursor IDE (VSCode fork + AI)
+        drawio                                     # diagram editor
+        ganttproject-bin                           # Gantt planner
+      ];
+    })
+
+    # Automation / project planning / version managers
+    (mkIf (hasTask "automation") {
+      environment.systemPackages = with pkgs; [ asdf-vm taskjuggler ];
+    })
+  ]);
 }
