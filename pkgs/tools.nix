@@ -11,7 +11,6 @@ with pkgs; [
   calibre               # ebook library / converter / reader
   certbot               # ACME / Let's Encrypt client
   findutils             # find / locate / xargs
-  galculator            # GTK scientific calculator (lightweight fallback)
   gawk                  # GNU awk
   ghostscript           # PostScript / PDF interpreter
   gnucash               # personal/small-business accounting
@@ -34,14 +33,11 @@ with pkgs; [
   plocate               # mlocate replacement (faster, smaller db)
   poppler-utils         # pdfinfo / pdftotext / pdftoppm (also in latex)
   pricehist             # historical price fetcher for hledger/ledger
-  screen                # legacy terminal multiplexer (alongside tmux)
-  speedcrunch           # Qt scientific calculator
   sqlite                # sqlite3 CLI
   sqlitebrowser         # GUI for SQLite databases
   tmux                  # terminal multiplexer
   veracrypt             # full-disk / file container encryption
   virt-manager          # libvirt GUI (KVM/QEMU/Xen)
-  waydroid              # Android container runtime on Linux
   wl-clipboard          # Wayland clipboard CLI (wl-copy / wl-paste)
   wxmaxima              # GUI for Maxima CAS
   xclip                 # X11 clipboard CLI

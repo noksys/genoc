@@ -67,6 +67,10 @@ in
     fi
   '';
 
+  environment.shellAliases = {
+    chez = "scheme";
+  };
+
   #
   # IMPORTANT!
   #

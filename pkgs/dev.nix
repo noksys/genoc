@@ -24,7 +24,6 @@ with pkgs; [
   chicken                        # practical Scheme system (compiles to C)
   code-cursor                    # Cursor IDE (VSCode fork with built-in AI)
   dbeaver-bin                    # universal SQL/NoSQL GUI client
-  dbgate                         # multi-DB GUI client (lighter than dbeaver)
   delve                          # Go debugger
   deno                           # secure JS/TS runtime
   elfutils                       # readelf / eu-* binary inspection
@@ -36,15 +35,12 @@ with pkgs; [
   gcc                            # GNU C/C++ compiler
   gdb                            # GNU debugger
   gdbgui                         # browser-based GDB frontend
-  gedit                          # simple GTK text editor
   gh                             # GitHub CLI
   git                            # Git VCS
   git-annex                      # large file content management on git
-  git-cola                       # GUI for Git
   git-crypt                      # transparent file encryption in git
   git-filter-repo                # history rewrite (replaces git filter-branch)
   git-lfs                        # large file storage extension
-  github-desktop                 # GitHub official desktop client
   gitsh.git-sh                   # custom build of vlad2/git-sh (Bash with git aliases)
   gnum4                          # GNU m4 macro processor
   gnumake                        # GNU make

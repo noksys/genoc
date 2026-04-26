@@ -21,7 +21,6 @@ with pkgs; [
   optipng                   # PNG optimizer
   pick-colour-picker        # GTK color picker
   pngquant                  # lossy PNG compressor
-  scribus                   # desktop publishing (InDesign alternative)
   simple-scan               # SANE scanning frontend
   sox                       # `play` and audio swiss-army CLI
   vlc                       # VLC media player

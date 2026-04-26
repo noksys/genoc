@@ -1,7 +1,6 @@
 { pkgs }:
 
 with pkgs; [
-  alacritty                  # GPU-accelerated terminal
   bashInteractive            # full Bash 5 with readline (richer than the minimal `bash`)
   bind                       # dig / nslookup / DNS tooling
   binutils                   # ld / as / objdump / nm
@@ -37,7 +36,6 @@ with pkgs; [
   parallel-full              # GNU parallel (full edition with docs)
   pkg-config                 # build-time dependency lookup helper
   psmisc                     # killall / pstree / fuser
-  ptyxis                     # GTK terminal (formerly GNOME Console)
   pv                         # pipe viewer (progress for shell pipelines)
   rclone                     # rsync for cloud storage
   recoll                     # full-text desktop search (Xapian-based)

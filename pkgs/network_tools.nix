@@ -7,7 +7,6 @@ with pkgs; [
   curl                           # HTTP/HTTPS/FTP transfer tool
   dbus                           # IPC daemon CLI tools
   docker                         # Docker engine CLI (daemon enabled in dev/docker.nix)
-  epiphany                       # GNOME Web (WebKitGTK)
   firefox                        # Mozilla Firefox
   google-chrome                  # Google Chrome
   gpgme                          # GnuPG made easy library + CLI
@@ -26,7 +25,6 @@ with pkgs; [
   nftables                       # netfilter / nft CLI
   openssl                        # TLS / crypto CLI
   #opera                         # commented (Opera deprecated for our use)
-  palemoon-bin                   # Pale Moon (legacy Firefox-fork browser)
   #postman                       # commented (use Apidog AppImage instead)
   protonvpn-gui                  # Proton VPN GUI client
   qutebrowser                    # keyboard-driven Qt browser
