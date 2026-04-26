@@ -316,6 +316,17 @@ in {
         caffeine-ng                                # screen-blank / suspend inhibitor (tray)
       ];
 
+      # NOTE: code-cursor is also pulled by tasks.editors-gui="full" (it's a
+      # VSCode fork, primarily an editor). Listing it here too means
+      # "ai=min/full also gets Cursor", which matches user mental model
+      # of Cursor as an AI-first tool. Nix dedupes by store path, so no cost.
+    })
+
+    (mkIf (fullTask "ai") {
+      environment.systemPackages = with pkgs; [
+        code-cursor                                # Cursor IDE (VSCode fork + AI agent)
+      ];
+
       systemd.user.services.caffeine = {
         description = "Caffeine — inhibit screen blank and suspend (long-running AI agents)";
         wantedBy = [ "graphical-session.target" ];
