@@ -44,20 +44,36 @@ in {
       example = "full";
       description = "Hardware/multisig/privacy wallet UIs. null = none.";
     };
+
+    btcVariant = mkOption {
+      type = types.enum [ "knots" "core" ];
+      default = "knots";
+      description = ''
+        Which Bitcoin client to install when coins.btc is set:
+        - knots: bitcoin-knots GUI + bitcoind-knots daemon (more conservative
+                 mempool policy; rejects inscriptions, etc.)
+        - core:  vanilla Bitcoin Core upstream (bitcoin + bitcoind)
+      '';
+    };
   };
 
   config = mkIf cfg.enable (mkMerge [
     # ── Bitcoin ──────────────────────────────────────────────────────────────
-    (mkIf (hasCoinAny "btc") {
-      environment.systemPackages = with pkgs; [
-        bitcoin-knots                # Bitcoin Knots GUI (bitcoin-qt)
-      ];
+    (mkIf (hasCoinAny "btc" && cfg.btcVariant == "knots") {
+      environment.systemPackages = [ pkgs.bitcoin-knots ];   # GUI (bitcoin-qt)
     })
-    (mkIf (hasCoinNode "btc") {
-      environment.systemPackages = with pkgs; [
-        bitcoind-knots               # Bitcoin Knots daemon
-        electrs                      # Electrum server backend (Rust)
-      ];
+    (mkIf (hasCoinAny "btc" && cfg.btcVariant == "core") {
+      environment.systemPackages = [ pkgs.bitcoin ];         # vanilla Bitcoin Core GUI
+    })
+    (mkIf (hasCoinNode "btc" && cfg.btcVariant == "knots") {
+      environment.systemPackages = with pkgs; [ bitcoind-knots electrs ];
+      services.tor.relay.onionServices.bitcoin = {
+        version = 3;
+        map = [{ port = 8333; target = { addr = "127.0.0.1"; port = 8333; }; }];
+      };
+    })
+    (mkIf (hasCoinNode "btc" && cfg.btcVariant == "core") {
+      environment.systemPackages = with pkgs; [ bitcoind electrs ];
       services.tor.relay.onionServices.bitcoin = {
         version = 3;
         map = [{ port = 8333; target = { addr = "127.0.0.1"; port = 8333; }; }];

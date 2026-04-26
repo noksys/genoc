@@ -4,11 +4,13 @@ lib.mkIf (config.genoc.locale == "ptbr") {
   # Fixing cedilla ć -> ç. Apply unconditionally (X11 + Wayland) — Plasma 6
   # Qt apps still respect QT_IM_MODULE on Wayland, and forcing it system-wide
   # is what produced the desired 'apostrophe + c -> ç' behavior on v1.
+  # mkForce because GNOME's ibus module also sets GTK_IM_MODULE=ibus.
+  # We want cedilla to win for the Brazilian apostrophe-c → ç workflow.
   environment.variables = {
-    QT_IM_MODULE = "cedilla";
-    GTK_IM_MODULE = "cedilla";
-    XMODIFIERS = "@im=cedilla";
-    XCOMPOSEFILE = "/etc/XCompose";
+    QT_IM_MODULE  = lib.mkForce "cedilla";
+    GTK_IM_MODULE = lib.mkForce "cedilla";
+    XMODIFIERS    = lib.mkForce "@im=cedilla";
+    XCOMPOSEFILE  = "/etc/XCompose";
   };
 
   # Avoid console.useXkbConfig: it injects a derivation into console.keyMap,

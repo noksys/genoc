@@ -339,7 +339,7 @@ with pkgs; [
       [Desktop Entry]
       Name=WezTerm (MangoHud)
       Comment=WezTerm with MangoHud FPS overlay
-      Exec=env MANGOHUD=1 wezterm start --cwd .
+      Exec=mangohud wezterm start --cwd .
       Icon=org.wezfurlong.wezterm
       Type=Application
       Terminal=false

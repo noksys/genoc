@@ -9,7 +9,8 @@ lib.mkIf (config.genoc.ui.desktop == "gnome") {
   # stayed under services.xserver.displayManager and we leave its
   # default (off) untouched.
   services.displayManager = {
-    gdm.enable = lib.mkForce true;
+    gdm.enable  = lib.mkDefault true;       # ↓ mkDefault so the "text"
+                                            # specialisation can mkForce false
     sddm.enable = lib.mkForce false;
   };
 
@@ -23,11 +24,11 @@ lib.mkIf (config.genoc.ui.desktop == "gnome") {
   # GNOME Keyring (path ok)
   services.gnome.gnome-keyring.enable = true;
 
-  # Pacotes extras
+  # Pacotes extras (paths atualizados para nixpkgs 25.11)
   environment.systemPackages = with pkgs; [
-    gnome.gnome-shell
-    gnome.gnome-shell-extensions
+    gnome-shell
+    gnome-shell-extensions
     gnomeExtensions.dash-to-dock
-    webkitgtk
+    webkitgtk_4_1
   ];
 }

@@ -27,9 +27,10 @@ lib.mkIf (config.genoc.ui.desktop == "lxqt") {
 
   # Display managers. lightdm enable lives under the legacy xserver path;
   # gdm/sddm have the new-path options and we force them off here.
-  services.xserver.displayManager.lightdm.enable = lib.mkForce true;
+  # mkDefault on lightdm so the "text" specialisation can mkForce false.
+  services.xserver.displayManager.lightdm.enable = lib.mkDefault true;
   services.displayManager = {
-    gdm.enable = lib.mkForce false;
+    gdm.enable  = lib.mkForce false;
     sddm.enable = lib.mkForce false;
   };
 
