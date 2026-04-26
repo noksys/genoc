@@ -1,9 +1,16 @@
-{ pkgs, ... }:
+# OpenRGB: vendor-agnostic RGB lighting control daemon + udev rules.
+{ config, lib, pkgs, ... }:
+
+with lib;
 
 {
-  services.udev.packages = [ pkgs.openrgb ];
+  options.genoc.hardware.openrgb.enable = mkOption {
+    type = types.bool;
+    default = true;
+  };
 
-  environment.systemPackages = with pkgs; [
-    openrgb # RGB lighting control for devices
-  ];
+  config = mkIf config.genoc.hardware.openrgb.enable {
+    services.udev.packages = [ pkgs.openrgb ];
+    environment.systemPackages = [ pkgs.openrgb ];
+  };
 }

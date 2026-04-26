@@ -1,14 +1,22 @@
-{ config, lib, pkgs, modulesPath, ... }:
+# YubiKey support: udev rules + agent + OATH (TOTP/HOTP) management UI
+# + provisioning CLI.
+{ config, lib, pkgs, ... }:
+
+with lib;
 
 {
-  # Udev for Yubikey
-  services.udev.packages = [ pkgs.yubikey-personalization ];
+  options.genoc.hardware.yubikey.enable = mkOption {
+    type = types.bool;
+    default = true;
+  };
 
-  environment.systemPackages = lib.mkMerge [
-    (with pkgs; [
+  config = mkIf config.genoc.hardware.yubikey.enable {
+    services.udev.packages = [ pkgs.yubikey-personalization ];
+
+    environment.systemPackages = with pkgs; [
       yubikey-agent
       yubioath-flutter
       yubikey-personalization
-    ])
-  ];
+    ];
+  };
 }

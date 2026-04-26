@@ -6,9 +6,18 @@
 # (kdePackages.colord-kde) is set up in genoc/ui/kde.nix.
 { config, lib, pkgs, ... }:
 
+with lib;
+
 {
-  environment.systemPackages = with pkgs; [
-    displaycal
-    argyllcms
-  ];
+  options.genoc.hardware.colorCalibration.enable = mkOption {
+    type = types.bool;
+    default = true;
+  };
+
+  config = mkIf config.genoc.hardware.colorCalibration.enable {
+    environment.systemPackages = with pkgs; [
+      displaycal
+      argyllcms
+    ];
+  };
 }
