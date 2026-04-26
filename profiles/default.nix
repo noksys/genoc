@@ -16,5 +16,6 @@
     ./office.nix
     ./education.nix
     ./forensics.nix
+    ./self-host.nix
   ];
 }
