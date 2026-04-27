@@ -1,12 +1,16 @@
-# lenovo.nix
+# Lenovo Legion Pro 7 16IRX9H (Gen 9, NVIDIA RTX 4090 Laptop, ALC287 audio).
+# Active when genoc.hardware.machine = "lenovo-legion-pro7-16irx9h".
+#
+# Note: the per-machine nixos-hardware module (<nixos-hardware/lenovo/
+# legion/16irx9h>) is imported from custom_machine.nix, NOT here —
+# imports can't be gated by config so we'd be force-loading Legion
+# kernel hints on every other machine that pulls genoc.
+#
+# baremetal.nix's mkIf condition includes "lenovo-..." too, so picking
+# this machine activates the baremetal essentials as well.
 { config, lib, pkgs, ... }:
 
-{
-  imports = [
-    <nixos-hardware/lenovo/legion/16irx8h>
-    ./baremetal.nix
-  ];
-
+lib.mkIf (config.genoc.hardware.machine == "lenovo-legion-pro7-16irx9h") {
   # Pin to LTS 6.12 — NVIDIA proprietary drivers (580.x) fail to build on 6.19+
   # (struct vm_area_struct dropped __vm_flags in 6.19).
   # lib.mkForce overrides zfs.nix dynamic selection (6.12 is ZFS-compatible).
@@ -36,18 +40,15 @@
   services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware.nvidia = {
-    # PRIME plumbing and proprietary driver for the 4090 Laptop GPU.
     modesetting.enable = true;
     open               = false;
     nvidiaSettings     = false;
     nvidiaPersistenced = false;
 
     # IMPORTANT: do NOT mkForce here; the powersave specialisation will override.
-    # Base = performance: dGPU is primary (no RTD3).
     prime.offload.enable   = false;  # dGPU drives the session (no offload)
     prime.sync.enable      = true;   # better smoothness if panel is iGPU-wired
     powerManagement.enable = false;  # do not try to RTD3 the dGPU in base
-    # finegrained has no effect without offload
   };
 
   # These env vars "pin" the base session to the NVIDIA stack for X11/GBM.
@@ -67,10 +68,6 @@
     # Symptoms: invisible/frozen cursor, KWin restart loop, occasional kernel
     # oops on Wayland — historically only triggered on this machine when running
     # dual-monitor; uncomment if it comes back on multi-display setups.
-    #
-    # Cost: a few ms of cursor latency, negligible CPU. Drop this line once
-    # the NVIDIA proprietary driver ships a fix or the dGPU is no longer
-    # session-primary on this machine.
     # KWIN_FORCE_SW_CURSOR      = "1";
   };
 
@@ -98,39 +95,33 @@
 
   # ---- Specialisation: POWERSAVE (iGPU only, NVIDIA fully off) --------------
   # Goal: run desktop on Intel iGPU; the NVIDIA dGPU is COMPLETELY blacklisted
-  # so the kernel doesn't touch it at all. This is the most aggressive battery
-  # mode (~4-7W less than RTD3-offload). Trade-off: prime-run will not work in
-  # this specialisation; CUDA / Steam GPU games / Blender GPU render fail until
-  # you reboot back to the default. NVreg_DynamicPowerManagement is set as a
-  # safety net for the case where the user later un-blacklists nvidia and
-  # falls back to RTD3 D3cold without rebuilding the whole spec.
-  specialisation = {
-    powersave.configuration = {
-      services.xserver.videoDrivers = lib.mkForce [ "modesetting" ];
+  # so the kernel doesn't touch it at all. Trade-off: prime-run will not work
+  # in this specialisation; CUDA / Steam GPU games / Blender GPU render fail
+  # until you reboot back to the default.
+  specialisation.powersave.configuration = {
+    services.xserver.videoDrivers = lib.mkForce [ "modesetting" ];
 
-      boot.blacklistedKernelModules = [
-        "nvidia" "nvidia_drm" "nvidia_uvm" "nvidia_modeset"
-      ];
+    boot.blacklistedKernelModules = [
+      "nvidia" "nvidia_drm" "nvidia_uvm" "nvidia_modeset"
+    ];
 
-      boot.extraModprobeConfig = ''
-        # Even when not blacklisted, force the deepest dynamic PM state (D3cold).
-        options nvidia "NVreg_DynamicPowerManagement=0x02"
-      '';
+    boot.extraModprobeConfig = ''
+      # Even when not blacklisted, force the deepest dynamic PM state (D3cold).
+      options nvidia "NVreg_DynamicPowerManagement=0x02"
+    '';
 
-      hardware.nvidia = {
-        prime.offload.enable           = lib.mkForce false;
-        prime.offload.enableOffloadCmd = lib.mkForce false;
-        prime.sync.enable              = lib.mkForce false;
-        powerManagement.enable         = lib.mkForce false;
-        powerManagement.finegrained    = lib.mkForce false;
-      };
+    hardware.nvidia = {
+      prime.offload.enable           = lib.mkForce false;
+      prime.offload.enableOffloadCmd = lib.mkForce false;
+      prime.sync.enable              = lib.mkForce false;
+      powerManagement.enable         = lib.mkForce false;
+      powerManagement.finegrained    = lib.mkForce false;
+    };
 
-      # Stop "pinning" the session to NVIDIA on powersave.
-      environment.sessionVariables = {
-        __GLX_VENDOR_LIBRARY_NAME = lib.mkForce "mesa";
-        __NV_PRIME_RENDER_OFFLOAD = lib.mkForce "";
-        GBM_BACKEND               = lib.mkForce "";
-      };
+    environment.sessionVariables = {
+      __GLX_VENDOR_LIBRARY_NAME = lib.mkForce "mesa";
+      __NV_PRIME_RENDER_OFFLOAD = lib.mkForce "";
+      GBM_BACKEND               = lib.mkForce "";
     };
   };
 }

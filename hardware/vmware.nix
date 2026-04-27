@@ -1,36 +1,19 @@
-{ config, lib, pkgs, modulesPath, ... }:
+# VMware / vmware-tools guest. Active when genoc.hardware.machine = "vmware".
+{ config, lib, pkgs, ... }:
 
-{
-  imports = [
-    ../../hardware-configuration.nix
-    ../sound/pulseaudio.nix
-    ./no_hibernation.nix
-    ./no_sleep.nix
-  ];
+lib.mkIf (config.genoc.hardware.machine == "vmware") {
+  services.xserver.videoDrivers = [ "vmware" ];
 
-  services.pipewire.enable = false;
-
-  # Virtualization
   virtualisation.vmware.guest.enable = true;
-  #virtualisation.docker.storageDriver = "btrfs";
   virtualisation.docker.enable = true;
   virtualisation.waydroid.enable = true;
 
-  services.xserver.videoDrivers = [ "vmware" ];
-#   services.xserver.deviceSection = ''
-#     Option "NoAccel" "True"
-#   '';
- 
-  environment.systemPackages = lib.mkMerge [
-    (with pkgs; [
-      open-vm-tools
-    ])
-  ];
+  environment.systemPackages = with pkgs; [ open-vm-tools ];
 
   fileSystems."/mnt/hgfs" = {
-    device = lib.mkForce ".host:/";
-    fsType = lib.mkForce "fuse./run/current-system/sw/bin/vmhgfs-fuse";
-    options = lib.mkForce ["umask=22" "uid=1000" "gid=1000" "allow_other" "defaults" "auto_unmount"];
+    device  = lib.mkForce ".host:/";
+    fsType  = lib.mkForce "fuse./run/current-system/sw/bin/vmhgfs-fuse";
+    options = lib.mkForce [ "umask=22" "uid=1000" "gid=1000" "allow_other" "defaults" "auto_unmount" ];
   };
 
   systemd.services.vmtoolsd = {
