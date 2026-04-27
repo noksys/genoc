@@ -326,7 +326,7 @@ with pkgs; [
       Type=Application
       Terminal=false
       Categories=System;TerminalEmulator;Utility;
-      PrefersNonDefaultGPU=true
+      PrefersNonDefaultGPU=false
       StartupWMClass=org.wezfurlong.wezterm
       Keywords=shell;prompt;command;commandline;cmd;
     '';
@@ -344,7 +344,7 @@ with pkgs; [
       Type=Application
       Terminal=false
       Categories=System;TerminalEmulator;Utility;
-      PrefersNonDefaultGPU=true
+      PrefersNonDefaultGPU=false
       StartupWMClass=org.wezfurlong.wezterm
       Keywords=shell;prompt;command;commandline;cmd;mangohud;fps;
     '';
