@@ -138,10 +138,10 @@ in {
 
     # JavaScript / TypeScript
     (mkIf (hasLang "js") {
-      environment.systemPackages = with pkgs; [ nodejs_20 typescript ];
+      environment.systemPackages = with pkgs; [ nodejs_20 typescript bun ];
     })
     (mkIf (fullLang "js") {
-      environment.systemPackages = with pkgs; [ deno bun playwright-test ];
+      environment.systemPackages = with pkgs; [ deno playwright-test ];
     })
 
     # Java — bare JDK in min; build tools live in full.
