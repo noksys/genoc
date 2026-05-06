@@ -310,8 +310,17 @@ in {
     # there's no battery cost when the user explicitly chooses powersave.
     (mkIf (hasTask "ai") {
       environment.systemPackages = with pkgs; [
-        claude-code                                # Anthropic Claude CLI
-        codex                                      # OpenAI Codex CLI
+        # Anthropic Claude CLI — npm bin is `claude`; expose `claude-code`
+        # as an alias because some docs/scripts still call it that.
+        (writeShellScriptBin "claude" ''
+          exec ${nodejs_20}/bin/npx -y @anthropic-ai/claude-code@latest "$@"
+        '')
+        (writeShellScriptBin "claude-code" ''
+          exec ${nodejs_20}/bin/npx -y @anthropic-ai/claude-code@latest "$@"
+        '')
+        (writeShellScriptBin "codex" ''
+          exec ${nodejs_20}/bin/npx -y @openai/codex@latest "$@"
+        '')                                        # OpenAI Codex CLI (latest via npx)
         gemini-cli                                 # Google Gemini CLI
         caffeine-ng                                # screen-blank / suspend inhibitor (tray)
       ];
