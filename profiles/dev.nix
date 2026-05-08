@@ -323,6 +323,7 @@ in {
         '')                                        # OpenAI Codex CLI (latest via npx)
         gemini-cli                                 # Google Gemini CLI
         caffeine-ng                                # screen-blank / suspend inhibitor (tray)
+        bubblewrap                                 # sandboxing (required by codex)
       ];
 
       # NOTE: code-cursor is also pulled by tasks.editors-gui="full" (it's a
