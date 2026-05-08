@@ -25,11 +25,11 @@ lib.mkIf (config.genoc.ui.desktop == "kde") {
 
     sddm.enable = lib.mkDefault true;
     # SDDM as a Wayland greeter — picks up the monitor's native DPI and
-    # renders the login screen at sane size on HiDPI panels. The user's
-    # session can still be X11 via defaultSession below.
+    # renders the login screen at sane size on HiDPI panels. X11 still
+    # selectable from the session dropdown if needed.
     sddm.wayland.enable = true;
 
-    defaultSession = "plasmax11";
+    defaultSession = "plasma";
   };
 
   # Desktop managers (newer option path for gnome; Plasma 6 stays here)
