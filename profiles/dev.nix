@@ -324,6 +324,7 @@ in {
         gemini-cli                                 # Google Gemini CLI
         caffeine-ng                                # screen-blank / suspend inhibitor (tray)
         bubblewrap                                 # sandboxing (required by codex)
+        nh                                         # nix/nixos-rebuild helper CLI
       ];
 
       # NOTE: code-cursor is also pulled by tasks.editors-gui="full" (it's a
