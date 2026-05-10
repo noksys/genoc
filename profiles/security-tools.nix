@@ -37,6 +37,7 @@ in {
       volatility3               # memory image forensics
       yubikey-manager           # GUI/CLI for YubiKey configuration
       yubikey-personalization   # YubiKey provisioning tool
+      gitleaks                  # git history / staged secret scanner
     ];
   };
 }
