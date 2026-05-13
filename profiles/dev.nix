@@ -102,6 +102,7 @@ in {
         tig                            # ncurses TUI for Git
 
         bat                            # cat with syntax highlighting
+        mdcat                          # markdown renderer for the terminal
         eza                            # modern ls replacement
         fd                             # user-friendly find
         file                           # MIME / file format identification
