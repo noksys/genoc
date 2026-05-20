@@ -311,8 +311,13 @@ in
   # GC
   nix.gc = {
     automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 14d";
+    dates = "daily";
+    options = "--delete-older-than 7d";
+    persistent = true;
+  };
+  nix.optimise = {
+    automatic = true;
+    dates = [ "weekly" ];
   };
 
   # Commands with space at start won't be saved:
