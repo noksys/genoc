@@ -26,7 +26,6 @@ in {
       kdePackages.krdc     # KDE remote desktop client (RDP/VNC/SSH)
       mosh                 # mobile shell (resilient SSH replacement)
       ncdu                 # ncurses disk usage analyzer
-      netbird-ui           # NetBird mesh VPN UI
       networkmanagerapplet # nm-applet (system tray client)
       nftables             # netfilter / nft CLI
       protonvpn-gui        # Proton VPN GUI client
