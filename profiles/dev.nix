@@ -311,17 +311,23 @@ in {
     # there's no battery cost when the user explicitly chooses powersave.
     (mkIf (hasTask "ai") {
       environment.systemPackages = with pkgs; [
-        # Anthropic Claude CLI — npm bin is `claude`; expose `claude-code`
-        # as an alias because some docs/scripts still call it that.
-        (writeShellScriptBin "claude" ''
-          exec ${nodejs_20}/bin/npx -y @anthropic-ai/claude-code@latest "$@"
-        '')
+        # Anthropic Claude CLI — npx @latest keeps it current daily.
+        # Script lives in genoc/profiles/scripts/claude-wrapper.sh;
+        # builtins.readFile embeds it at eval time. writeShellApplication
+        # prepends set -euo pipefail and puts nodejs_20 in PATH.
+        (writeShellApplication {
+          name = "claude";
+          runtimeInputs = [ nodejs_20 ];
+          text = builtins.readFile ./scripts/claude-wrapper.sh;
+        })
         (writeShellScriptBin "claude-code" ''
           exec ${nodejs_20}/bin/npx -y @anthropic-ai/claude-code@latest "$@"
-        '')
-        (writeShellScriptBin "codex" ''
-          exec ${nodejs_20}/bin/npx -y @openai/codex@latest "$@"
-        '')                                        # OpenAI Codex CLI (latest via npx)
+        '')                                        # legacy alias
+        (writeShellApplication {
+          name = "codex";
+          runtimeInputs = [ nodejs_20 ];
+          text = builtins.readFile ./scripts/codex-wrapper.sh;
+        })                                         # OpenAI Codex CLI (latest via npx)
         gemini-cli                                 # Google Gemini CLI
         caffeine-ng                                # screen-blank / suspend inhibitor (tray)
         bubblewrap                                 # sandboxing (required by codex)
