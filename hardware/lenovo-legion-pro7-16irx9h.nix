@@ -34,6 +34,30 @@ lib.mkIf (config.genoc.hardware.machine == "lenovo-legion-pro7-16irx9h") {
   # Prevent the AVS driver from grabbing the device (keep using snd-hda-intel).
   boot.blacklistedKernelModules = [ "snd_soc_avs" ];
 
+  # ---- USB autosuspend OFF (default profile) + crash capture -----------------
+  # The xHCI/Thunderbolt bus destabilises under USB power management: devices
+  # (notably the YubiKey) re-enumerate repeatedly and the box hard-freezes
+  # (incident 2026-06-03 ~03:08; same signature 2026-05-05 / 2026-05-07).
+  # Disable USB autosuspend in the default (AC/performance) profile so there is
+  # no suspend/resume churn. The powersave specialisation deliberately KEEPS
+  # autosuspend=1 for battery (see below). Also turn the next silent freeze
+  # into a capturable panic.
+  boot.kernelParams = [
+    "usbcore.autosuspend=-1"   # default profile only: no USB autosuspend
+  ];
+
+  # pstore(efi_pstore) is already active, so a panic's dmesg survives the reboot
+  # in /sys/fs/pstore. We deliberately do NOT auto-reboot (kernel.panic = 0) so
+  # the panic stays on screen for a photo if it reaches the console.
+  boot.kernel.sysctl = {
+    "kernel.panic_on_oops"    = 1;   # an oops becomes a panic (gets recorded)
+    "kernel.panic"            = 0;   # do NOT auto-reboot; leave the panic up
+    "kernel.nmi_watchdog"     = 1;   # REQUIRED: without it hardlockup_panic never fires
+    "kernel.hardlockup_panic" = 1;   # NMI-detected hard lockup -> panic
+    # softlockup_panic / hung_task_panic left OFF on purpose: ZFS D-state stalls
+    # (scrub / heavy IO) could false-trigger a reboot.
+  };
+
   # ---- Graphics base (PERFORMANCE by default) -------------------------------
   # Base profile: run the whole desktop on the NVIDIA dGPU for max smoothness.
   hardware.graphics.enable = true;
@@ -100,6 +124,15 @@ lib.mkIf (config.genoc.hardware.machine == "lenovo-legion-pro7-16irx9h") {
   # until you reboot back to the default.
   specialisation.powersave.configuration = {
     services.xserver.videoDrivers = lib.mkForce [ "modesetting" ];
+
+    # Keep genoc's powersave autosuspend=1 here (battery saving is the point of
+    # this profile). The default profile sets autosuspend=-1, which this
+    # specialisation inherits; re-assert =1 LAST (mkAfter) so it deterministically
+    # wins on the kernel cmdline regardless of merge order. Also re-enable the NMI
+    # watchdog that genoc disables (nmi_watchdog=0) so a powersave-mode freeze is
+    # still caught by hardlockup_panic. Negligible battery cost.
+    boot.kernelParams = lib.mkAfter [ "usbcore.autosuspend=1" ];
+    boot.kernel.sysctl."kernel.nmi_watchdog" = lib.mkForce 1;
 
     boot.blacklistedKernelModules = [
       "nvidia" "nvidia_drm" "nvidia_uvm" "nvidia_modeset"
