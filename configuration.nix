@@ -372,11 +372,11 @@ in
       services.blueman.enable = lib.mkForce false;
       hardware.xpadneo.enable = lib.mkForce false;
 
-      # NOTE: snd_hda_intel power_save fica DESLIGADO mesmo no powersave: com
-      # power_save=1 os alto-falantes (TAS2781) dessincronizam do ALC287 e
-      # emudecem. Herdamos power_save=0 do modulo da maquina
-      # (hardware/lenovo-legion-pro7-16irx9h.nix). A antiga linha
-      # snd_ac97_codec era inocua (nao ha AC'97 nesta maquina).
+      # NOTE: snd_hda_intel power_save stays OFF even in powersave: with
+      # power_save=1 the speakers (TAS2781) desync from the ALC287 and go
+      # silent. We inherit power_save=0 from the machine module
+      # (hardware/lenovo-legion-pro7-16irx9h.nix). The old snd_ac97_codec line
+      # was inert (no AC'97 on this machine).
 
       # Drop screen brightness to 30% (148 / 496 max) when entering powersave.
       # Overrides the genoc/hardware/backlight.nix backlight-default that sets 50%.

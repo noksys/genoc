@@ -16,15 +16,15 @@ lib.mkIf (config.genoc.hardware.machine == "lenovo-legion-pro7-16irx9h") {
   # lib.mkForce overrides zfs.nix dynamic selection (6.12 is ZFS-compatible).
   boot.kernelPackages = lib.mkForce pkgs.linuxPackages_6_12;
 
-  # ---- Audio: impedir desync ALC287 <-> TAS2781 smart-amps ------------------
-  # Alto-falantes = 2x TI TAS2781 (i2c TIAS2781:00) escravos do Realtek ALC287
-  # (subsystem 0x17aa38cd). Quando snd_hda_intel faz runtime power-save do
-  # codec, o link do tas2781-hda quebra e os alto-falantes emudecem apos pouco
-  # tempo ocioso; fone P2/BT (que nao passam pelo smart-amp) continuam.
-  # Fix: nunca power-save no codec HDA.
+  # ---- Audio: keep ALC287 <-> TAS2781 smart-amps from desyncing -------------
+  # Internal speakers are 2x TI TAS2781 smart-amps (i2c TIAS2781:00) slaved to
+  # the Realtek ALC287 (subsystem 0x17aa38cd). When snd_hda_intel runtime
+  # power-saves the codec, the tas2781-hda component link drops and the
+  # speakers go silent after a short idle; headphones (jack/BT, which bypass
+  # the smart-amp) keep working. Fix: never power-save the HDA codec.
   #
-  # NB: o antigo legion-alc287.patch mirava o subsystem 0x17aa3863, que NAO
-  # bate com esta unidade (0x17aa38cd) -> nunca foi aplicado. Removido.
+  # NB: the old legion-alc287.patch targeted subsystem 0x17aa3863, which never
+  # matched this unit (0x17aa38cd), so it was never applied. Dropped.
   boot.extraModprobeConfig = ''
     options snd_hda_intel power_save=0
   '';
@@ -32,12 +32,12 @@ lib.mkIf (config.genoc.hardware.machine == "lenovo-legion-pro7-16irx9h") {
   # Prevent the AVS driver from grabbing the device (keep using snd-hda-intel).
   boot.blacklistedKernelModules = [ "snd_soc_avs" ];
 
-  # ---- Audio: re-sync do TAS2781 apos suspend/resume (S3) -------------------
-  # Ao voltar do suspend, o link HDA <-> amp pode cair (mesmo estado "mudo" que
-  # o power_save derrubava por ociosidade). Um unbind/bind do device i2c
-  # re-anexa o componente tas2781-hda ao ALC287 -> recuperacao comprovada na
-  # mao. Idempotente; custa um glitch <1s no resume. power_save/control ja sao
-  # persistentes (modprobe + udev acima); aqui so reforcamos o control e o bind.
+  # ---- Audio: re-sync the TAS2781 after suspend/resume (S3) ------------------
+  # Across a suspend the HDA <-> amp link can drop (same "silent" state that
+  # power_save caused on idle). Unbinding/binding the i2c device re-attaches
+  # the tas2781-hda component to the ALC287 -> proven manual recovery.
+  # Idempotent; costs a <1s glitch on resume. power_save/control are already
+  # persistent (modprobe + udev above); here we only re-assert control + bind.
   powerManagement.resumeCommands = ''
     dev=i2c-TIAS2781:00
     echo on > /sys/bus/i2c/devices/$dev/power/control || true
@@ -112,7 +112,7 @@ lib.mkIf (config.genoc.hardware.machine == "lenovo-legion-pro7-16irx9h") {
   # ---- dGPU runtime power policy via udev (helps RTD3 when on battery) -----
   # Keep dGPU "on" when on AC and allow autosuspend (RTD3) when on battery.
   services.udev.extraRules = ''
-    # TAS2781 smart-amp: nunca runtime-suspend (reforco do power_save=0 acima).
+    # TAS2781 smart-amp: never runtime-suspend (reinforces power_save=0 above).
     ACTION=="add", SUBSYSTEM=="i2c", KERNEL=="*TIAS2781*", ATTR{power/control}="on"
 
     ACTION=="change", SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_ONLINE}=="1", \
