@@ -16,23 +16,37 @@ lib.mkIf (config.genoc.hardware.machine == "lenovo-legion-pro7-16irx9h") {
   # lib.mkForce overrides zfs.nix dynamic selection (6.12 is ZFS-compatible).
   boot.kernelPackages = lib.mkForce pkgs.linuxPackages_6_12;
 
-  # ---- Audio firmware patch -------------------------------------------------
-  # Ship a tiny custom firmware patch for the ALC287 codec.
-  hardware.firmware = [
-    (pkgs.runCommand "legion-audio-patch" {} ''
-      mkdir -p $out/lib/firmware
-      cp ${./legion-alc287.patch} $out/lib/firmware/legion-alc287.patch
-    '')
-  ];
-
-  # Apply the patch at module load time.
+  # ---- Audio: impedir desync ALC287 <-> TAS2781 smart-amps ------------------
+  # Alto-falantes = 2x TI TAS2781 (i2c TIAS2781:00) escravos do Realtek ALC287
+  # (subsystem 0x17aa38cd). Quando snd_hda_intel faz runtime power-save do
+  # codec, o link do tas2781-hda quebra e os alto-falantes emudecem apos pouco
+  # tempo ocioso; fone P2/BT (que nao passam pelo smart-amp) continuam.
+  # Fix: nunca power-save no codec HDA.
+  #
+  # NB: o antigo legion-alc287.patch mirava o subsystem 0x17aa3863, que NAO
+  # bate com esta unidade (0x17aa38cd) -> nunca foi aplicado. Removido.
   boot.extraModprobeConfig = ''
-    # options snd-hda-intel model=alc287-yoga9-bass-spk-pin
-    options snd-hda-intel patch=legion-alc287.patch
+    options snd_hda_intel power_save=0
   '';
 
   # Prevent the AVS driver from grabbing the device (keep using snd-hda-intel).
   boot.blacklistedKernelModules = [ "snd_soc_avs" ];
+
+  # ---- Audio: re-sync do TAS2781 apos suspend/resume (S3) -------------------
+  # Ao voltar do suspend, o link HDA <-> amp pode cair (mesmo estado "mudo" que
+  # o power_save derrubava por ociosidade). Um unbind/bind do device i2c
+  # re-anexa o componente tas2781-hda ao ALC287 -> recuperacao comprovada na
+  # mao. Idempotente; custa um glitch <1s no resume. power_save/control ja sao
+  # persistentes (modprobe + udev acima); aqui so reforcamos o control e o bind.
+  powerManagement.resumeCommands = ''
+    dev=i2c-TIAS2781:00
+    echo on > /sys/bus/i2c/devices/$dev/power/control || true
+    if [ -e /sys/bus/i2c/drivers/tas2781-hda/$dev ]; then
+      echo "$dev" > /sys/bus/i2c/drivers/tas2781-hda/unbind || true
+      ${pkgs.coreutils}/bin/sleep 1
+      echo "$dev" > /sys/bus/i2c/drivers/tas2781-hda/bind || true
+    fi
+  '';
 
   # ---- USB autosuspend OFF (default profile) + crash capture -----------------
   # The xHCI/Thunderbolt bus destabilises under USB power management: devices
@@ -98,6 +112,9 @@ lib.mkIf (config.genoc.hardware.machine == "lenovo-legion-pro7-16irx9h") {
   # ---- dGPU runtime power policy via udev (helps RTD3 when on battery) -----
   # Keep dGPU "on" when on AC and allow autosuspend (RTD3) when on battery.
   services.udev.extraRules = ''
+    # TAS2781 smart-amp: nunca runtime-suspend (reforco do power_save=0 acima).
+    ACTION=="add", SUBSYSTEM=="i2c", KERNEL=="*TIAS2781*", ATTR{power/control}="on"
+
     ACTION=="change", SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_ONLINE}=="1", \
       RUN+="/bin/sh -c 'echo on > /sys/bus/pci/devices/0000:01:00.0/power/control'"
 
