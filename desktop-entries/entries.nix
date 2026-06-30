@@ -186,6 +186,23 @@ with pkgs; [
   })
 
   (writeTextFile {
+    name = "claude-science.desktop";
+    destination = "/share/applications/claude-science.desktop";
+    text = ''
+      [Desktop Entry]
+      Version=1.0
+      Name=Claude Science
+      Comment=Anthropic research workbench (beta)
+      Exec=appimage-run ${vars.homeDirectory}/app/claude-science.AppImage
+      Terminal=false
+      Type=Application
+      Icon=applications-science
+      Categories=Science;Development;
+      StartupWMClass=Claude Science
+    '';
+  })
+
+  (writeTextFile {
     name = "steam.desktop";
     destination = "/share/applications/steam.desktop";
     text = ''
