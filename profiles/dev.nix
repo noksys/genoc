@@ -88,6 +88,7 @@ in {
         permittedInsecurePackages = [
           "openssl-1.1.1u"
           "qtwebkit-5.212.0-alpha4"
+          "librewolf-151.0.2-1"          # unmaintained in nixpkgs (no active committer), not a live CVE
         ];
       };
 
@@ -258,8 +259,10 @@ in {
     # Container runtimes — min stays trim, full is the kitchen sink + k8s.
     (mkIf (hasTask "containers") {
       virtualisation.docker.enable = true;
-      environment.systemPackages = with pkgs; [ docker docker-compose ];
+      virtualisation.docker.package = pkgs.docker_29;   # 28.x marcado inseguro; subir p/ linha 29
+      environment.systemPackages = with pkgs; [ docker_29 docker-compose ];
     })
+
     (mkIf (fullTask "containers") {
       environment.systemPackages = with pkgs; [
         docker-buildx
@@ -328,6 +331,11 @@ in {
           runtimeInputs = [ nodejs_20 ];
           text = builtins.readFile ./scripts/codex-wrapper.sh;
         })                                         # OpenAI Codex CLI (latest via npx)
+        (writeShellApplication {
+          name = "grok";
+          runtimeInputs = [ nodejs_20 ];
+          text = builtins.readFile ./scripts/grok-wrapper.sh;
+        })                                         # xAI Grok Build CLI (latest via npx)
         gemini-cli                                 # Google Gemini CLI
         caffeine-ng                                # screen-blank / suspend inhibitor (tray)
         bubblewrap                                 # sandboxing (required by codex)

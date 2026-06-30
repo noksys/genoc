@@ -82,8 +82,9 @@ in {
 
     # ── Liquid (Elements) ────────────────────────────────────────────────────
     (mkIf (hasCoinAny "liquid") {
-      environment.systemPackages = with pkgs; [
-        elements                     # elements-qt + tools
+      environment.systemPackages = [
+        # elements                     # elements-qt + tools
+        (import <nixos-unstable> { inherit (pkgs) system; }).elements   # 23.3.x p/ hard fork Liquid
       ];
     })
     (mkIf (hasCoinNode "liquid") {

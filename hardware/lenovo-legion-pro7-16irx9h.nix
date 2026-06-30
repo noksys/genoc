@@ -48,6 +48,45 @@ lib.mkIf (config.genoc.hardware.machine == "lenovo-legion-pro7-16irx9h") {
     fi
   '';
 
+  # ---- Audio: stop TLP from re-enabling the HDA codec power-save ------------
+  # TLP (services.tlp) defaults SOUND_POWER_SAVE_ON_{AC,BAT}=1, so it writes
+  # power_save=1 to snd_hda_intel at startup and on every AC<->battery switch,
+  # overriding BOTH boot.extraModprobeConfig and the snd_hda_intel.power_save=0
+  # kernel cmdline param below. That is what kept re-triggering the TAS2781
+  # desync after boot. Force it off (settings merge with battery/tlp.nix).
+  services.tlp.settings = {
+    SOUND_POWER_SAVE_ON_AC = "0";
+    SOUND_POWER_SAVE_ON_BAT = "0";
+  };
+
+  # ---- Audio: guaranteed re-sync ~30s after the desktop is up ---------------
+  # Belt-and-suspenders for the same desync: even with power_save pinned off,
+  # the codec<->amp link can come up desynced at boot (speakers silent until a
+  # rebind). One unbind/bind of the i2c device re-attaches the tas2781-hda
+  # component to the ALC287 -- the proven manual recovery, durable for the
+  # whole session. Run it once shortly after graphical.target, when the audio
+  # stack (and TLP) have settled.
+  systemd.services.tas2781-resync = {
+    description = "Re-sync TAS2781 smart-amp after boot (restore laptop speakers)";
+    wantedBy = [ "graphical.target" ];
+    after = [ "graphical.target" "sound.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStartPre = "${pkgs.coreutils}/bin/sleep 30";
+      ExecStart = pkgs.writeShellScript "tas2781-resync" ''
+        dev=i2c-TIAS2781:00
+        echo 0  > /sys/module/snd_hda_intel/parameters/power_save || true
+        echo on > /sys/bus/pci/devices/0000:00:1f.3/power/control || true
+        echo on > /sys/bus/i2c/devices/$dev/power/control || true
+        if [ -e /sys/bus/i2c/drivers/tas2781-hda/$dev ]; then
+          echo "$dev" > /sys/bus/i2c/drivers/tas2781-hda/unbind || true
+          ${pkgs.coreutils}/bin/sleep 1
+          echo "$dev" > /sys/bus/i2c/drivers/tas2781-hda/bind || true
+        fi
+      '';
+    };
+  };
+
   # ---- USB autosuspend OFF (default profile) + crash capture -----------------
   # The xHCI/Thunderbolt bus destabilises under USB power management: devices
   # (notably the YubiKey) re-enumerate repeatedly and the box hard-freezes
@@ -58,6 +97,14 @@ lib.mkIf (config.genoc.hardware.machine == "lenovo-legion-pro7-16irx9h") {
   # into a capturable panic.
   boot.kernelParams = [
     "usbcore.autosuspend=-1"   # default profile only: no USB autosuspend
+    # Force the HDA codec's power_save OFF at module init. The modprobe.d
+    # option (boot.extraModprobeConfig above) does NOT stick: snd_hda_intel is
+    # coldplugged in the initrd, which ignores /etc/modprobe.d, so the module
+    # comes up with the kernel default (1) and the real-root config is never
+    # reapplied. A kernel cmdline param applies regardless of how/when the
+    # module loads. Without this the codec power-saves on idle and the TAS2781
+    # smart-amp desyncs (speakers go silent shortly after login).
+    "snd_hda_intel.power_save=0"
   ];
 
   # pstore(efi_pstore) is already active, so a panic's dmesg survives the reboot

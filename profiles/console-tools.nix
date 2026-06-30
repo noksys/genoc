@@ -93,7 +93,7 @@ in {
       ddgr                       # DuckDuckGo terminal client
       elinks                     # ncurses web browser
       electron                   # Electron runtime (some pinned apps need a system one)
-      parallel-full              # GNU parallel
+      parallel                   # GNU parallel (no DB drivers; avoids DBD-CSV test break in nixpkgs sandbox)
       recoll                     # full-text desktop search
       tarsnap                    # encrypted offsite backup CLI
       usbutils                   # lsusb / usb-devices
