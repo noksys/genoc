@@ -193,7 +193,7 @@ with pkgs; [
       Version=1.0
       Name=Claude Science
       Comment=Anthropic research workbench (beta)
-      Exec=appimage-run ${vars.homeDirectory}/app/claude-science.AppImage
+      Exec=${vars.homeDirectory}/app/claude-science/start.sh
       Terminal=false
       Type=Application
       Icon=applications-science
