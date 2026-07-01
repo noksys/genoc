@@ -336,6 +336,11 @@ in {
           runtimeInputs = [ nodejs_20 ];
           text = builtins.readFile ./scripts/grok-wrapper.sh;
         })                                         # xAI Grok Build CLI (latest via npx)
+        (writeShellApplication {
+          name = "claude-science";
+          runtimeInputs = [ steam-run ];
+          text = builtins.readFile ./scripts/claude-science-wrapper.sh;
+        })                                         # Anthropic Claude Science (local daemon + web UI; ~/app binary via FHS)
         gemini-cli                                 # Google Gemini CLI
         caffeine-ng                                # screen-blank / suspend inhibitor (tray)
         bubblewrap                                 # sandboxing (required by codex)

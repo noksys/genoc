@@ -192,8 +192,8 @@ with pkgs; [
       [Desktop Entry]
       Version=1.0
       Name=Claude Science
-      Comment=Anthropic research workbench (beta)
-      Exec=${vars.homeDirectory}/app/claude-science/start.sh
+      Comment=Anthropic research workbench (beta) — starts the local daemon and opens the web UI
+      Exec=claude-science serve
       Terminal=false
       Type=Application
       Icon=applications-science
