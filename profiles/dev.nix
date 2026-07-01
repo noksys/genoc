@@ -338,9 +338,9 @@ in {
         })                                         # xAI Grok Build CLI (latest via npx)
         (writeShellApplication {
           name = "claude-science";
-          runtimeInputs = [ steam-run ];
+          runtimeInputs = [ socat ];
           text = builtins.readFile ./scripts/claude-science-wrapper.sh;
-        })                                         # Anthropic Claude Science (local daemon + web UI; ~/app binary via FHS)
+        })                                         # Anthropic Claude Science (local daemon + web UI; ~/app binary via nix-ld, socat for sandbox net)
         gemini-cli                                 # Google Gemini CLI
         caffeine-ng                                # screen-blank / suspend inhibitor (tray)
         bubblewrap                                 # sandboxing (required by codex)

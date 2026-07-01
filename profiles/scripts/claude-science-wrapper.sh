@@ -1,11 +1,14 @@
 # Embedded by writeShellApplication in genoc/profiles/dev.nix.
-# set -euo pipefail is prepended automatically; steam-run is in PATH via runtimeInputs.
+# set -euo pipefail is prepended automatically; socat is in PATH via runtimeInputs.
 #
-# Anthropic Claude Science: a self-contained CLI that runs a local daemon + web
-# UI (`claude-science serve`). It is NOT an AppImage/Electron app — it's a
-# foreign, dynamically-linked ELF, so on NixOS it needs an FHS loader; steam-run
-# provides one. The binary lives under ~/app because `claude-science update`
-# self-updates it in place, which a read-only Nix store cannot host.
+# Anthropic Claude Science: a Bun-compiled CLI that runs a local daemon + web UI
+# (`claude-science serve`). It is a foreign dynamic ELF, but nix-ld already
+# provides the loader system-wide, so it runs directly -- no steam-run/FHS.
+# In fact it must: the tool creates its OWN Linux sandboxes (namespaces + socat
+# bridges) to run code, so nesting it inside an FHS namespace (steam-run) would
+# break that. We only put the tools it shells out to (socat) on PATH. The binary
+# lives under ~/app because `claude-science update` rewrites it in place, which a
+# read-only Nix store can't host.
 
 bin="${HOME}/app/claude-science/claude-science"
 
@@ -16,4 +19,4 @@ if [ ! -x "$bin" ]; then
   exit 1
 fi
 
-exec steam-run "$bin" "$@"
+exec "$bin" "$@"
