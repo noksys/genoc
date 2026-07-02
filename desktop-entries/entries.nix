@@ -185,6 +185,12 @@ with pkgs; [
     '';
   })
 
+  # Launches with --dangerously-no-sandbox: the bundled conda/micromamba envs
+  # (Python/R) can't provision inside the app's bwrap sandbox on NixOS — it
+  # assumes an FHS /bin (sleep/mkdir/socat) that stock NixOS lacks, and envfs
+  # doesn't survive the sandbox's unshare-pid + masked /proc. Disabling the
+  # sandbox lets the host tools resolve. Drop the flag once Anthropic ships a
+  # NixOS sandbox fix. (Sandbox off = analysis code runs with full $HOME/network.)
   (writeTextFile {
     name = "claude-science.desktop";
     destination = "/share/applications/claude-science.desktop";
@@ -193,7 +199,7 @@ with pkgs; [
       Version=1.0
       Name=Claude Science
       Comment=Anthropic research workbench (beta) — starts the local daemon and opens the web UI
-      Exec=claude-science serve
+      Exec=claude-science serve --dangerously-no-sandbox
       Terminal=false
       Type=Application
       Icon=applications-science
