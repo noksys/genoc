@@ -157,6 +157,14 @@ in
   i18n.defaultLocale = "en_US.UTF-8";
   services.timesyncd.enable = true;
 
+  # FHS emulation for /bin and /usr/bin via a FUSE fs (returns symlinks to
+  # executables resolved from the caller's PATH). Needed by tools that hardcode
+  # FHS paths like /bin/sleep or /usr/bin/socat — notably the Claude Science
+  # sandbox: bwrap ro-binds the host /bin+/usr/bin, and its conda/micromamba
+  # shell scripts call coreutils/socat by bare name, which fail on a stock NixOS
+  # /bin (only sh/bash). See ~/app/claude-science and the claude-science wrapper.
+  services.envfs.enable = true;
+
   services.xserver = {
     # Configure XKB with US Intl as default + PT-BR ABNT2 as alternate
     # (Shift+Shift to toggle). v3 follows v2's order — physical EN-INT
