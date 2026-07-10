@@ -140,7 +140,7 @@ in {
 
     # JavaScript / TypeScript
     (mkIf (hasLang "js") {
-      environment.systemPackages = with pkgs; [ nodejs_20 typescript bun ];
+      environment.systemPackages = with pkgs; [ nodejs_22 typescript bun ];
     })
     (mkIf (fullLang "js") {
       environment.systemPackages = with pkgs; [ deno playwright-test ];
@@ -317,25 +317,30 @@ in {
         # Anthropic Claude CLI — npx @latest keeps it current daily.
         # Script lives in genoc/profiles/scripts/claude-wrapper.sh;
         # builtins.readFile embeds it at eval time. writeShellApplication
-        # prepends set -euo pipefail and puts nodejs_20 in PATH.
+        # prepends set -euo pipefail and puts nodejs_22 in PATH.
         (writeShellApplication {
           name = "claude";
-          runtimeInputs = [ nodejs_20 ];
+          runtimeInputs = [ nodejs_22 ];
           text = builtins.readFile ./scripts/claude-wrapper.sh;
         })
         (writeShellScriptBin "claude-code" ''
-          exec ${nodejs_20}/bin/npx -y @anthropic-ai/claude-code@latest "$@"
+          exec ${nodejs_22}/bin/npx -y @anthropic-ai/claude-code@latest "$@"
         '')                                        # legacy alias
         (writeShellApplication {
           name = "codex";
-          runtimeInputs = [ nodejs_20 ];
+          runtimeInputs = [ nodejs_22 ];
           text = builtins.readFile ./scripts/codex-wrapper.sh;
         })                                         # OpenAI Codex CLI (latest via npx)
         (writeShellApplication {
           name = "grok";
-          runtimeInputs = [ nodejs_20 ];
+          runtimeInputs = [ nodejs_22 ];
           text = builtins.readFile ./scripts/grok-wrapper.sh;
         })                                         # xAI Grok Build CLI (latest via npx)
+        (writeShellApplication {
+          name = "pi";
+          runtimeInputs = [ nodejs_22 ];
+          text = builtins.readFile ./scripts/pi-wrapper.sh;
+        })                                         # pi coding agent (latest via npx) — harness do Tamandua
         (writeShellApplication {
           name = "claude-science";
           runtimeInputs = [ socat ];
