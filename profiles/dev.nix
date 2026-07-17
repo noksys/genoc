@@ -351,7 +351,11 @@ in {
           runtimeInputs = [ socat ];
           text = builtins.readFile ./scripts/claude-science-wrapper.sh;
         })                                         # Anthropic Claude Science (local daemon + web UI; ~/app binary via nix-ld, socat for sandbox net)
-        gemini-cli                                 # Google Gemini CLI
+        (writeShellApplication {
+          name = "gemini";
+          runtimeInputs = [ nodejs_22 ];
+          text = builtins.readFile ./scripts/gemini-wrapper.sh;
+        })                                         # Google Gemini CLI (latest via npx; needs GEMINI_API_KEY — Google killed individual OAuth 2026-06-18)
         caffeine-ng                                # screen-blank / suspend inhibitor (tray)
         bubblewrap                                 # sandboxing (required by codex)
         nh                                         # nix/nixos-rebuild helper CLI
