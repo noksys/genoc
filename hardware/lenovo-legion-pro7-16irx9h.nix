@@ -105,6 +105,13 @@ lib.mkIf (config.genoc.hardware.machine == "lenovo-legion-pro7-16irx9h") {
     # module loads. Without this the codec power-saves on idle and the TAS2781
     # smart-amp desyncs (speakers go silent shortly after login).
     "snd_hda_intel.power_save=0"
+    # Disable Intel Panel Self Refresh. The internal panel (eDP-1) is wired to
+    # the i915 (card1) and does the scanout even when the desktop renders on the
+    # NVIDIA dGPU (PRIME sync). PSR exit on screensaver/DPMS wake hangs the
+    # display engine: black screen + frozen session while the kernel stays alive
+    # (audio kept playing). Logged signature: i915 "Atomic update failure on
+    # pipe A" (recurring). Incident 2026-06-30; see ai-play-ground/2026-06-30_freeze.md.
+    "i915.enable_psr=0"
   ];
 
   # pstore(efi_pstore) is already active, so a panic's dmesg survives the reboot
@@ -153,7 +160,12 @@ lib.mkIf (config.genoc.hardware.machine == "lenovo-legion-pro7-16irx9h") {
     # Symptoms: invisible/frozen cursor, KWin restart loop, occasional kernel
     # oops on Wayland — historically only triggered on this machine when running
     # dual-monitor; uncomment if it comes back on multi-display setups.
-    # KWIN_FORCE_SW_CURSOR      = "1";
+    #
+    # 2026-06-30: ENABLED. Recurrent hard freezes on GPU events (screensaver
+    # wake; launching an Electron app) with KWin spewing "Failed to create an
+    # offscreen framebuffer" / glTexStorage2D before the display dies. See
+    # ai-play-ground/2026-06-30_freeze.md. Mitigation on the nvidia-Wayland path.
+    KWIN_FORCE_SW_CURSOR      = "1";
   };
 
   # ---- dGPU runtime power policy via udev (helps RTD3 when on battery) -----
