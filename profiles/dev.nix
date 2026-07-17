@@ -337,6 +337,11 @@ in {
           text = builtins.readFile ./scripts/grok-wrapper.sh;
         })                                         # xAI Grok Build CLI (latest via npx)
         (writeShellApplication {
+          name = "kimi";
+          runtimeInputs = [ nodejs_22 ];
+          text = builtins.readFile ./scripts/kimi-wrapper.sh;
+        })                                         # Moonshot AI Kimi Code CLI (latest via npx)
+        (writeShellApplication {
           name = "pi";
           runtimeInputs = [ nodejs_22 ];
           text = builtins.readFile ./scripts/pi-wrapper.sh;
