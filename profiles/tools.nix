@@ -35,7 +35,6 @@ in {
       p7zip                 # 7-zip archiver
       parted                # partitioning CLI (partprobe lives here)
       patch                 # GNU patch
-      peek                  # GIF screen recorder
       plocate               # mlocate replacement (faster, smaller db)
       sqlite                # sqlite3 CLI
       sqlitebrowser         # GUI for SQLite databases
