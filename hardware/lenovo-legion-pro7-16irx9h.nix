@@ -126,6 +126,15 @@ lib.mkIf (config.genoc.hardware.machine == "lenovo-legion-pro7-16irx9h") {
     # (scrub / heavy IO) could false-trigger a reboot.
   };
 
+  # ---- Hardware error monitoring (RAS) --------------------------------------
+  # Log + decode Machine Check Exceptions and memory (EDAC) errors. Passive,
+  # event-driven daemon: ~0 CPU at idle, no per-instruction checking (the CPU's
+  # Machine Check Architecture is always on in HW regardless). Added 2026-07-01
+  # after corrected MCEs (Bank 0) + cross-program segfaults showed up; we want
+  # every future MCE decoded with a timestamp to tell hardware marginality apart
+  # from the GPU/Wayland freezes. Query: `ras-mc-ctl --errors` / `--summary`.
+  hardware.rasdaemon.enable = true;
+
   # ---- Graphics base (PERFORMANCE by default) -------------------------------
   # Base profile: run the whole desktop on the NVIDIA dGPU for max smoothness.
   hardware.graphics.enable = true;
