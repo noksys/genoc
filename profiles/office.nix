@@ -8,6 +8,7 @@
 #
 #   docs = "min" | "full"
 #     min  → pandoc + tectonic + poppler-utils + okular + mupdf + enscript
+#            + marktext (WYSIWYG Markdown editor)
 #     full → + ocrmypdf, pdftk, qpdf, pdfgrep, typst, unscii, img2pdf
 #
 #   suite = "min" | "full"
@@ -50,6 +51,10 @@ in {
     (mkIf (cfg.docs != null) {
       environment.systemPackages = with pkgs; [
         pandoc tectonic poppler-utils kdePackages.okular mupdf enscript
+        # Single-pane WYSIWYG Markdown editor (renders inline while typing,
+        # no source/preview split). Replaces ghostwriter, which was
+        # home-manager-only and always showed the split view.
+        marktext
       ];
     })
     (mkIf (cfg.docs == "full") {
