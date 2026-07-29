@@ -115,9 +115,10 @@ in
   # '';
 
   boot.kernel.sysctl."net.ipv6.conf.all.disable_ipv6" = false;
-  # Magic SysRq in safe mode (REISUB without dangerous memory dumps).
-  # Was =1 (everything); v2's dev-hacker.nix narrowed to 244 — safer.
-  boot.kernel.sysctl."kernel.sysrq" = 244;
+  # Magic SysRq fully enabled (=1). 244 already allowed full REISUB, but it
+  # blocked the debug dumps (SysRq+w/l/t backtraces) needed to diagnose the
+  # mantis freezes (2026-06/07). Note: =1 also enables crash(c) = deliberate panic.
+  boot.kernel.sysctl."kernel.sysrq" = 1;
   # Keep idle long-running TCP connections alive (Telegram/Signal/SSH on flaky NAT).
   boot.kernel.sysctl."net.ipv4.tcp_keepalive_time" = 60;
   boot.kernel.sysctl."net.ipv4.tcp_keepalive_intvl" = 30;
@@ -196,13 +197,25 @@ in
   security.sudo = {
     wheelNeedsPassword = false;
     enable = true;
+    # Narrow passwordless set. These stay NOPASSWD on purpose: they are the
+    # scheduled sleep/wake automation, none of them can yield a root shell, and
+    # with genoc.security.sudo2fa the blanket NOPASSWD: ALL is gone, so anything
+    # missing from this list would start demanding a YubiKey touch mid-script.
     extraRules = [{
       commands = [
-        { command = "${pkgs.systemd}/bin/systemctl suspend"; options = [ "NOPASSWD" ]; }
-        { command = "${pkgs.systemd}/bin/reboot"; options = [ "NOPASSWD" ]; }
-        { command = "${pkgs.systemd}/bin/poweroff"; options = [ "NOPASSWD" ]; }
+        # /run/current-system paths rather than store paths: sudoers matches the
+        # command literally without resolving symlinks, and what actually gets
+        # invoked comes from PATH. A store path would also break silently on every
+        # nixpkgs bump, since the hash changes and the rule stops matching.
+        { command = "/run/current-system/sw/bin/systemctl suspend"; options = [ "NOPASSWD" ]; }
+        { command = "/run/current-system/sw/bin/systemctl hibernate"; options = [ "NOPASSWD" ]; }
+        { command = "/run/current-system/sw/bin/systemctl hybrid-sleep"; options = [ "NOPASSWD" ]; }
+        { command = "/run/current-system/sw/bin/systemctl suspend-then-hibernate"; options = [ "NOPASSWD" ]; }
+        { command = "/run/current-system/sw/bin/rtcwake"; options = [ "NOPASSWD" ]; }
+        { command = "/run/current-system/sw/bin/reboot"; options = [ "NOPASSWD" ]; }
+        { command = "/run/current-system/sw/bin/poweroff"; options = [ "NOPASSWD" ]; }
       ];
-      groups = [ "wheel" "docker" ];
+      groups = [ "wheel" ];
     }];
   };
 
@@ -219,7 +232,10 @@ in
     isNormalUser = true;
     hashedPassword = vars.userHashedPassword;
     description = vars.userFullName;
-    extraGroups = [ "networkmanager" "nginx" "wheel" "audio" "tarsnap" "lp" "tor" "debian-tor" "plugdev" "docker" ];
+    # "docker" deliberately absent: membership is equivalent to passwordless
+    # root via the daemon socket, which would undo sudo hardening. Containers
+    # run through the rootless daemon instead (genoc/profiles/dev.nix).
+    extraGroups = [ "networkmanager" "nginx" "wheel" "audio" "tarsnap" "lp" "tor" "debian-tor" "plugdev" ];
     # Per-user packages live in profiles or in machine config (e.g.,
     # KDE-specific user packages in genoc/ui/kde.nix).
     packages = [];

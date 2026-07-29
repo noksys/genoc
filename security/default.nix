@@ -6,5 +6,7 @@
   imports = [
     ./tpm2.nix
     ./sddm-u2f.nix
+    ./sudo-2fa.nix
+    ./warp-lock.nix
   ];
 }

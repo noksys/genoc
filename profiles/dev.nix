@@ -258,8 +258,26 @@ in {
 
     # Container runtimes — min stays trim, full is the kitchen sink + k8s.
     (mkIf (hasTask "containers") {
-      virtualisation.docker.enable = true;
-      virtualisation.docker.package = pkgs.docker_29;   # 28.x marcado inseguro; subir p/ linha 29
+      # Rootless: the daemon runs as the user inside a userns, so a container
+      # asking for `-v /:/host --privileged` gets the user's own privileges and
+      # nothing more. This is what lets the user leave the root-equivalent
+      # "docker" group (see genoc/configuration.nix).
+      virtualisation.docker = {
+        enable = false;
+        package = pkgs.docker_29;   # 28.x marcado inseguro; subir p/ linha 29
+        rootless = {
+          enable = true;
+          # The rootless daemon has its own package input; leaving it at the
+          # default pulls docker 28.x, which nixpkgs marks insecure.
+          package = pkgs.docker_29;
+          setSocketVariable = true;   # exports DOCKER_HOST for the user
+          # Fresh data-root on purpose: layers under the old root data-root are
+          # owned by real root, while a rootless daemon expects them mapped into
+          # the subuid range. There is no supported migration, so the old tree is
+          # left intact as a rollback and images are rebuilt or re-pulled.
+          daemon.settings.data-root = "/home/felipelalli/parked/docker-rootless";
+        };
+      };
       environment.systemPackages = with pkgs; [ docker_29 docker-compose ];
     })
 
