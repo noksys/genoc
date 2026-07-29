@@ -350,6 +350,11 @@ in {
           text = builtins.readFile ./scripts/codex-wrapper.sh;
         })                                         # OpenAI Codex CLI (latest via npx)
         (writeShellApplication {
+          name = "codex-security";
+          runtimeInputs = [ nodejs_22 ];
+          text = builtins.readFile ./scripts/codex-security-wrapper.sh;
+        })                                         # OpenAI Codex Security CLI (latest via npx; scoped @openai/ name is mandatory — unscoped npm name is a typosquat placeholder)
+        (writeShellApplication {
           name = "grok";
           runtimeInputs = [ nodejs_22 ];
           text = builtins.readFile ./scripts/grok-wrapper.sh;
