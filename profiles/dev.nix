@@ -380,7 +380,7 @@ in {
           text = builtins.readFile ./scripts/gemini-wrapper.sh;
         })                                         # Google Gemini CLI (latest via npx; needs GEMINI_API_KEY — Google killed individual OAuth 2026-06-18)
         (import <nixos-unstable> {
-          inherit (pkgs) system;
+          inherit (pkgs.stdenv.hostPlatform) system;
           config.allowUnfree = true;
         }).antigravity-cli                         # Google Antigravity CLI (`agy`) — official home of individual Google Sign-In; unstable only, no npm dist
         caffeine-ng                                # screen-blank / suspend inhibitor (tray)

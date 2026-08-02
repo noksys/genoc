@@ -84,7 +84,7 @@ in {
     (mkIf (hasCoinAny "liquid") {
       environment.systemPackages = [
         # elements                     # elements-qt + tools
-        (import <nixos-unstable> { inherit (pkgs) system; }).elements   # 23.3.x p/ hard fork Liquid
+        (import <nixos-unstable> { inherit (pkgs.stdenv.hostPlatform) system; }).elements   # 23.3.x p/ hard fork Liquid
       ];
     })
     (mkIf (hasCoinNode "liquid") {

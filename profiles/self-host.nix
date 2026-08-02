@@ -145,7 +145,7 @@ in {
     (mkIf cfg.sites.paisa.enable (
       let
         paisaFlake  = builtins.getFlake "github:ananthakumaran/paisa";
-        paisaPkg    = paisaFlake.packages.${pkgs.system}.default;
+        paisaPkg    = paisaFlake.packages.${pkgs.stdenv.hostPlatform.system}.default;
         paisaPort   = 7500;
         publicPort  = 8350;
       in {
