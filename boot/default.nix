@@ -22,7 +22,9 @@ in {
       description = ''
         Which bootloader to install:
         - grub-bios:         legacy GRUB on a specific disk device
-        - grub-efi-dualboot: EFI GRUB with cryptodisk + OS prober + memtest
+        - grub-efi-dualboot: EFI GRUB with cryptodisk + memtest; dualboot
+                             entries are declared statically per machine
+                             (boot.loader.grub.extraEntries), not probed
         - systemd-boot:      lightweight EFI bootloader (no Linux/Win dualboot)
       '';
     };
@@ -41,7 +43,11 @@ in {
 
       boot.loader.grub = {
         enable             = true;
-        useOSProber        = true;
+        # os-prober off: it remounted every vfat/NTFS partition on each
+        # rebuild to rediscover loaders we already know, its dmraid probe
+        # spammed the build log, and its EFI sub-probes only recognise
+        # ELILO and Microsoft anyway. Machines declare their own entries.
+        useOSProber        = false;
         configurationLimit = 20;
         splashImage        = ./bg.png;
         font               = "${grubFont}/DejaVuSansMono36.pf2";
