@@ -432,7 +432,25 @@ in
   # rolling-channel bump (151 -> 152 -> ...) never re-breaks the build the way a
   # pinned version list does. For one-off insecure pkgs add exact names below.
   nixpkgs.config.allowInsecurePredicate = pkg:
-    builtins.elem (lib.getName pkg) [ "librewolf" "librewolf-unwrapped" ];
+    builtins.elem (lib.getName pkg) [
+      "librewolf"
+      "librewolf-unwrapped"
+
+      # python-ecdsa, pulled in by python3Packages.ckcc-protocol (the Coldcard
+      # 'ckcc' CLI, hardware/coldcard.nix). Flagged for CVE-2024-23342
+      # (Minerva): the library is pure Python, is not side-channel resistant,
+      # and upstream states it will not be made so — the flag is permanent, not
+      # a pending fix to wait out.
+      #
+      # The attack recovers a private key from timing while that key signs
+      # locally. On this machine the keys live on the Coldcard and never reach
+      # the host, so nothing here signs with a secret scalar. Not audited
+      # further than that: ckcc-protocol's own use of the library was not read.
+      #
+      # By name rather than by version, for the reason in the comment above:
+      # a channel bump to 0.19.2 must not re-break the build.
+      "ecdsa"
+    ];
   nixpkgs.config.permittedInsecurePackages = [
     # e.g. "gradle-7.6.6" — exact-version entries (predicate already covers librewolf)
   ];

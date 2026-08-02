@@ -1,5 +1,5 @@
 # Coldcard hardware wallet udev rules (USB + hidraw) so the device is
-# usable without 'plugdev' group dependency.
+# usable without 'plugdev' group dependency, plus the 'ckcc' CLI.
 { config, lib, pkgs, ... }:
 
 with lib;
@@ -22,6 +22,10 @@ with lib;
     environment.systemPackages = with pkgs; [
       libusb1   # USB access library
       udev      # device manager utilities
+
+      # Coinkite's official CLI ('ckcc'): list/version/upgrade over USB.
+      # Provides the 'ckcc' binary; pulls in click, hidapi, ecdsa, pyaes.
+      python3Packages.ckcc-protocol
     ];
   };
 }
