@@ -69,6 +69,8 @@ in
 
   environment.shellAliases = {
     chez = "scheme";
+    # The antigravity-cli package only installs `agy`.
+    antigravity = "agy";
     # Force WezTerm onto the NVIDIA dGPU via PRIME render offload.
     wezterm = "__NV_PRIME_RENDER_OFFLOAD=1 __VK_LAYER_NV_optimus=NVIDIA_only __GLX_VENDOR_LIBRARY_NAME=nvidia command wezterm";
   };
@@ -235,7 +237,7 @@ in
     # "docker" deliberately absent: membership is equivalent to passwordless
     # root via the daemon socket, which would undo sudo hardening. Containers
     # run through the rootless daemon instead (genoc/profiles/dev.nix).
-    extraGroups = [ "networkmanager" "nginx" "wheel" "audio" "tarsnap" "lp" "tor" "debian-tor" "plugdev" ];
+    extraGroups = [ "networkmanager" "nginx" "wheel" "audio" "tarsnap" "lp" "tor" "debian-tor" "plugdev" "dialout" ];
     # Per-user packages live in profiles or in machine config (e.g.,
     # KDE-specific user packages in genoc/ui/kde.nix).
     packages = [];

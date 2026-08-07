@@ -170,6 +170,22 @@ with pkgs; [
   })
 
   (writeTextFile {
+    name = "blockstream.desktop";
+    destination = "/share/applications/blockstream.desktop";
+    text = ''
+      [Desktop Entry]
+      Name=Blockstream
+      Comment=Blockstream App (Green) — Bitcoin & Liquid Wallet
+      Exec=${vars.homeDirectory}/app/blockstream/start.sh
+      Terminal=false
+      Type=Application
+      Icon=${vars.homeDirectory}/app/blockstream/squashfs-root/linux_production.png
+      Categories=Office;Finance;P2P;Network;Qt;
+      StartupWMClass=Blockstream
+    '';
+  })
+
+  (writeTextFile {
     name = "notesnook.desktop";
     destination = "/share/applications/notesnook.desktop";
     text = ''
