@@ -46,7 +46,7 @@ in {
       wxmaxima              # GUI for Maxima CAS
       xclip                 # X11 clipboard CLI
       xlockmore             # screen locker (X11)
-      xorg.xmessage         # tiny X11 dialog tool
+      xmessage         # tiny X11 dialog tool
     ];
   };
 }

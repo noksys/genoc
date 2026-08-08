@@ -80,6 +80,7 @@ in {
       fileSystems."/var/lib/i2pd" = {
         device  = "${home}/parked/auth/i2p";
         options = [ "bind" ];
+        fsType  = "none";
       };
 
       environment.systemPackages = [ pkgs.nginx ];
@@ -90,6 +91,7 @@ in {
       fileSystems."/var/www/puma.i2p" = {
         device  = "${home}/www/puma.i2p";
         options = [ "bind" ];
+        fsType  = "none";
       };
 
       services.nginx.virtualHosts."localhost" = {

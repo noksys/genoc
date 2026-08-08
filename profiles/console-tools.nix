@@ -104,7 +104,7 @@ in {
 
       # ── X / keyboard / Xorg helpers ──────────────────────────────────────
       xkeyboard_config           # XKB data files (also via XKB_CONFIG_ROOT)
-      xorg.xrdb                  # X resource database loader
+      xrdb                  # X resource database loader
     ];
   };
 }

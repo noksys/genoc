@@ -21,6 +21,6 @@ lib.mkIf (config.genoc.hardware.machine == "baremetal"
     udev
     vulkan-tools
     wayland-utils
-    xorg.xrandr
+    xrandr
   ];
 }

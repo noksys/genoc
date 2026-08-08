@@ -31,7 +31,7 @@ in {
       serviceConfig = {
         Type = "oneshot";
         ExecStart = "${refreshScript}";
-        Environment = "PATH=${pkgs.xorg.xrandr}/bin:${pkgs.coreutils}/bin:${pkgs.gawk}/bin:${pkgs.gnugrep}/bin:${pkgs.bash}/bin";
+        Environment = "PATH=${pkgs.xrandr}/bin:${pkgs.coreutils}/bin:${pkgs.gawk}/bin:${pkgs.gnugrep}/bin:${pkgs.bash}/bin";
       };
     };
 
@@ -45,7 +45,7 @@ in {
         # (X11/Wayland might not be initialized at graphical-session.target).
         ExecStart = pkgs.writeShellScript "refresh-with-wait.sh" ''
           for attempt in {1..30}; do
-            if ${pkgs.xorg.xrandr}/bin/xrandr --query &>/dev/null; then
+            if ${pkgs.xrandr}/bin/xrandr --query &>/dev/null; then
               echo "[refresh-smart] Display ready after $attempt seconds, executing refresh..."
               ${refreshScript}
               exit 0

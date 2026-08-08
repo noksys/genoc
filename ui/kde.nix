@@ -196,9 +196,9 @@ lib.mkIf (config.genoc.ui.desktop == "kde") {
       kdePackages.kruler         # on-screen ruler
       kdePackages.spectacle      # screenshot tool
 
-      xorg.xinput
-      xorg.xwininfo
-      xorg.xdpyinfo
+      xinput
+      xwininfo
+      xdpyinfo
     ];
   }];
 }

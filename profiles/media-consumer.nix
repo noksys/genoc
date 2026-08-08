@@ -29,7 +29,7 @@ in {
       simple-scan             # SANE scanning frontend
       sox                     # `play` and audio swiss-army CLI
       vlc                     # VLC media player
-      youtube-music           # third-party YouTube Music desktop
+      pear-desktop           # third-party YouTube Music desktop
       zathura                 # keyboard-driven document viewer
 
       # ProjectM visualizer (lightweight, used as a music visualizer):

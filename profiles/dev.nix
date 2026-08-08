@@ -298,7 +298,7 @@ in {
     (mkIf (hasTask "editors-gui") {
       environment.systemPackages = with pkgs; [
         vscode
-        wmctrl xorg.xprop                          # vscode helpers
+        wmctrl xprop                          # vscode helpers
         meld                                       # GUI diff/merge
       ];
     })

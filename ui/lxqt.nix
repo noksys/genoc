@@ -68,7 +68,7 @@ lib.mkIf (config.genoc.ui.desktop == "lxqt") {
 
       # WM / X11 tools
       openbox
-      xorg.xdpyinfo
+      xdpyinfo
       mesa-demos
 
       # lockscreen stack

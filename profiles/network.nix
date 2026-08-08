@@ -28,7 +28,7 @@ in {
       ncdu                 # ncurses disk usage analyzer
       networkmanagerapplet # nm-applet (system tray client)
       nftables             # netfilter / nft CLI
-      protonvpn-gui        # Proton VPN GUI client
+      proton-vpn        # Proton VPN GUI client
       speedtest-cli        # Ookla speedtest CLI
       syncthing            # P2P file sync daemon
       torsocks             # transparent SOCKS over Tor
