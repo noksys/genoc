@@ -26,6 +26,7 @@ in {
       gawk                  # GNU awk
       ghostscript           # PostScript / PDF interpreter
       gnome-tweaks          # extra GNOME settings (works under KDE for some toggles)
+      gnuplot               # command-driven plotting (charts from data files / pipes)
       htop                  # interactive process viewer
       jq                    # JSON CLI processor
       kdePackages.kcalc     # KDE calculator
