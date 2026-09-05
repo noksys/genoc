@@ -128,6 +128,33 @@ with lib;
     security.pam.services.sudo.rules.auth.oath.control = mkForce "sufficient";
     security.pam.services.polkit-1.rules.auth.oath.control = mkForce "sufficient";
 
+    # polkit 127 (NixOS 26.05) stopped running polkit-agent-helper-1 as a setuid
+    # binary and moved it into a socket-activated, sandboxed unit. Its stock
+    # hardening silently removes both factors from the dialog above:
+    #
+    #   PrivateDevices=yes + DevicePolicy=strict  -> no /dev/hidraw*, pam_u2f
+    #                                                never sees the key (no blink)
+    #   ProtectHome=yes                           -> ~/.config/Yubico/u2f_keys
+    #                                                is not readable either
+    #   ProtectSystem=strict                      -> /etc read-only, so pam_oath
+    #                                                cannot record the used time
+    #                                                step and rejects valid codes
+    #
+    # What is left is the password alone — which is the soft spot the polkit-1
+    # stack above exists to close. Relax exactly the three, nothing else.
+    systemd.services."polkit-agent-helper@".serviceConfig = {
+      PrivateDevices = false;
+      # The base unit ships DeviceAllow=/dev/null only, and DevicePolicy=strict
+      # keeps the cgroup filter allowlist-only, so turning PrivateDevices off is
+      # not enough — each node has to be named. /dev/urandom is not optional
+      # decoration: pam_u2f reads it in set_cdh() to build the FIDO challenge, and
+      # without it the module dies with "Failed to generate challenge" AFTER
+      # finding the key, which looks exactly like a missing device.
+      DeviceAllow = [ "char-hidraw rw" "char-usb_device rw" "/dev/urandom r" ];
+      ProtectHome = false;
+      ReadWritePaths = [ "/etc" ]; # pam_oath rewrites users.oath + a .lock beside it
+    };
+
     # oath-toolkit used to arrive on PATH as a side effect of
     # security.pam.oath.enable. It is needed to seed and verify /etc/users.oath,
     # so ask for it directly rather than leaning on that flag. pam_u2f (for
