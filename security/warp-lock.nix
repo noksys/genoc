@@ -21,9 +21,16 @@
 # problem: it is declarative, applied at creation, and needs no group.
 #
 # Known cost: warp-taskbar runs as the desktop user and talks to the same socket,
-# so the tray applet stops working. There is no way to keep it and still gate the
+# so the tray applet cannot work. There is no way to keep it and still gate the
 # service — whoever can reach the socket can control the connection. Use
 # `sudo warp-cli status` instead.
+#
+# The applet must therefore be masked, not merely left broken: the package ships
+# an XDG autostart entry (`systemctl --user start warp-taskbar`) and a unit with
+# Restart=always, so an unmasked warp-taskbar retries the socket once per second
+# for the whole session, logging an ERROR line each time — about a third of the
+# journal, crowding real logs out of retention. Masking the user unit makes that
+# autostart fail instantly and silently.
 #
 # This is a local control, so it is only as strong as the sudo in front of it. The
 # durable version lives on the Cloudflare side, as a Zero Trust device policy: it
@@ -39,5 +46,6 @@ with lib;
 
   config = mkIf config.genoc.security.warpLock.enable {
     systemd.services.cloudflare-warp.serviceConfig.RuntimeDirectoryMode = "0750";
+    systemd.user.units."warp-taskbar.service".enable = false;
   };
 }
