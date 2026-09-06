@@ -1,6 +1,14 @@
 { config, lib, pkgs, modulesPath, ... }:
 
 let
+  # Qual máquina construir. Mesmo marcador que ../custom_vars.nix usa;
+  # ver o comentário longo lá.
+  marker = /etc/nixos/machine;
+  machine =
+    if builtins.pathExists marker
+    then builtins.replaceStrings [ "\n" ] [ "" ] (builtins.readFile marker)
+    else "mantis-legion-pro-7";
+
   vars = import ../custom_vars.nix;
   zfsCompatibleKernelPackages = lib.filterAttrs (
     name: kernelPackages:
@@ -18,8 +26,7 @@ in
   imports =
     [
       # Custom user config
-      #../custom_machine.nix
-      /etc/nixos/mica-nixos/mantis-legion-pro-7/custom_machine.nix
+      (../. + "/${machine}/custom_machine.nix")
     ];
 
   programs.dconf.enable = true;
