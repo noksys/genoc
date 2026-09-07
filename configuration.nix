@@ -471,5 +471,9 @@ in
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = vars.installationNixOSVersion; # Did you read the comment?
-  system.autoUpgrade.enable = true;
+  system.autoUpgrade = {
+    enable = true;
+    dates = "02:00";           # window start
+    randomizedDelaySec = "7h"; # random point between 02:00 and 09:00
+  };
 }
