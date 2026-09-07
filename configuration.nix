@@ -129,7 +129,14 @@ in
   fileSystems."/".options = lib.mkDefault [ "noatime" ];
 
   # configurationLimit moved to ./boot/grub.nix (= 20, brought from v2.x).
-  boot.initrd.availableKernelModules = lib.mkMerge [ [ "dm_crypt" "zfs" ] ];
+  # "zfs" saiu daqui e foi para ./hardware/zfs.nix, atrás do mesmo gate do resto
+  # do ZFS. Sem gate, uma máquina com `genoc.hardware.zfs.enable = false` pedia
+  # um módulo que não existe no kernel escolhido e o build morria em
+  # `modules-shrunk`: "modprobe: FATAL: Module zfs not found".
+  #
+  # Máquinas com raiz ou /home em ZFS não perdem nada: o módulo continua vindo,
+  # pelo módulo, e listas de initrd se somam entre módulos do NixOS.
+  boot.initrd.availableKernelModules = [ "dm_crypt" ];
 
   system = {
     copySystemConfiguration = true;

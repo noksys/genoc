@@ -33,6 +33,11 @@ in {
 
     boot.kernelModules = [ "zfs" ];
 
+    # Necessário para máquinas cuja raiz ou /home vive em ZFS (o initrd tem que
+    # conseguir importar o pool antes do switch-root). Veio de
+    # genoc/configuration.nix, onde estava sem gate.
+    boot.initrd.availableKernelModules = [ "zfs" ];
+
     services.zfs.autoScrub.enable = true;
     services.zfs.trim.enable = true;
     services.zfs.autoSnapshot = {
