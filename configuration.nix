@@ -10,17 +10,6 @@ let
     else "mantis-legion-pro-7";
 
   vars = import ../custom_vars.nix;
-  zfsCompatibleKernelPackages = lib.filterAttrs (
-    name: kernelPackages:
-    (builtins.match "linux_[0-9]+_[0-9]+" name) != null
-    && (builtins.tryEval kernelPackages).success
-    && (!kernelPackages.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken)
-  ) pkgs.linuxKernel.packages;
-  latestKernelPackage = lib.last (
-    lib.sort (a: b: (lib.versionOlder a.kernel.version b.kernel.version)) (
-      builtins.attrValues zfsCompatibleKernelPackages
-    )
-  );
 in
 {
   imports =
@@ -31,10 +20,18 @@ in
 
   programs.dconf.enable = true;
 
-  # zfs stuff
-  boot.supportedFilesystems = [ "zfs" ];
-  boot.zfs.forceImportRoot = false;
-  boot.kernelPackages = latestKernelPackage;
+  # ZFS NÃO é declarado aqui. Ele vive inteiro em ./hardware/zfs.nix, atrás de
+  # `genoc.hardware.zfs.enable` (default true), e aquele módulo é um superset
+  # exato do que estava duplicado neste arquivo — acrescenta ainda zfs_arc_max
+  # e autoSnapshot.
+  #
+  # A duplicação não era inofensiva: como as linhas aqui não tinham gate, uma
+  # máquina que pusesse `genoc.hardware.zfs.enable = false` ganhava ZFS mesmo
+  # assim. Medido no nxdev (servidor headless, sem pool importado): 24 unidades
+  # zfs-* entravam no sistema apesar do false explícito, e o kernel era fixado
+  # no último compatível com ZFS.
+  #
+  # Máquinas que querem ZFS não precisam fazer nada: o default do módulo é true.
   # Note: zfs.zfs_arc_max moved to ./hardware/zfs.nix (machine-imported).
   # rd.luks.timeout=1800 keeps the kernel-level LUKS prompt at 30min;
   # genoc/boot/plymouth.nix adds a complementary systemd-level cap.
@@ -60,11 +57,6 @@ in
       ln -sf ${pkgs.perl}/bin/perl /usr/bin/perl
     '';
   };
-
-  services.zfs.autoScrub.enable = true;
-  services.zfs.trim.enable = true;
-
-  boot.kernelModules = [ "zfs" ];
 
   environment.interactiveShellInit = ''
     # Auto-logout
@@ -471,9 +463,5 @@ in
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = vars.installationNixOSVersion; # Did you read the comment?
-  system.autoUpgrade = {
-    enable = true;
-    dates = "02:00";           # window start
-    randomizedDelaySec = "7h"; # random point between 02:00 and 09:00
-  };
+  system.autoUpgrade.enable = true;
 }
