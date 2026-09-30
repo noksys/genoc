@@ -26,6 +26,7 @@ in {
       signal-desktop    # Signal Messenger desktop
       telegram-desktop  # Telegram official Qt client
       vesktop           # third-party Discord client (allows screen-sharing on Linux)
+      zoom-us           # Zoom video conferencing (unfree)
     ];
   };
 }
