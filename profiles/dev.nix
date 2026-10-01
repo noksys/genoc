@@ -59,7 +59,8 @@ in {
       example = { cloud = "min"; data = "full"; containers = "full"; ai = "min"; };
       description = ''
         Cross-cutting workflow buckets. Absent tasks install nothing.
-        Recognized keys: cloud data containers editors-gui planning ai.
+        Recognized keys: cloud data containers editors-gui planning ai
+        electronics.
       '';
     };
   };
@@ -320,6 +321,17 @@ in {
     })
     (mkIf (fullTask "planning") {
       environment.systemPackages = with pkgs; [ ganttproject-bin ];
+    })
+
+    # Electronics: schematic capture, PCB layout and SPICE simulation.
+    # KiCad already links libngspice for its built-in simulator; the
+    # standalone ngspice adds the CLI for running exported netlists.
+    # min = kicad-small (no 3D model library); full = kicad with 3D models.
+    (mkIf (hasTask "electronics") {
+      environment.systemPackages = with pkgs; [
+        (if fullTask "electronics" then kicad else kicad-small)
+        ngspice
+      ];
     })
 
     # AI assistants (CLI agents in min, local LLM stack in full).
