@@ -30,7 +30,13 @@
 # Restart=always, so an unmasked warp-taskbar retries the socket once per second
 # for the whole session, logging an ERROR line each time — about a third of the
 # journal, crowding real logs out of retention. Masking the user unit makes that
-# autostart fail instantly and silently.
+# autostart fail instantly.
+#
+# The autostart entry is masked too. systemd-xdg-autostart-generator turns it
+# into app-com.cloudflare.WarpTaskbar@autostart.service, which otherwise runs at
+# every login, fails on the masked unit and leaves the user session "degraded"
+# with an error in the journal. The generator writes to the lowest-priority unit
+# directory, so a mask in /etc/systemd/user wins over it.
 #
 # This is a local control, so it is only as strong as the sudo in front of it. The
 # durable version lives on the Cloudflare side, as a Zero Trust device policy: it
@@ -47,5 +53,6 @@ with lib;
   config = mkIf config.genoc.security.warpLock.enable {
     systemd.services.cloudflare-warp.serviceConfig.RuntimeDirectoryMode = "0750";
     systemd.user.units."warp-taskbar.service".enable = false;
+    systemd.user.units."app-com.cloudflare.WarpTaskbar@autostart.service".enable = false;
   };
 }
