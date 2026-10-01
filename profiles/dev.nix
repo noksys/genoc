@@ -325,11 +325,6 @@ in {
     # AI assistants (CLI agents in min, local LLM stack in full).
     # API keys live in the user's home-manager (per-user secrets); the
     # binaries themselves are system-wide.
-    #
-    # Caffeine ships in min: long agent runs would otherwise be interrupted
-    # by screen blank / suspend. The powersave specialisation in
-    # genoc/ui/kde.nix already kills caffeine.service on activation, so
-    # there's no battery cost when the user explicitly chooses powersave.
     (mkIf (hasTask "ai") {
       environment.systemPackages = with pkgs; [
         # Anthropic Claude CLI — npx @latest keeps it current daily.
@@ -383,7 +378,6 @@ in {
           inherit (pkgs.stdenv.hostPlatform) system;
           config.allowUnfree = true;
         }).antigravity-cli                         # Google Antigravity CLI (`agy`) — official home of individual Google Sign-In; unstable only, no npm dist
-        caffeine-ng                                # screen-blank / suspend inhibitor (tray)
         bubblewrap                                 # sandboxing (required by codex)
         nh                                         # nix/nixos-rebuild helper CLI
       ];
@@ -398,15 +392,6 @@ in {
       environment.systemPackages = with pkgs; [
         code-cursor                                # Cursor IDE (VSCode fork + AI agent)
       ];
-
-      systemd.user.services.caffeine = {
-        description = "Caffeine — inhibit screen blank and suspend (long-running AI agents)";
-        wantedBy = [ "graphical-session.target" ];
-        serviceConfig = {
-          ExecStart = "${pkgs.caffeine-ng}/bin/caffeine";
-          Restart = "on-failure";
-        };
-      };
     })
     (mkIf (fullTask "ai") {
       environment.systemPackages = with pkgs; [
