@@ -313,6 +313,10 @@ in {
         onShutdown = "shutdown";
       };
       programs.virt-manager.enable = true;   # GUI; dconf points it at qemu:///system
+      # Kernel Samepage Merging: QEMU marks guest RAM mergeable, so identical
+      # pages across (and within) guests get deduplicated. Pays off most with
+      # several similar VMs; costs a little ksmd CPU.
+      hardware.ksm.enable = true;
       # The NixOS firewall drops DHCP and DNS from guests on libvirt's default
       # NAT bridge. Open just those: trustedInterfaces would expose every host
       # service to the guests.
@@ -327,6 +331,11 @@ in {
         swtpm.enable      = true;                 # emulated TPM 2.0
         vhostUserPackages = [ pkgs.virtiofsd ];   # virtiofs shared folders
       };
+      # swtpm_setup signs each new vTPM's EK/platform certs through
+      # swtpm_localca, whose CA lives in /var/lib/swtpm-localca. The NixOS
+      # module doesn't create it, so every guest with a TPM fails to start.
+      # libvirt runs swtpm as "tss".
+      systemd.tmpfiles.rules = [ "d /var/lib/swtpm-localca 0750 tss tss -" ];
       environment.systemPackages = with pkgs; [ quickemu ];
     })
 
