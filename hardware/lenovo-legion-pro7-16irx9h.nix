@@ -57,6 +57,10 @@ lib.mkIf (config.genoc.hardware.machine == "lenovo-legion-pro7-16irx9h") {
   services.tlp.settings = {
     SOUND_POWER_SAVE_ON_AC = "0";
     SOUND_POWER_SAVE_ON_BAT = "0";
+    # Same trap for the NMI watchdog: TLP defaults NMI_WATCHDOG=0 and writes it
+    # at startup and on every resume, silently overriding the
+    # kernel.nmi_watchdog=1 sysctl below, so hardlockup_panic could never fire.
+    NMI_WATCHDOG = "1";
   };
 
   # ---- Audio: guaranteed re-sync ~30s after the desktop is up ---------------
@@ -122,8 +126,10 @@ lib.mkIf (config.genoc.hardware.machine == "lenovo-legion-pro7-16irx9h") {
     "kernel.panic"            = 0;   # do NOT auto-reboot; leave the panic up
     "kernel.nmi_watchdog"     = 1;   # REQUIRED: without it hardlockup_panic never fires
     "kernel.hardlockup_panic" = 1;   # NMI-detected hard lockup -> panic
-    # softlockup_panic / hung_task_panic left OFF on purpose: ZFS D-state stalls
-    # (scrub / heavy IO) could false-trigger a reboot.
+    "kernel.softlockup_panic" = 1;   # CPU spinning in kernel >20s (e.g. a GPU driver) -> panic
+    # hung_task_panic left OFF on purpose: ZFS D-state stalls (scrub / heavy IO)
+    # trip the hung-task detector and could false-trigger it. They do not trip
+    # the softlockup detector, which only fires on a CPU that never schedules.
   };
 
   # ---- Hardware error monitoring (RAS) --------------------------------------
