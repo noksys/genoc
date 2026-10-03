@@ -59,7 +59,7 @@ in {
       example = { cloud = "min"; data = "full"; containers = "full"; ai = "min"; };
       description = ''
         Cross-cutting workflow buckets. Absent tasks install nothing.
-        Recognized keys: cloud data containers editors-gui planning ai
+        Recognized keys: cloud data containers vms editors-gui planning ai
         electronics.
       '';
     };
@@ -291,6 +291,43 @@ in {
         # Kubernetes
         kubectl k9s kubernetes-helm kustomize kind minikube
       ];
+    })
+
+    # Virtual machines: KVM through libvirt, driven by virsh and virt-manager.
+    # The user is deliberately NOT in the "libvirtd" group: like "docker",
+    # membership is root-equivalent (a guest can be handed the host's / as a
+    # disk). qemu:///system goes through polkit, which asks for the same
+    # factors as sudo; qemu:///session needs no prompt at all.
+    # min  = libvirtd + virsh + virt-manager/virt-viewer.
+    # full = + an emulated TPM (Windows 11), virtiofs shared folders, quickemu.
+    # UEFI needs nothing here: since 26.05 libvirt sees every firmware image
+    # QEMU ships, Secure Boot variants included (the old qemu.ovmf is gone).
+    (mkIf (hasTask "vms") {
+      virtualisation.libvirtd = {
+        enable = true;
+        qemu.package = pkgs.qemu_kvm;   # host-arch guests only, smaller closure
+        # NixOS runs guests as root by default; the unprivileged
+        # qemu-libvirtd user keeps a guest escape from landing on root.
+        qemu.runAsRoot = false;
+        # Shut guests down with the host instead of dumping their RAM to disk.
+        onShutdown = "shutdown";
+      };
+      programs.virt-manager.enable = true;   # GUI; dconf points it at qemu:///system
+      # The NixOS firewall drops DHCP and DNS from guests on libvirt's default
+      # NAT bridge. Open just those: trustedInterfaces would expose every host
+      # service to the guests.
+      networking.firewall.interfaces.virbr0 = {
+        allowedUDPPorts = [ 53 67 ];
+        allowedTCPPorts = [ 53 ];
+      };
+      environment.systemPackages = with pkgs; [ virt-viewer ];
+    })
+    (mkIf (fullTask "vms") {
+      virtualisation.libvirtd.qemu = {
+        swtpm.enable      = true;                 # emulated TPM 2.0
+        vhostUserPackages = [ pkgs.virtiofsd ];   # virtiofs shared folders
+      };
+      environment.systemPackages = with pkgs; [ quickemu ];
     })
 
     # GUI editors / IDEs.

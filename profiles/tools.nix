@@ -1,6 +1,7 @@
 # Tools profile: a grab-bag of GUI + CLI utilities that don't fit any
 # narrower bucket — calculators, password manager, screen recorders,
-# CLI helpers, virt-manager, etc. Always-on by default.
+# CLI helpers, etc. Always-on by default. virt-manager lives in the dev
+# profile's "vms" task, next to the libvirtd it needs.
 { config, lib, pkgs, ... }:
 
 with lib;
@@ -41,7 +42,6 @@ in {
       sqlitebrowser         # GUI for SQLite databases
       tmux                  # terminal multiplexer
       veracrypt             # full-disk / file container encryption
-      virt-manager          # libvirt GUI (KVM/QEMU/Xen)
       wl-clipboard          # Wayland clipboard CLI (wl-copy / wl-paste)
       wxmaxima              # GUI for Maxima CAS
       xclip                 # X11 clipboard CLI
