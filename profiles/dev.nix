@@ -63,6 +63,32 @@ in {
         electronics.
       '';
     };
+
+    # Declared libvirt objects for the "vms" task, so a reinstall rebuilds
+    # them from the repo instead of relying on /var/lib/libvirt.
+    vms = {
+      domains = mkOption {
+        type = types.attrsOf types.path;
+        default = {};
+        example = literalExpression "{ void-doom = ../vms/void-doom.xml; }";
+        description = ''
+          Domain XML files for qemu:///system, keyed by name. Defined on every
+          boot and switch: a definition replaces the one with the same UUID,
+          and a running guest picks it up on its next start. Domains not
+          listed are left alone, never deleted.
+        '';
+      };
+      networks = mkOption {
+        type = types.attrsOf types.path;
+        default = {};
+        description = "Network XML files, keyed by name; defined, autostarted and started.";
+      };
+      pools = mkOption {
+        type = types.attrsOf types.path;
+        default = {};
+        description = "Storage pool XML files, keyed by name; defined, autostarted and started.";
+      };
+    };
   };
 
   config = mkIf cfg.enable (mkMerge [
@@ -325,6 +351,53 @@ in {
         allowedTCPPorts = [ 53 ];
       };
       environment.systemPackages = with pkgs; [ virt-viewer ];
+
+      # SPICE USB redirection (e.g. a YubiKey into a guest) needs this
+      # cap_fowner helper to ACL the device node. spice-gtk's polkit policy
+      # lets any active session use it unasked, which would hand any process
+      # of the user raw access to any USB device; ask for admin auth instead,
+      # kept for a few minutes.
+      virtualisation.spiceUSBRedirection.enable = true;
+      security.polkit.extraConfig = ''
+        polkit.addRule(function(action, subject) {
+          if (action.id == "org.spice-space.lowlevelusbaccess") {
+            return polkit.Result.AUTH_ADMIN_KEEP;
+          }
+        });
+      '';
+
+      # Define what genoc.profile.dev.vms declares. virsh define/net-define/
+      # pool-define replace by UUID, so re-running is harmless.
+      systemd.services.libvirt-declared =
+        let
+          v = cfg.vms;
+          virsh = "${config.virtualisation.libvirtd.package}/bin/virsh -c qemu:///system";
+          # No grep -q: with pipefail its early exit would SIGPIPE virsh.
+          isListed = list: name: "${virsh} ${list} --name | grep -x ${escapeShellArg name} >/dev/null";
+        in
+        mkIf (v.domains != {} || v.networks != {} || v.pools != {}) {
+          description = "Define the libvirt objects declared in genoc.profile.dev.vms";
+          after = [ "libvirtd.service" ];
+          requires = [ "libvirtd.service" ];
+          wantedBy = [ "multi-user.target" ];
+          restartTriggers = attrValues v.networks ++ attrValues v.pools ++ attrValues v.domains;
+          serviceConfig = { Type = "oneshot"; RemainAfterExit = true; };
+          script = concatStrings (
+            mapAttrsToList (name: xml: ''
+              ${virsh} net-define ${xml}
+              ${virsh} net-autostart ${escapeShellArg name}
+              ${isListed "net-list" name} || ${virsh} net-start ${escapeShellArg name}
+            '') v.networks
+            ++ mapAttrsToList (name: xml: ''
+              ${virsh} pool-define ${xml}
+              ${virsh} pool-autostart ${escapeShellArg name}
+              ${isListed "pool-list" name} || ${virsh} pool-start ${escapeShellArg name}
+            '') v.pools
+            ++ mapAttrsToList (name: xml: ''
+              ${virsh} define ${xml}
+            '') v.domains
+          );
+        };
     })
     (mkIf (fullTask "vms") {
       virtualisation.libvirtd.qemu = {
