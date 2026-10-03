@@ -43,6 +43,7 @@ in {
     services.zfs.autoSnapshot = {
       enable = true;
       flags  = "-k -p";  # preserve on destroy/rename, keep full path
+      monthly = 6;       # half a year of monthlies (NixOS default: 12)
     };
   };
 }
